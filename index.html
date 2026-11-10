@@ -37,6 +37,7 @@
         <button class="tab active" data-tab="people"><span data-i18n="Personnages">Personnages</span></button>
         <button class="tab" data-tab="frames"><span data-i18n="Frame Theater">Frame Theater</span></button>
         <button class="tab" data-tab="compare"><span data-i18n="Comparer">Comparer</span></button>
+        <button class="tab" data-tab="replay"><span data-i18n="Replay Analyzer">Replay Analyzer</span></button>
         <button class="tab" data-tab="create"><span id="createTabLabel" data-i18n="Créer">Créer</span></button>
         <button class="tab" data-tab="import"><span data-i18n="Importer">Importer</span></button>
       </nav>
@@ -119,6 +120,70 @@
             </div>
             <div id="compareSummary"></div>
             <div id="compareOut" class="grid2"></div>
+          </div>
+        </section>
+
+        <!-- Replay Analyzer -->
+        <section id="replay" class="page hidden">
+          <div class="panel section">
+            <h2 data-i18n="Replay Analyzer">Replay Analyzer</h2>
+            <p class="muted small" data-i18n="ra.lead">Analyse la vidéo d’un combo : lecture, points de timing, séquence. Les fiches liées viennent du graphe interne, sans onglet séparé.</p>
+            <div class="grid2 ra-ids">
+              <div class="field"><label for="raGame" data-i18n="Jeu">Jeu</label><select id="raGame"></select></div>
+              <div class="field"><label for="raChar" data-i18n="Personnage">Personnage</label><select id="raChar"></select></div>
+              <div class="field"><label for="raCombo" data-i18n="Combo">Combo</label><select id="raCombo"></select></div>
+              <div class="field"><label for="raUrl" data-i18n="Vidéo YouTube (facultatif)">Vidéo YouTube (facultatif)</label><input id="raUrl" type="url" placeholder="https://www.youtube.com/watch?v=…" autocomplete="off" /></div>
+            </div>
+          </div>
+          <div class="ra-layout">
+            <div class="panel ra-stage-panel">
+              <div id="raStage" class="ra-stage"></div>
+              <div class="ra-transport">
+                <div class="buttons">
+                  <button type="button" id="raPlay" class="primary" data-i18n="▶ Lecture">▶ Lecture</button>
+                  <button type="button" id="raBack" class="tiny" title="-1s">−1s</button>
+                  <button type="button" id="raBackF" class="tiny" title="-0.1s">−0.1s</button>
+                  <button type="button" id="raFwdF" class="tiny" title="+0.1s">+0.1s</button>
+                  <button type="button" id="raFwd" class="tiny" title="+1s">+1s</button>
+                  <label class="ra-rate-lab" for="raRate" data-i18n="Vitesse">Vitesse</label>
+                  <select id="raRate" class="compact" aria-label="Vitesse">
+                    <option value="0.25">0.25×</option>
+                    <option value="0.5">0.5×</option>
+                    <option value="0.75">0.75×</option>
+                    <option value="1" selected>1×</option>
+                    <option value="1.25">1.25×</option>
+                    <option value="1.5">1.5×</option>
+                  </select>
+                </div>
+                <div class="ra-time-row">
+                  <span id="raTime" class="muted small">0:00</span>
+                  <input id="raSeek" type="range" min="0" max="1000" value="0" step="1" aria-label="Timeline" />
+                  <span id="raDur" class="muted small">0:00</span>
+                </div>
+              </div>
+              <div>
+                <h3 data-i18n="Séquence">Séquence</h3>
+                <div id="raSeq" class="seq"></div>
+              </div>
+            </div>
+            <div class="panel ra-side">
+              <div class="row between">
+                <h3 style="margin:0" data-i18n="Points de timing">Points de timing</h3>
+                <button type="button" id="raMark" class="tiny primary" data-i18n="Marquer ici">Marquer ici</button>
+              </div>
+              <div class="field" style="margin-top:10px">
+                <label for="raMarkNote" data-i18n="Note du point">Note du point</label>
+                <input id="raMarkNote" maxlength="120" placeholder="ex. 5H, confirm, delay…" autocomplete="off" />
+              </div>
+              <div id="raMarks" class="ra-marks"></div>
+              <hr />
+              <h3 data-i18n="Notes de lab (facultatif)">Notes de lab (facultatif)</h3>
+              <textarea id="raNotes" rows="3" maxlength="2000" data-i18n-placeholder="Timing, conditions, observations…" placeholder="Timing, conditions, observations…"></textarea>
+              <hr />
+              <h3 data-i18n="Combos liés">Combos liés</h3>
+              <p class="muted small" data-i18n="ra.related">Même vidéo, même perso, commandes en commun — calculé en arrière-plan.</p>
+              <div id="raRelated"></div>
+            </div>
           </div>
         </section>
 

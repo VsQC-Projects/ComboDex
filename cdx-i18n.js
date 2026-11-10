@@ -2,6 +2,10 @@ window.CDX_I18N={
 fr:{
 "cookie.body":"Les combos (écrits et vidéo) restent <b>sur ComboDex pour tout le monde</b>, comme un wiki. Favoris et entraînement restent sur cet appareil. Un cookie retient seulement que tu as vu ce message.",
 "ft.help":"L’avantage « on block » indique qui peut agir en premier après un coup bloqué. Un coup à +2 laisse l’attaquant agir 2 frames avant l’adversaire. Un coup à −8 peut être puni si l’adversaire a une attaque assez rapide et à portée. D’autres propriétés (pushback, portée) jouent aussi."
+,"ra.lead":"Analyse la vidéo d’un combo : lecture, points de timing, séquence. Les fiches liées viennent du graphe interne, sans onglet séparé."
+,"ra.related":"Même vidéo, même perso, commandes en commun — calculé en arrière-plan."
+,"Aucun combo lié.":"Aucun combo lié."
+,"Choisir un combo":"Choisir un combo"
 ,"Light Punch":"Direct léger","Medium Punch":"Direct moyen","Heavy Punch":"Direct fort","Light Kick":"Coup de pied léger","Medium Kick":"Coup de pied moyen","Heavy Kick":"Coup de pied fort","Punch":"Coup de poing","Kick":"Coup de pied","Slash":"Slash","Heavy Slash":"Heavy Slash","Dust":"Dust","Special":"Special","Special 1":"Special 1","Special 2":"Special 2"},
 en:{
 "Aller au contenu":"Skip to content",
@@ -12,6 +16,20 @@ en:{
 "Personnages":"Characters",
 "Frame Theater":"Frame Theater",
 "Comparer":"Compare",
+"Replay Analyzer":"Replay Analyzer",
+"ra.lead":"Analyze a combo video: playback, timing marks, sequence. Linked sheets come from the internal graph, without a separate tab.",
+"Points de timing":"Timing marks",
+"Marquer ici":"Mark here",
+"Note du point":"Mark note",
+"Combos liés":"Linked combos",
+"ra.related":"Same video, same character, shared commands — computed in the background.",
+"Vitesse":"Speed",
+"Aucune vidéo YouTube pour ce combo.":"No YouTube video on this combo.",
+"Colle un lien YouTube pour l’analyser.":"Paste a YouTube link to analyze it.",
+"Aucun combo pour ce personnage.":"No combo for this character.",
+"Supprimer le point":"Delete mark",
+"Aucun combo lié.":"No linked combos.",
+"Choisir un combo":"Choose a combo",
 "Créer":"Create",
 "Importer":"Import",
 "Effacer":"Clear",
@@ -158,6 +176,20 @@ es:{
 "Personnages":"Personajes",
 "Frame Theater":"Frame Theater",
 "Comparer":"Comparar",
+"Replay Analyzer":"Replay Analyzer",
+"ra.lead":"Analiza el vídeo de un combo: reproducción, marcas de timing, secuencia. Las fichas ligadas salen del grafo interno, sin pestaña aparte.",
+"Points de timing":"Puntos de timing",
+"Marquer ici":"Marcar aquí",
+"Note du point":"Nota del punto",
+"Combos liés":"Combos ligados",
+"ra.related":"Mismo vídeo, mismo personaje, comandos en común — calculado en segundo plano.",
+"Vitesse":"Velocidad",
+"Aucune vidéo YouTube pour ce combo.":"Este combo no tiene vídeo de YouTube.",
+"Colle un lien YouTube pour l’analyser.":"Pega un enlace de YouTube para analizarlo.",
+"Aucun combo pour ce personnage.":"No hay combo para este personaje.",
+"Supprimer le point":"Borrar marca",
+"Aucun combo lié.":"Ningún combo ligado.",
+"Choisir un combo":"Elegir un combo",
 "Créer":"Crear",
 "Importer":"Importar",
 "Effacer":"Borrar",
