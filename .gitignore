@@ -3,4 +3,4 @@
 !.gitignore
 !.nojekyll
 !pad/
-!pad/*.png
+!pad/**

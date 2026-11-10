@@ -1,0 +1,46 @@
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" width="54.9" height="21.6" viewBox="0 0 54.9 21.6">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #242424;
+      }
+
+      .cls-2, .cls-6 {
+        fill: #fff;
+      }
+
+      .cls-2, .cls-4, .cls-5, .cls-6 {
+        isolation: isolate;
+      }
+
+      .cls-2 {
+        opacity: 0.09;
+      }
+
+      .cls-3 {
+        fill: none;
+      }
+
+      .cls-4 {
+        opacity: 0.3;
+      }
+
+      .cls-5 {
+        opacity: 0.48;
+      }
+
+      .cls-6 {
+        opacity: 0.11;
+      }
+    </style>
+  </defs>
+  <g>
+    <path class="cls-1" d="M8.9,0,0,13.5s.6,1.7,1.6,1.8,8.1-.2,8.1-.2h2.5l7.6,4.7L21,21.5l7.6-.2,1.7-2.9,2-1.8,4.4-1.2,9.2-.6L54.9.3Z"/>
+    <polygon class="cls-2" points="20.7 21.3 31 3.2 38.6 3.1 28.6 21.4 20.8 21.6 20.7 21.3"/>
+    <polygon class="cls-3" points="27.3 0.2 31 3.2 20.7 21.3 19.7 19.9 16.8 18 27.3 0.2"/>
+    <path class="cls-2" d="M8.9,0,0,13.5s.6,1.7,1.6,1.8L11.5,0Z"/>
+    <polygon class="cls-4" points="27.3 0.2 31 3.2 38.6 3.1 41 0.3 27.3 0.2"/>
+    <polygon class="cls-5" points="32.2 16.7 36.7 15.5 39.1 15.3 47.4 0.4 41 0.3 38.6 3.1 28.6 21.4 30.2 18.5 32.2 16.7"/>
+    <polygon class="cls-6" points="21 0.1 21 0.1 12.1 15.2 16.8 18 27.3 0.2 21 0.1"/>
+  </g>
+</svg>
