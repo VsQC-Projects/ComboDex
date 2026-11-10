@@ -385,13 +385,79 @@ function padDir(gp){
   if(g==="ssbu")return v<0?"jump":null;
   return({[-1]:{[-1]:"7",[0]:"4",[1]:"1"},[0]:{[-1]:"8",[1]:"2"},[1]:{[-1]:"9",[0]:"6",[1]:"3"}})[h][v];
 }
+
+function padKind(gp){
+  const id=(gp&&gp.id||"").toLowerCase();
+  if(/dualsense|dualshock|playstation|054c|sony/.test(id))return"dualsense";
+  if(/xbox|xinput|045e|microsoft/.test(id))return"xbox";
+  if(/switch|pro controller|nintendo|057e|joy-?con/.test(id))return"switch";
+  if(/gamecube|mayflash|wii u gc/.test(id))return"gamecube";
+  return gp?"generic":"dualsense";
+}
+function padDpad(){return `<div class="pad-dpad"><span></span><span class="pad-key" data-pad="du">↑</span><span></span><span class="pad-key" data-pad="dl">←</span><span class="pad-key" data-pad="d5">●</span><span class="pad-key" data-pad="dr">→</span><span></span><span class="pad-key" data-pad="dd">↓</span><span></span></div>`}
+function padFace(a,b,c,d){return `<div class="pad-face"><span></span><span class="pad-key" data-pad="b3">${d}</span><span></span><span class="pad-key" data-pad="b2">${c}</span><span></span><span class="pad-key" data-pad="b1">${b}</span><span></span><span class="pad-key" data-pad="b0">${a}</span><span></span></div>`}
+function padDrawInner(kind){
+  if(kind==="xbox")return `<div class="xb-top"><span class="pad-key sh" data-pad="l1">LB</span><span class="pad-key sh" data-pad="r1">RB</span></div><div class="xb-row"><div class="xb-col">${padDpad()}<div class="xb-stick pad-key" data-pad="ls"></div></div><div class="xb-mid"><span class="xb-guide"></span></div><div class="xb-col">${padFace("A","B","X","Y")}<div class="xb-stick pad-key" data-pad="rs"></div></div></div>`;
+  if(kind==="switch")return `<div class="nsw-top nsw-rail-l nsw-rail-r"><span class="pad-key sh" data-pad="l1">L</span><span class="pad-key sh" data-pad="r1">R</span></div><div class="nsw-row"><div class="ds-col"><div class="nsw-stick pad-key" data-pad="ls"></div>${padDpad()}</div><div class="nsw-mid"><span class="nsw-home"></span></div><div class="ds-col">${padFace("B","A","Y","X")}<div class="nsw-stick pad-key" data-pad="rs"></div></div></div>`;
+  if(kind==="gamecube")return `<div class="ds-top"><span class="pad-key sh" data-pad="l1">L</span><span class="pad-key sh" data-pad="r1">R</span></div><div class="ds-row"><div class="ds-col">${padDpad()}</div><div class="ds-mid"><div class="ds-stick pad-key" data-pad="ls"></div></div><div class="ds-col">${padFace("A","B","X","Y")}</div></div>`;
+  if(kind==="generic")return `<div class="pad-shoulders"><span class="pad-key sh" data-pad="l1">L1</span><span class="pad-key sh" data-pad="r1">R1</span></div><div class="pad-core">${padDpad()}<div></div>${padFace("A","B","X","Y")}</div>`;
+  return `<svg class="ds-svg" viewBox="0 0 360 220" aria-hidden="true">
+  <defs>
+    <linearGradient id="dsShell" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f7f8fb"/><stop offset="45%" stop-color="#d5dae3"/><stop offset="100%" stop-color="#9aa3b0"/></linearGradient>
+    <linearGradient id="dsWell" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2a2e36"/><stop offset="100%" stop-color="#12141a"/></linearGradient>
+  </defs>
+  <path fill="url(#dsShell)" stroke="#7a818c" stroke-width="1.6" d="M74 38c28-16 86-24 106-24s78 8 106 24c24 12 40 38 44 68 4 32-2 64-16 90-8 14-24 10-30-8-4-12-6-30-8-42H84c-2 12-4 30-8 42-6 18-22 22-30 8C32 170 26 138 30 106c4-30 20-56 44-68z"/>
+  <path fill="#c5cbd4" d="M78 132c8 28 18 52 32 58h140c14-6 24-30 32-58H78z" opacity=".55"/>
+  <rect class="pad-key sh" data-pad="l1" x="78" y="22" width="52" height="12" rx="4" fill="#2c3038" stroke="#111"/>
+  <rect class="pad-key sh" data-pad="r1" x="230" y="22" width="52" height="12" rx="4" fill="#2c3038" stroke="#111"/>
+  <text x="104" y="31" text-anchor="middle" fill="#e8eaef" font-size="8" font-weight="700">L1</text>
+  <text x="256" y="31" text-anchor="middle" fill="#e8eaef" font-size="8" font-weight="700">R1</text>
+  <rect x="128" y="42" width="104" height="30" rx="6" fill="#1b1d24" stroke="#0c0d10"/>
+  <rect x="138" y="74" width="84" height="5" rx="2.5" fill="#5ec8ff"/>
+  <circle cx="180" cy="92" r="8" fill="#2a2e36" stroke="#111"/>
+  <text x="180" y="95" text-anchor="middle" fill="#cfd3da" font-size="7" font-weight="800">PS</text>
+  <rect x="174" y="104" width="12" height="7" rx="2" fill="#2a2e36"/>
+  <g fill="#2a2e36"><circle cx="168" cy="120" r="1.3"/><circle cx="176" cy="120" r="1.3"/><circle cx="184" cy="120" r="1.3"/><circle cx="192" cy="120" r="1.3"/><circle cx="172" cy="126" r="1.3"/><circle cx="180" cy="126" r="1.3"/><circle cx="188" cy="126" r="1.3"/></g>
+  <rect x="108" y="52" width="14" height="8" rx="3" fill="#2a2e36"/>
+  <rect x="238" y="52" width="14" height="8" rx="3" fill="#2a2e36"/>
+  <g class="pad-key" data-pad="ls"><circle cx="96" cy="78" r="18" fill="url(#dsWell)" stroke="#0b0c0f" stroke-width="2"/><circle cx="96" cy="78" r="7" fill="#3a3f4a"/></g>
+  <g class="pad-dpad" transform="translate(96 128)">
+    <rect class="pad-key" data-pad="du" x="-7" y="-22" width="14" height="16" rx="3" fill="#2c3038"/>
+    <rect class="pad-key" data-pad="dd" x="-7" y="6" width="14" height="16" rx="3" fill="#2c3038"/>
+    <rect class="pad-key" data-pad="dl" x="-22" y="-7" width="16" height="14" rx="3" fill="#2c3038"/>
+    <rect class="pad-key" data-pad="dr" x="6" y="-7" width="16" height="14" rx="3" fill="#2c3038"/>
+    <circle class="pad-key" data-pad="d5" r="5" fill="#1a1c22"/>
+  </g>
+  <g class="pad-face" font-size="8" font-weight="800" text-anchor="middle">
+    <g class="pad-key" data-pad="b3"><circle cx="264" cy="62" r="11" fill="#2c3038" stroke="#111"/><text x="264" y="65" fill="#eee">△</text></g>
+    <g class="pad-key" data-pad="b1"><circle cx="286" cy="84" r="11" fill="#2c3038" stroke="#111"/><text x="286" y="87" fill="#eee">○</text></g>
+    <g class="pad-key" data-pad="b0"><circle cx="264" cy="106" r="11" fill="#2c3038" stroke="#111"/><text x="264" y="109" fill="#eee">×</text></g>
+    <g class="pad-key" data-pad="b2"><circle cx="242" cy="84" r="11" fill="#2c3038" stroke="#111"/><text x="242" y="87" fill="#eee">□</text></g>
+  </g>
+  <g class="pad-key" data-pad="rs"><circle cx="264" cy="138" r="18" fill="url(#dsWell)" stroke="#0b0c0f" stroke-width="2"/><circle cx="264" cy="138" r="7" fill="#3a3f4a"/></g>
+</svg>`
+}
+function padCls(kind){return({dualsense:"ds",xbox:"xb",switch:"nsw",gamecube:"gc",generic:"gen"}[kind]||"ds")}
+function padMount(gp){
+  const root=a("padBody"); if(!root)return;
+  const kind=padKind(gp);
+  if(root.dataset.kind!==kind || !root.innerHTML.trim()){
+    root.dataset.kind=kind;
+    root.className="pad-draw pad-"+padCls(kind)+(gp?"":" off");
+    root.innerHTML=padDrawInner(kind);
+  }
+  padRelabel();
+}
 function padName(gp){return (gp&&(gp.id||"").split("(")[0].trim())||cdxT("manette")}
 function padRelabel(){
   const root=a("padBody"); if(!root||!o.draft)return;
   const map=PAD_FACE[o.draft.game]||PAD_FACE.sf6;
   [["b0",0],["b1",1],["b2",2],["b3",3]].forEach(([id,i])=>{
     const el=root.querySelector('[data-pad="'+id+'"]');
-    if(el)el.textContent=map[i]||el.textContent;
+    if(!el)return;
+    const lab=map[i]; if(!lab)return;
+    const tx=el.querySelector("text");
+    if(tx)tx.textContent=lab; else el.textContent=lab;
   });
 }
 function padPaint(gp,tok){
@@ -413,15 +479,18 @@ function padPaint(gp,tok){
   if(gp.buttons[15]&&gp.buttons[15].pressed)on("dr");
   const x=(gp.axes&&gp.axes[0])||0,y=(gp.axes&&gp.axes[1])||0;
   if(y<-0.45)on("du"); if(y>0.45)on("dd"); if(x<-0.45)on("dl"); if(x>0.45)on("dr");
+  if(Math.hypot(x,y)>0.45)on("ls");
+  const x2=(gp.axes&&gp.axes[2])||0,y2=(gp.axes&&gp.axes[3])||0;
+  if(Math.hypot(x2,y2)>0.45)on("rs");
   if(!tok)on("d5");
   if(live)live.textContent=tok?cdxT("Dernière touche")+" · "+tok:"";
 }
 function padStatus(){
   const el=a("padStatus"); if(!el)return;
-  padRelabel();
   const pads=[...navigator.getGamepads?navigator.getGamepads():[]].filter(Boolean);
+  padMount(pads[0]||null);
   if(!pads.length){el.textContent=cdxT("Branche une manette pour écrire la séquence.");el.classList.remove("on");padPaint(null,"");return}
-  el.textContent=cdxT("Manette détectée : {0}.").replace("{0}",padName(pads[0]))+" "+cdxT("Écris la séquence avec la manette.");
+  el.textContent=padName(pads[0]);
   el.classList.add("on");
   padPaint(pads[0],"");
 }
@@ -1280,6 +1349,52 @@ main{flex:1 1 auto}
 .combo-video .video-frame{max-height:220px}
 .video-pop{display:grid;gap:12px}
 .video-pop .video-frame{max-height:min(52vh,420px)}
+
+.cond-panel h3{margin:0 0 10px}
+.cond-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:10px 16px;align-items:end}
+.cond-grid .field{margin-bottom:0}
+.cond-grid .span{grid-column:1/-1}
+.cond-checks{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;grid-column:1/-1;padding-top:2px}
+.cmd-right{min-width:0;padding:12px 14px 14px;border:1px solid var(--line);border-radius:14px;background:#2a2c3a}
+#sequenceEditor.seq{min-height:76px;font-size:15px;line-height:1.45;padding:10px 12px;background:#1b1c26;border:1px solid var(--line);border-radius:10px}
+.pad-inline{display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:16px;padding-top:12px;border-top:1px solid var(--line)}
+.pad-inline .pad-status{text-align:center;margin:0;max-width:100%}
+.pad-inline .pad-live{margin:0;min-height:1.2em;text-align:center}
+.pad-draw{width:min(198px,100%);opacity:.98}
+.pad-draw.off{opacity:.82}
+.pad-ds .ds-svg{width:100%;height:auto;display:block;filter:drop-shadow(0 8px 14px #0007)}
+.pad-ds g.pad-key.on circle,.pad-ds g.pad-key.on rect,.pad-ds rect.pad-key.on{fill:#6b4fa3;stroke:#c9a7ff}
+.pad-key{display:flex;align-items:center;justify-content:center;border:1px solid #2a2d36;background:#22242e;color:#eceaf2;font-weight:750;font-size:10px;user-select:none}
+.pad-key.sh{width:46px;height:14px;border-radius:7px 7px 3px 3px;font-size:9px}
+.pad-key.on{background:var(--purple2);border-color:var(--purple);color:#fff;box-shadow:0 0 0 2px rgba(155,120,194,.4)}
+.pad-dpad{display:grid;grid-template-columns:20px 20px 20px;grid-template-rows:20px 20px 20px;gap:2px;justify-content:center}
+.pad-dpad .pad-key{width:20px;height:20px;border-radius:3px}
+.pad-face{display:grid;grid-template-columns:26px 26px 26px;grid-template-rows:26px 26px 26px;gap:3px;justify-content:center}
+.pad-face .pad-key{width:26px;height:26px;border-radius:50%}
+.ds-top,.xb-top,.nsw-top{display:flex;justify-content:space-between;align-items:flex-end;padding:0 10px}
+.ds-touch{height:20px;margin:6px 32px 8px;background:#1b1d24;border-radius:5px;box-shadow:inset 0 0 0 1px #0d0e12}
+.ds-row,.xb-row,.nsw-row{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;padding:0 8px 10px}
+.ds-col,.xb-col{display:flex;flex-direction:column;align-items:center;gap:8px}
+.ds-mid,.xb-mid,.nsw-mid{display:flex;flex-direction:column;align-items:center;gap:6px}
+.ds-ps,.xb-guide,.nsw-home{width:18px;height:18px;border-radius:50%;background:#2b2e38;border:1px solid #111}
+.ds-stick,.xb-stick,.nsw-stick{width:22px;height:22px;border-radius:50%;background:#15171d;border:2px solid #0c0d11;box-shadow:inset 0 1px 2px #0008}
+.ds-stick.on,.xb-stick.on,.nsw-stick.on{border-color:var(--purple);box-shadow:0 0 0 2px rgba(155,120,194,.4)}
+.pad-ds{background:none;border:0;border-radius:0;padding:0;box-shadow:none;color:#1b1d24}
+.pad-xb{background:linear-gradient(180deg,#2a2d33,#16181c);border:1px solid #3e424c;border-radius:36px 36px 26px 26px;padding:8px 8px 14px;box-shadow:0 8px 16px #0006}
+.pad-xb .pad-face [data-pad="b0"]{background:#3d9a4a}
+.pad-xb .pad-face [data-pad="b1"]{background:#c44b3a}
+.pad-xb .pad-face [data-pad="b2"]{background:#3a6fbf}
+.pad-xb .pad-face [data-pad="b3"]{background:#d4b13a;color:#1a1a1a}
+.pad-nsw{background:linear-gradient(180deg,#353842,#1c1e24);border:1px solid #4a4e5a;border-radius:18px;padding:8px 8px 12px}
+.pad-nsw .nsw-rail-l{box-shadow:inset 3px 0 0 #2ee6d6}
+.pad-nsw .nsw-rail-r{box-shadow:inset -3px 0 0 #ff5a6a}
+.pad-gc{background:linear-gradient(180deg,#d9dce3,#b7bcc6);border-radius:50% 50% 42% 42%;padding:10px 12px 16px;border:1px solid #8d929c}
+.pad-gc .pad-face [data-pad="b0"]{background:#5aa0e8}
+.pad-gc .pad-face [data-pad="b1"]{background:#e25757}
+.pad-gc .pad-face [data-pad="b2"]{background:#e8c04a;color:#1a1a1a}
+.pad-gc .pad-face [data-pad="b3"]{background:#4caf6a}
+.pad-gen{background:#101218;border:1px solid var(--line);border-radius:28px;padding:10px}
+.editor-rest{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(280px,.85fr);gap:15px;align-items:start}
 </style>
   </head>
   <body>
@@ -1399,6 +1514,28 @@ main{flex:1 1 auto}
             </div>
           </div>
           <div class="editor">
+            <div class="panel cond-panel">
+              <h3 data-i18n="Conditions du combo">Conditions du combo</h3>
+              <div class="cond-grid">
+                <div class="field"><label for="editPosition" data-i18n="Position">Position</label><select id="editPosition"></select></div>
+                <div class="field"><label id="meterLabel" for="editMeter">Ressource</label><select id="editMeter"></select></div>
+                <div id="specialWrap" class="field hidden"><label id="specialLabel" for="editSpecial"></label><select id="editSpecial"></select></div>
+                <div id="extrasWrap" class="extras"></div>
+                <div class="field"><label id="assistLabel" for="editAssist">Assists</label><select id="editAssist"></select></div>
+                <div class="field span"><span class="label" data-i18n="Combo DNA">Combo DNA</span><div id="dnaWrap" class="chip-row"></div></div>
+                <div class="field"><label for="editDamage" data-i18n="Dégâts (facultatif)">Dégâts (facultatif)</label><input type="number" min="0" step="1" inputmode="numeric" id="editDamage" /></div>
+                <div class="field"><label for="editVideo" data-i18n="Vidéo YouTube (facultatif)">Vidéo YouTube (facultatif)</label><input type="url" id="editVideo" placeholder="https://www.youtube.com/watch?v=…" /></div>
+                <div class="cond-checks">
+                  <label class="checkrow"><input type="checkbox" id="editVerified" /> <span data-i18n="Vérifié et testé en lab">Vérifié et testé en lab</span></label>
+                  <label class="checkrow"><input type="checkbox" id="editFavorite" /> <span data-i18n="Ajouter aux favoris">Ajouter aux favoris</span></label>
+                </div>
+                <details id="labDetails" class="span">
+                  <summary data-i18n="Notes de lab (facultatif)">Notes de lab (facultatif)</summary>
+                  <div class="field" style="margin-top:9px"><label for="editLabDate" data-i18n="Date du test">Date du test</label><input type="date" id="editLabDate" /></div>
+                  <textarea id="editNotes" aria-label="Notes de lab" data-i18n-aria="Notes de lab" placeholder="Timing, conditions, observations…" data-i18n-placeholder="Timing, conditions, observations…"></textarea>
+                </details>
+              </div>
+            </div>
             <div class="panel cmd-panel">
               <div class="row between" style="gap:10px;align-items:center">
                 <h3 style="margin:0"><span data-i18n="Commandes">Commandes</span> <span class="muted small" id="paletteGame"></span></h3>
@@ -1422,34 +1559,15 @@ main{flex:1 1 auto}
                     <label for="seqNotch" data-i18n="Modifier la séquence">Modifier la séquence</label>
                     <input id="seqNotch" maxlength="400" aria-label="Éditer la séquence du combo" data-i18n-aria="Éditer la séquence du combo" autocomplete="off" />
                   </div>
+                  <div class="pad-inline" id="padPanel">
+                    <div id="padStatus" class="pad-status muted small" data-i18n="Branche une manette pour écrire la séquence.">Branche une manette pour écrire la séquence.</div>
+                    <div class="pad-draw pad-ds off" id="padBody" data-kind="dualsense" aria-hidden="true"></div>
+                    <div id="padLive" class="pad-live muted small"></div>
+                  </div>
                 </div>
               </div>
             </div>
             <div class="editor-rest">
-            <div class="editor-left">
-              <div class="panel pad-panel" id="padPanel">
-                <h3 data-i18n="Manette">Manette</h3>
-                <div id="padStatus" class="pad-status muted small" data-i18n="Branche une manette pour écrire la séquence.">Branche une manette pour écrire la séquence.</div>
-                <div class="pad-stage">
-                  <div class="pad-draw off" id="padBody" aria-hidden="true">
-                    <div class="pad-shoulders"><span class="pad-key sh" data-pad="l1">L1</span><span class="pad-key sh" data-pad="r1">R1</span></div>
-                    <div class="pad-core">
-                      <div class="pad-dpad">
-                        <span></span><span class="pad-key" data-pad="du">↑</span><span></span>
-                        <span class="pad-key" data-pad="dl">←</span><span class="pad-key" data-pad="d5">●</span><span class="pad-key" data-pad="dr">→</span>
-                        <span></span><span class="pad-key" data-pad="dd">↓</span><span></span>
-                      </div>
-                      <div></div>
-                      <div class="pad-face">
-                        <span></span><span class="pad-key" data-pad="b3">Y</span><span></span>
-                        <span class="pad-key" data-pad="b2">X</span><span></span><span class="pad-key" data-pad="b1">B</span>
-                        <span></span><span class="pad-key" data-pad="b0">A</span><span></span>
-                      </div>
-                    </div>
-                  </div>
-                  <div id="padLive" class="pad-live muted small"></div>
-                </div>
-              </div>
               <div class="panel">
                 <h3 data-i18n="Identité du combo">Identité du combo</h3>
                 <div class="grid2">
@@ -1460,26 +1578,6 @@ main{flex:1 1 auto}
                 <div class="field" style="grid-column:1/-1"><label for="editDesc" data-i18n="Description du combo">Description du combo</label><textarea id="editDesc" rows="2" maxlength="2000"></textarea></div>
                 <div class="field"><label for="editDifficulty" data-i18n="Difficulté">Difficulté</label><select id="editDifficulty"></select></div>
               </div>
-            </div>
-            <div class="stack">
-              <div class="panel">
-                <h3 data-i18n="Conditions du combo">Conditions du combo</h3>
-                <div class="field"><label for="editPosition" data-i18n="Position">Position</label><select id="editPosition"></select></div>
-                <div class="field"><label id="meterLabel" for="editMeter">Ressource</label><select id="editMeter"></select></div>
-                <div id="specialWrap" class="field hidden"><label id="specialLabel" for="editSpecial"></label><select id="editSpecial"></select></div>
-                <div id="extrasWrap" class="extras"></div>
-                <div class="field"><label id="assistLabel" for="editAssist">Assists</label><select id="editAssist"></select></div>
-                <div class="field"><span class="label" data-i18n="Combo DNA">Combo DNA</span><div id="dnaWrap" class="chip-row"></div></div>
-                <div class="field"><label for="editDamage" data-i18n="Dégâts (facultatif)">Dégâts (facultatif)</label><input type="number" min="0" step="1" inputmode="numeric" id="editDamage" /></div>
-                <div class="field"><label for="editVideo" data-i18n="Vidéo YouTube (facultatif)">Vidéo YouTube (facultatif)</label><input type="url" id="editVideo" placeholder="https://www.youtube.com/watch?v=…" /></div>
-                <label class="checkrow"><input type="checkbox" id="editVerified" /> <span data-i18n="Vérifié et testé en lab">Vérifié et testé en lab</span></label>
-                <label class="checkrow"><input type="checkbox" id="editFavorite" /> <span data-i18n="Ajouter aux favoris">Ajouter aux favoris</span></label>
-                <details id="labDetails" style="margin-top:10px">
-                  <summary data-i18n="Notes de lab (facultatif)">Notes de lab (facultatif)</summary>
-                  <div class="field" style="margin-top:9px"><label for="editLabDate" data-i18n="Date du test">Date du test</label><input type="date" id="editLabDate" /></div>
-                  <textarea id="editNotes" aria-label="Notes de lab" data-i18n-aria="Notes de lab" placeholder="Timing, conditions, observations…" data-i18n-placeholder="Timing, conditions, observations…"></textarea>
-                </details>
-              </div>
               <div class="panel sticky">
                 <h3 data-i18n="Aperçu de la fiche">Aperçu de la fiche</h3>
                 <div id="editPreview" class="subpanel"></div>
@@ -1489,7 +1587,6 @@ main{flex:1 1 auto}
                 </div>
                 <p class="small muted" id="saveHint"><span class="kbd" data-i18n="Ctrl + Entrée">Ctrl + Entrée</span> <span data-i18n="pour enregistrer">pour enregistrer</span></p>
               </div>
-            </div>
             </div>
           </div>
         </section>
