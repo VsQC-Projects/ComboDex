@@ -39,6 +39,7 @@ en:{
 "Éditeur manuel":"Manual editor",
 "Abandonner et repartir de zéro":"Discard and start over",
 "Identité du combo":"Combo identity",
+"Description":"Description",
 "Nom du combo":"Combo name",
 "Description du combo":"Combo description",
 "Commandes":"Commands",
@@ -181,6 +182,7 @@ es:{
 "Éditeur manuel":"Editor manual",
 "Abandonner et repartir de zéro":"Descartar y empezar de nuevo",
 "Identité du combo":"Identidad del combo",
+"Description":"Descripción",
 "Nom du combo":"Nombre del combo",
 "Description du combo":"Descripción del combo",
 "Commandes":"Comandos",
@@ -390,47 +392,95 @@ function padDir(gp){
 
 function padKind(gp){
   const id=(gp&&gp.id||"").toLowerCase();
-  if(/dualsense|dualshock|playstation|054c|sony/.test(id))return"dualsense";
-  if(/xbox|xinput|045e|microsoft/.test(id))return"xbox";
+  if(/dualsense/.test(id))return"dualsense";
+  if(/dualshock\s*4|ds4|054c/.test(id)&&!/dualsense/.test(id))return"ds4";
+  if(/dualshock\s*3|ds3|playstation\s*3/.test(id))return"ds3";
+  if(/xbox\s*360/.test(id))return"xbox360";
+  if(/xbox\s*series/.test(id))return"xboxseries";
+  if(/xbox|xinput|045e|microsoft/.test(id))return"xboxone";
   if(/switch|pro controller|nintendo|057e|joy-?con/.test(id))return"switch";
   if(/gamecube|mayflash|wii u gc/.test(id))return"gamecube";
-  return gp?"generic":"dualsense";
+  if(/fight\s*stick|arcade/.test(id))return"fightstick";
+  if(/fight\s*pad/.test(id))return"fightpad";
+  if(/\bnes\b/.test(id))return"nes";
+  return gp?"xboxone":"dualsense";
 }
+const PAD_SKINS=[
+  ["dualsense","DualSense (PS5)"],
+  ["ds4","DualShock 4"],
+  ["ds4w","DualShock 4 White"],
+  ["ds3","DualShock 3"],
+  ["ds3w","DualShock 3 White"],
+  ["xboxone","Xbox One"],
+  ["xboxonew","Xbox One White"],
+  ["xboxseries","Xbox Series"],
+  ["xbox360","Xbox 360"],
+  ["switch","Switch Pro"],
+  ["gamecube","GameCube"],
+  ["nes","NES"],
+  ["fightpad","FightPad"],
+  ["fightstick","Fight Stick"]
+];
+let padUserPick=false;
 function padDpad(){return `<div class="pad-dpad"><span></span><span class="pad-key" data-pad="du">↑</span><span></span><span class="pad-key" data-pad="dl">←</span><span class="pad-key" data-pad="d5">●</span><span class="pad-key" data-pad="dr">→</span><span></span><span class="pad-key" data-pad="dd">↓</span><span></span></div>`}
 function padFace(a,b,c,d){return `<div class="pad-face"><span></span><span class="pad-key" data-pad="b3">${d}</span><span></span><span class="pad-key" data-pad="b2">${c}</span><span></span><span class="pad-key" data-pad="b1">${b}</span><span></span><span class="pad-key" data-pad="b0">${a}</span><span></span></div>`}
+function padStick(id){return `<div class="gpv-well"><span class="nub pad-key" data-pad="${id}"></span></div>`}
 function padDrawInner(kind){
-  const src=({dualsense:"pad/dualsense.png",xbox:"pad/xbox.png",switch:"pad/switch.png",gamecube:"pad/gamecube.png"}[kind]||"pad/dualsense.png");
-  const hots=({
-    dualsense:[["l1",15,1,16,8],["r1",69,1,16,8],["du",17.2,24,7,8],["dd",17.2,38,7,8],["dl",11.2,31,7,8],["dr",23.2,31,7,8],["ls",21.5,46,13,17],["rs",55.5,46,13,17],["b3",72.6,20.5,7.5,11],["b2",66,30,7.5,11],["b1",79.2,30,7.5,11],["b0",72.6,39,7.5,11]],
-    xbox:[["l1",8,1,18,10],["r1",74,1,18,10],["ls",16,16,16,22],["rs",57,42,15,20],["dl",22,52,7,10],["dr",33,52,7,10],["du",27.5,44,7,10],["dd",27.5,60,7,10],["b3",68,16,8,12],["b2",61,27,8,12],["b1",75,27,8,12],["b0",68,38,8,12]],
-    switch:[["l1",10,2,16,8],["r1",74,2,16,8],["ls",12,22,14,20],["rs",52,44,14,20],["du",20,48,7,9],["dd",20,64,7,9],["dl",13,56,7,9],["dr",27,56,7,9],["b3",73,24,8,12],["b2",66,36,8,12],["b1",80,36,8,12],["b0",73,47,8,12]],
-    gamecube:[["l1",8,8,16,10],["r1",76,8,16,10],["ls",14,24,18,24],["rs",64,56,14,18],["du",23,62,7,9],["dd",23,76,7,9],["dl",16,69,7,9],["dr",30,69,7,9],["b3",70,22,8,12],["b0",72,34,10,14],["b1",64,42,7,10],["b2",82,32,8,12]]
-  }[kind]||[]);
-  const keys=hots.map(([id,l,t,w,h])=>`<span class="pad-hot pad-key" data-pad="${id}" style="left:${l}%;top:${t}%;width:${w}%;height:${h}%"></span>`).join("");
-  return `<div class="pad-photo"><img src="${src}" alt="" draggable="false">${keys}</div>`
+  const k=kind||"dualsense";
+  const bumps=(l,r)=>`<div class="gpv-bumps"><span class="pad-key sh" data-pad="l1">${l}</span><span class="pad-key sh" data-pad="r1">${r}</span></div>`;
+  const board=(left,mid,right)=>`<div class="gpv-board"><div class="gpv-col">${left}</div><div class="gpv-mid">${mid}</div><div class="gpv-col">${right}</div></div>`;
+  if(k==="nes")return `<div class="gpv gpv-nes">${board(padDpad(),`<span class="gpv-logo">NES</span>`,`<div class="nes-ab"><span class="pad-key" data-pad="b1">B</span><span class="pad-key" data-pad="b0">A</span></div>`)}</div>`;
+  if(k==="fightstick")return `<div class="gpv gpv-fs">${bumps("L","R")}${board(padStick("ls"),"",padFace("A","B","X","Y"))}</div>`;
+  if(k==="gamecube")return `<div class="gpv gpv-gc">${bumps("L","R")}${board(padStick("ls")+padDpad(),`<span class="gpv-logo">GC</span>`,padFace("A","B","X","Y")+padStick("rs"))}</div>`;
+  if(k==="switch")return `<div class="gpv gpv-nsw">${bumps("L","R")}${board(padStick("ls")+padDpad(),`<span class="gpv-logo">Switch</span>`,padFace("B","A","Y","X")+padStick("rs"))}</div>`;
+  if(k==="fightpad")return `<div class="gpv gpv-fp">${bumps("L","R")}${board(padDpad(),`<span class="gpv-guide"></span>`,padFace("A","B","X","Y"))}</div>`;
+  if(/^xbox/.test(k))return `<div class="gpv gpv-xb gpv-${k}">${bumps("LB","RB")}${board(padStick("ls")+padDpad(),`<span class="gpv-guide"></span>`,padFace("A","B","X","Y")+padStick("rs"))}</div>`;
+  if(k==="ds3"||k==="ds3w")return `<div class="gpv gpv-ds3 gpv-${k}">${bumps("L1","R1")}${board(padDpad()+padStick("ls"),`<span class="gpv-ps">PS</span>`,padFace("×","○","□","△")+padStick("rs"))}</div>`;
+  if(k==="ds4"||k==="ds4w")return `<div class="gpv gpv-ds4 gpv-${k}">${bumps("L1","R1")}<div class="gpv-touch"></div>${board(padStick("ls")+padDpad(),`<span class="gpv-ps">PS</span>`,padFace("×","○","□","△")+padStick("rs"))}</div>`;
+  return `<div class="gpv gpv-ds">${bumps("L1","R1")}<div class="gpv-touch"></div><div class="gpv-bar"></div>${board(padStick("ls")+padDpad(),`<span class="gpv-ps">PS</span>`,padFace("×","○","□","△")+padStick("rs"))}</div>`;
 }
-function padCls(kind){return({dualsense:"ds",xbox:"xb",switch:"nsw",gamecube:"gc",generic:"gen"}[kind]||"ds")}
-function padMount(gp){
+function padCls(kind){
+  if(/^xbox/.test(kind))return"xb";
+  if(kind==="switch")return"nsw";
+  if(kind==="gamecube")return"gc";
+  if(kind==="nes")return"nes";
+  if(kind==="fightstick")return"fs";
+  if(kind==="fightpad")return"fp";
+  return"ds";
+}
+function padFillSkins(){
+  const sel=a("padSkin"); if(!sel||sel.options.length)return;
+  PAD_SKINS.forEach(([v,n])=>{const o=document.createElement("option");o.value=v;o.textContent=n;sel.appendChild(o)});
+  sel.value="dualsense";
+  sel.onchange=()=>{padUserPick=true;const pads=[...navigator.getGamepads?navigator.getGamepads():[]].filter(Boolean);padMount(pads[0]||null,true)};
+}
+function padSkinNow(gp){
+  const sel=a("padSkin");
+  if(sel&&padUserPick)return sel.value;
+  return padKind(gp);
+}
+function padMount(gp,force){
+  padFillSkins();
   const root=a("padBody"); if(!root)return;
-  const kind=padKind(gp);
-  if(root.dataset.kind!==kind || !root.innerHTML.trim()){
+  const kind=padSkinNow(gp);
+  const sel=a("padSkin");
+  if(sel&&!padUserPick)sel.value=kind;
+  if(force||root.dataset.kind!==kind||!root.innerHTML.trim()){
     root.dataset.kind=kind;
     root.className="pad-draw pad-"+padCls(kind)+(gp?"":" off");
     root.innerHTML=padDrawInner(kind);
-  }
+  }else root.classList.toggle("off",!gp);
   padRelabel();
 }
 function padName(gp){return (gp&&(gp.id||"").split("(")[0].trim())||cdxT("manette")}
 function padRelabel(){
   const root=a("padBody"); if(!root||!o.draft)return;
-  if(root.querySelector(".pad-photo"))return;
   const map=PAD_FACE[o.draft.game]||PAD_FACE.sf6;
   [["b0",0],["b1",1],["b2",2],["b3",3]].forEach(([id,i])=>{
     const el=root.querySelector('[data-pad="'+id+'"]');
     if(!el)return;
     const lab=map[i]; if(!lab)return;
-    const tx=el.querySelector("text");
-    if(tx)tx.textContent=lab; else el.textContent=lab;
+    el.textContent=lab;
   });
 }
 function padPaint(gp,tok){
@@ -438,7 +488,16 @@ function padPaint(gp,tok){
   root.classList.toggle("off",!gp);
   root.querySelectorAll(".pad-key").forEach(el=>el.classList.remove("on"));
   const live=a("padLive");
-  if(!gp){if(live)live.textContent="";return}
+  const nub=(id,x,y)=>{
+    const el=root.querySelector('[data-pad="'+id+'"]'); if(!el)return;
+    el.style.transform=`translate(${(x||0)*13}px,${(y||0)*13}px)`;
+    if(Math.hypot(x||0,y||0)>0.18)el.classList.add("on");
+  };
+  if(!gp){
+    nub("ls",0,0); nub("rs",0,0);
+    if(live)live.textContent="";
+    return;
+  }
   const on=(id)=>{const el=root.querySelector('[data-pad="'+id+'"]');if(el)el.classList.add("on")};
   if(gp.buttons[0]&&gp.buttons[0].pressed)on("b0");
   if(gp.buttons[1]&&gp.buttons[1].pressed)on("b1");
@@ -452,15 +511,16 @@ function padPaint(gp,tok){
   if(gp.buttons[15]&&gp.buttons[15].pressed)on("dr");
   const x=(gp.axes&&gp.axes[0])||0,y=(gp.axes&&gp.axes[1])||0;
   if(y<-0.45)on("du"); if(y>0.45)on("dd"); if(x<-0.45)on("dl"); if(x>0.45)on("dr");
-  if(Math.hypot(x,y)>0.45)on("ls");
-  const x2=(gp.axes&&gp.axes[2])||0,y2=(gp.axes&&gp.axes[3])||0;
-  if(Math.hypot(x2,y2)>0.45)on("rs");
+  nub("ls",x,y);
+  nub("rs",(gp.axes&&gp.axes[2])||0,(gp.axes&&gp.axes[3])||0);
   if(!tok)on("d5");
   if(live)live.textContent=tok?cdxT("Dernière touche")+" · "+tok:"";
 }
 function padStatus(){
   const el=a("padStatus"); if(!el)return;
+  padFillSkins();
   const pads=[...navigator.getGamepads?navigator.getGamepads():[]].filter(Boolean);
+  if(pads[0]&&!padUserPick){const sel=a("padSkin"); if(sel)sel.value=padKind(pads[0])}
   padMount(pads[0]||null);
   if(!pads.length){el.textContent=cdxT("Branche une manette pour écrire la séquence.");el.classList.remove("on");padPaint(null,"");return}
   el.textContent=padName(pads[0]);
@@ -1340,23 +1400,45 @@ main{flex:1 1 auto}
 .cond-checks{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;grid-column:1/-1;padding-top:2px}
 .cmd-right{min-width:0;padding:12px 14px 14px;border:1px solid var(--line);border-radius:14px;background:#2a2c3a}
 #sequenceEditor.seq{min-height:76px;font-size:15px;line-height:1.45;padding:10px 12px;background:#1b1c26;border:1px solid var(--line);border-radius:10px}
-.pad-inline{display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:16px;padding-top:12px;border-top:1px solid var(--line)}
-.pad-inline .pad-status{text-align:center;margin:0;max-width:100%}
+.pad-inline{display:flex;flex-direction:column;align-items:stretch;gap:8px;margin-top:16px;padding-top:12px;border-top:1px solid var(--line)}
+.pad-fold{margin:0;border:0;background:none}
+.pad-fold>summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:8px;align-items:center;font-weight:650}
+.pad-fold>summary::-webkit-details-marker{display:none}
+.pad-status{text-align:right;margin:0;flex:1}
 .pad-inline .pad-live{margin:0;min-height:1.2em;text-align:center}
-.cond-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 0 10px;flex-wrap:wrap}
+#padSkin{width:100%}
+.cond-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin:0 0 10px;flex-wrap:wrap}
 .cond-head h3{margin:0}
+.id-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
+.id-row select{flex:1;min-width:110px}
 .cond-save{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
 button.save-combo{background:#c62828;border:1px solid #ef5350;color:#fff;font-weight:800;font-size:16px;padding:12px 22px;border-radius:12px;box-shadow:0 6px 16px #c6282855}
 button.save-combo:hover{background:#e53935;border-color:#ff8a80}
 .save-pop .subpanel{margin:0}
-.editor-rest{display:block}
-.pad-draw{width:min(230px,100%);opacity:.98;background:none;border:0;padding:0;box-shadow:none}
-.pad-draw.off{opacity:.9}
-.pad-photo{position:relative;width:100%}
-.pad-photo img{width:100%;height:auto;display:block;pointer-events:none}
-.pad-hot.pad-key{position:absolute;display:block;border:0;background:transparent;box-shadow:none;color:transparent;font-size:0;border-radius:50%;padding:0}
-.pad-hot.pad-key.on{background:rgba(155,120,194,.4);box-shadow:0 0 0 2px rgba(201,167,255,.9),0 0 14px 3px rgba(155,120,194,.55);color:transparent}
-.pad-hot[data-pad="l1"],.pad-hot[data-pad="r1"]{border-radius:7px}
+.editor-rest{display:none}
+.pad-draw{width:min(240px,100%);margin:8px auto 0;opacity:.98}
+.pad-draw.off{opacity:.55}
+.gpv{display:flex;flex-direction:column;gap:6px;padding:8px 6px 12px}
+.gpv-ds,.gpv-ds4,.gpv-ds3{background:linear-gradient(#f4f5f8,#b7bdc8);border-radius:26px 26px 40px 40px;color:#1a1a1a}
+.gpv-ds4w,.gpv-ds3w{background:linear-gradient(#fff,#dfe3ea);color:#111}
+.gpv-xb{color:#eee}
+.gpv-xboxonew{background:#e6e8ec;color:#111;border-radius:28px;padding:8px}
+.gpv-nes{background:#cfc6bb;border-radius:10px;color:#222}
+.gpv-fs{background:#1a1a1a;border-radius:8px}
+.gpv-bumps{display:flex;justify-content:space-between;padding:0 18px}
+.gpv-touch{height:18px;margin:0 40px;background:#1a1c22;border-radius:6px}
+.gpv-bar{height:4px;margin:2px 52px 0;background:#4ec7ff;border-radius:2px}
+.gpv-board{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center}
+.gpv-col{display:flex;flex-direction:column;align-items:center;gap:8px}
+.gpv-mid{display:flex;align-items:center;justify-content:center}
+.gpv-guide,.gpv-ps{width:20px;height:20px;border-radius:50%;background:#2b2e38;border:1px solid #111;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:800}
+.gpv-logo{font-size:9px;font-weight:800;letter-spacing:.04em;opacity:.7}
+.gpv-well{width:32px;height:32px;border-radius:50%;background:#0e1014;border:2px solid #2a2d36;display:flex;align-items:center;justify-content:center}
+.nub{width:18px;height:18px;border-radius:50%;background:#3a3f4a;border:1px solid #111;display:block;will-change:transform}
+.nub.on{background:var(--purple);border-color:#c9a7ff}
+.gpv .pad-face .pad-key.on,.gpv .pad-dpad .pad-key.on,.gpv .pad-key.sh.on{transform:translateY(2px);filter:brightness(1.35)}
+.nes-ab{display:flex;gap:8px}
+.nes-ab .pad-key{width:28px;height:28px;border-radius:50%;background:#c44b3a}
 .pad-key{display:flex;align-items:center;justify-content:center;border:1px solid #2a2d36;background:#22242e;color:#eceaf2;font-weight:750;font-size:10px;user-select:none}
 .pad-key.sh{width:46px;height:14px;border-radius:7px 7px 3px 3px;font-size:9px}
 .pad-key.on{background:var(--purple2);border-color:var(--purple);color:#fff;box-shadow:0 0 0 2px rgba(155,120,194,.4)}
@@ -1372,8 +1454,8 @@ button.save-combo:hover{background:#e53935;border-color:#ff8a80}
 .ds-ps,.xb-guide,.nsw-home{width:18px;height:18px;border-radius:50%;background:#2b2e38;border:1px solid #111}
 .ds-stick,.xb-stick,.nsw-stick{width:22px;height:22px;border-radius:50%;background:#15171d;border:2px solid #0c0d11;box-shadow:inset 0 1px 2px #0008}
 .ds-stick.on,.xb-stick.on,.nsw-stick.on{border-color:var(--purple);box-shadow:0 0 0 2px rgba(155,120,194,.4)}
-.pad-ds{background:none;border:0;border-radius:0;padding:0;box-shadow:none;color:#1b1d24}
-.pad-xb{background:linear-gradient(180deg,#2a2d33,#16181c);border:1px solid #3e424c;border-radius:36px 36px 26px 26px;padding:8px 8px 14px;box-shadow:0 8px 16px #0006}
+.pad-ds,.pad-xb,.pad-nsw,.pad-gc,.pad-nes,.pad-fs,.pad-fp{background:none;border:0;border-radius:0;padding:0;box-shadow:none}
+.gpv-xb{background:#16181c;border:1px solid #3e424c;border-radius:28px 28px 22px 22px}
 .pad-xb .pad-face [data-pad="b0"]{background:#3d9a4a}
 .pad-xb .pad-face [data-pad="b1"]{background:#c44b3a}
 .pad-xb .pad-face [data-pad="b2"]{background:#3a6fbf}
@@ -1509,12 +1591,25 @@ button.save-combo:hover{background:#e53935;border-color:#ff8a80}
           <div class="editor">
             <div class="panel cond-panel">
               <div class="cond-head">
-                <h3 data-i18n="Conditions du combo">Conditions du combo</h3>
+                <div>
+                  <h3 data-i18n="Identité du combo">Identité du combo</h3>
+                  <div class="id-row">
+                    <select id="editGame" aria-label="Jeu" data-i18n-aria="Jeu"></select>
+                    <select id="editChar" aria-label="Personnage" data-i18n-aria="Personnage"></select>
+                    <select id="editDifficulty" aria-label="Difficulté" data-i18n-aria="Difficulté"></select>
+                  </div>
+                </div>
                 <div class="cond-save">
                   <button id="saveCombo" class="save-combo" data-i18n="Enregistrer le combo">Enregistrer le combo</button>
                   <p class="small muted" id="saveHint" style="margin:0"><span class="kbd" data-i18n="Ctrl + Entrée">Ctrl + Entrée</span></p>
                 </div>
               </div>
+              <details id="descDetails" style="margin:0 0 12px">
+                <summary data-i18n="Description">Description</summary>
+                <div class="field" style="margin-top:9px"><label for="editName" data-i18n="Nom du combo">Nom du combo</label><input id="editName" maxlength="100" /></div>
+                <div class="field"><label for="editDesc" data-i18n="Description du combo">Description du combo</label><textarea id="editDesc" rows="2" maxlength="2000"></textarea></div>
+              </details>
+              <h3 data-i18n="Conditions du combo">Conditions du combo</h3>
               <div class="cond-grid">
                 <div class="field"><label for="editPosition" data-i18n="Position">Position</label><select id="editPosition"></select></div>
                 <div class="field"><label id="meterLabel" for="editMeter">Ressource</label><select id="editMeter"></select></div>
@@ -1558,28 +1653,18 @@ button.save-combo:hover{background:#e53935;border-color:#ff8a80}
                     <label for="seqNotch" data-i18n="Modifier la séquence">Modifier la séquence</label>
                     <input id="seqNotch" maxlength="400" aria-label="Éditer la séquence du combo" data-i18n-aria="Éditer la séquence du combo" autocomplete="off" />
                   </div>
-                  <div class="pad-inline" id="padPanel">
-                    <div id="padStatus" class="pad-status muted small" data-i18n="Branche une manette pour écrire la séquence.">Branche une manette pour écrire la séquence.</div>
+                  <details class="pad-fold pad-inline" id="padPanel" open>
+                    <summary><span data-i18n="Manette">Manette</span> — <span id="padStatus" class="pad-status muted small">Branche une manette pour écrire la séquence.</span></summary>
+                    <select id="padSkin" aria-label="Manette"></select>
                     <div class="pad-draw pad-ds off" id="padBody" data-kind="dualsense" aria-hidden="true"></div>
                     <div id="padLive" class="pad-live muted small"></div>
-                  </div>
+                  </details>
                 </div>
               </div>
             </div>
             <div id="editPreview" class="hidden"></div>
             <div id="editErrors" class="status bad hidden"></div>
-            <div class="editor-rest">
-              <div class="panel">
-                <h3 data-i18n="Identité du combo">Identité du combo</h3>
-                <div class="grid2">
-                  <div class="field"><label for="editGame" data-i18n="Jeu">Jeu</label><select id="editGame"></select></div>
-                  <div class="field"><label for="editChar" data-i18n="Personnage">Personnage</label><select id="editChar"></select></div>
-                </div>
-                <div class="field"><label for="editName" data-i18n="Nom du combo">Nom du combo</label><input id="editName" maxlength="100" /></div>
-                <div class="field" style="grid-column:1/-1"><label for="editDesc" data-i18n="Description du combo">Description du combo</label><textarea id="editDesc" rows="2" maxlength="2000"></textarea></div>
-                <div class="field"><label for="editDifficulty" data-i18n="Difficulté">Difficulté</label><select id="editDifficulty"></select></div>
-              </div>
-            </div>
+
           </div>
         </section>
 
