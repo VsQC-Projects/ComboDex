@@ -1,5 +1,10 @@
 *
 !index.html
+!cdx-i18n.js
+!cdx-portraits.js
+!cdx-ft.js
+!cdx-app.js
+!cdx.css
 !.gitignore
 !.nojekyll
 !pad/
