@@ -1099,7 +1099,7 @@ function ftCleanCharList(list){
   return [...new Set((list||[]).filter(t=>t&&!/[:/]/.test(t)&&!/^(talk|user|poc)\b/i.test(t)))];
 }
 async function ftWikiChars(game){
-  const cached=ftCacheGet(game+":c7");
+  const cached=ftCacheGet(game+":c8");
   if(cached&&cached.length)return cached;
   const src=FT_SRC[game];
   let list=[];
@@ -1119,7 +1119,7 @@ async function ftWikiChars(game){
     }
   }catch(err){console.warn("chars",err);list=[]}
   list=ftCleanCharList(list);
-  if(list.length)ftCacheSet(game+":c7",list);
+  if(list.length)ftCacheSet(game+":c8",list);
   return list;
 }
 const ftMem={moves:{},pre:{}};
@@ -1127,14 +1127,14 @@ function ftMoveKey(game,chara){return game+":"+chara}
 function ftMovesGet(game,chara){
   const k=ftMoveKey(game,chara);
   if(ftMem.moves[k]&&ftMem.moves[k].length)return ftMem.moves[k];
-  const cached=ftCacheGet(game+":m12:"+chara);
+  const cached=ftCacheGet(game+":m13:"+chara);
   if(Array.isArray(cached)&&cached.length){ftMem.moves[k]=cached;return cached}
   return null;
 }
 function ftMovesPut(game,chara,rows){
   const k=ftMoveKey(game,chara);
   ftMem.moves[k]=rows||[];
-  if(rows&&rows.length)ftCacheSet(game+":m12:"+chara,rows);
+  if(rows&&rows.length)ftCacheSet(game+":m13:"+chara,rows);
 }
 function ftCharaOf(src,r,game){
   if(!src.splitId)return r.chara||"";
