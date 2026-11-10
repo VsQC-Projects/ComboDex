@@ -91,6 +91,7 @@ en:{
 "CRÉÉ PAR VSQC":"CREATED BY VSQC",
 "OK":"OK",
 "Fermer":"Close",
+"Annuler":"Cancel",
 "Fermer ✕":"Close ✕",
 "Langue":"Language",
 "combo":"combo",
@@ -232,6 +233,7 @@ es:{
 "CRÉÉ PAR VSQC":"CREADO POR VSQC",
 "OK":"OK",
 "Fermer":"Cerrar",
+"Annuler":"Cancelar",
 "Fermer ✕":"Cerrar ✕",
 "Langue":"Idioma",
 "combo":"combo",
@@ -397,45 +399,15 @@ function padKind(gp){
 function padDpad(){return `<div class="pad-dpad"><span></span><span class="pad-key" data-pad="du">↑</span><span></span><span class="pad-key" data-pad="dl">←</span><span class="pad-key" data-pad="d5">●</span><span class="pad-key" data-pad="dr">→</span><span></span><span class="pad-key" data-pad="dd">↓</span><span></span></div>`}
 function padFace(a,b,c,d){return `<div class="pad-face"><span></span><span class="pad-key" data-pad="b3">${d}</span><span></span><span class="pad-key" data-pad="b2">${c}</span><span></span><span class="pad-key" data-pad="b1">${b}</span><span></span><span class="pad-key" data-pad="b0">${a}</span><span></span></div>`}
 function padDrawInner(kind){
-  if(kind==="xbox")return `<div class="xb-top"><span class="pad-key sh" data-pad="l1">LB</span><span class="pad-key sh" data-pad="r1">RB</span></div><div class="xb-row"><div class="xb-col">${padDpad()}<div class="xb-stick pad-key" data-pad="ls"></div></div><div class="xb-mid"><span class="xb-guide"></span></div><div class="xb-col">${padFace("A","B","X","Y")}<div class="xb-stick pad-key" data-pad="rs"></div></div></div>`;
-  if(kind==="switch")return `<div class="nsw-top nsw-rail-l nsw-rail-r"><span class="pad-key sh" data-pad="l1">L</span><span class="pad-key sh" data-pad="r1">R</span></div><div class="nsw-row"><div class="ds-col"><div class="nsw-stick pad-key" data-pad="ls"></div>${padDpad()}</div><div class="nsw-mid"><span class="nsw-home"></span></div><div class="ds-col">${padFace("B","A","Y","X")}<div class="nsw-stick pad-key" data-pad="rs"></div></div></div>`;
-  if(kind==="gamecube")return `<div class="ds-top"><span class="pad-key sh" data-pad="l1">L</span><span class="pad-key sh" data-pad="r1">R</span></div><div class="ds-row"><div class="ds-col">${padDpad()}</div><div class="ds-mid"><div class="ds-stick pad-key" data-pad="ls"></div></div><div class="ds-col">${padFace("A","B","X","Y")}</div></div>`;
-  if(kind==="generic")return `<div class="pad-shoulders"><span class="pad-key sh" data-pad="l1">L1</span><span class="pad-key sh" data-pad="r1">R1</span></div><div class="pad-core">${padDpad()}<div></div>${padFace("A","B","X","Y")}</div>`;
-  return `<svg class="ds-svg" viewBox="0 0 360 220" aria-hidden="true">
-  <defs>
-    <linearGradient id="dsShell" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f7f8fb"/><stop offset="45%" stop-color="#d5dae3"/><stop offset="100%" stop-color="#9aa3b0"/></linearGradient>
-    <linearGradient id="dsWell" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2a2e36"/><stop offset="100%" stop-color="#12141a"/></linearGradient>
-  </defs>
-  <path fill="url(#dsShell)" stroke="#7a818c" stroke-width="1.6" d="M74 38c28-16 86-24 106-24s78 8 106 24c24 12 40 38 44 68 4 32-2 64-16 90-8 14-24 10-30-8-4-12-6-30-8-42H84c-2 12-4 30-8 42-6 18-22 22-30 8C32 170 26 138 30 106c4-30 20-56 44-68z"/>
-  <path fill="#c5cbd4" d="M78 132c8 28 18 52 32 58h140c14-6 24-30 32-58H78z" opacity=".55"/>
-  <rect class="pad-key sh" data-pad="l1" x="78" y="22" width="52" height="12" rx="4" fill="#2c3038" stroke="#111"/>
-  <rect class="pad-key sh" data-pad="r1" x="230" y="22" width="52" height="12" rx="4" fill="#2c3038" stroke="#111"/>
-  <text x="104" y="31" text-anchor="middle" fill="#e8eaef" font-size="8" font-weight="700">L1</text>
-  <text x="256" y="31" text-anchor="middle" fill="#e8eaef" font-size="8" font-weight="700">R1</text>
-  <rect x="128" y="42" width="104" height="30" rx="6" fill="#1b1d24" stroke="#0c0d10"/>
-  <rect x="138" y="74" width="84" height="5" rx="2.5" fill="#5ec8ff"/>
-  <circle cx="180" cy="92" r="8" fill="#2a2e36" stroke="#111"/>
-  <text x="180" y="95" text-anchor="middle" fill="#cfd3da" font-size="7" font-weight="800">PS</text>
-  <rect x="174" y="104" width="12" height="7" rx="2" fill="#2a2e36"/>
-  <g fill="#2a2e36"><circle cx="168" cy="120" r="1.3"/><circle cx="176" cy="120" r="1.3"/><circle cx="184" cy="120" r="1.3"/><circle cx="192" cy="120" r="1.3"/><circle cx="172" cy="126" r="1.3"/><circle cx="180" cy="126" r="1.3"/><circle cx="188" cy="126" r="1.3"/></g>
-  <rect x="108" y="52" width="14" height="8" rx="3" fill="#2a2e36"/>
-  <rect x="238" y="52" width="14" height="8" rx="3" fill="#2a2e36"/>
-  <g class="pad-key" data-pad="ls"><circle cx="96" cy="78" r="18" fill="url(#dsWell)" stroke="#0b0c0f" stroke-width="2"/><circle cx="96" cy="78" r="7" fill="#3a3f4a"/></g>
-  <g class="pad-dpad" transform="translate(96 128)">
-    <rect class="pad-key" data-pad="du" x="-7" y="-22" width="14" height="16" rx="3" fill="#2c3038"/>
-    <rect class="pad-key" data-pad="dd" x="-7" y="6" width="14" height="16" rx="3" fill="#2c3038"/>
-    <rect class="pad-key" data-pad="dl" x="-22" y="-7" width="16" height="14" rx="3" fill="#2c3038"/>
-    <rect class="pad-key" data-pad="dr" x="6" y="-7" width="16" height="14" rx="3" fill="#2c3038"/>
-    <circle class="pad-key" data-pad="d5" r="5" fill="#1a1c22"/>
-  </g>
-  <g class="pad-face" font-size="8" font-weight="800" text-anchor="middle">
-    <g class="pad-key" data-pad="b3"><circle cx="264" cy="62" r="11" fill="#2c3038" stroke="#111"/><text x="264" y="65" fill="#eee">△</text></g>
-    <g class="pad-key" data-pad="b1"><circle cx="286" cy="84" r="11" fill="#2c3038" stroke="#111"/><text x="286" y="87" fill="#eee">○</text></g>
-    <g class="pad-key" data-pad="b0"><circle cx="264" cy="106" r="11" fill="#2c3038" stroke="#111"/><text x="264" y="109" fill="#eee">×</text></g>
-    <g class="pad-key" data-pad="b2"><circle cx="242" cy="84" r="11" fill="#2c3038" stroke="#111"/><text x="242" y="87" fill="#eee">□</text></g>
-  </g>
-  <g class="pad-key" data-pad="rs"><circle cx="264" cy="138" r="18" fill="url(#dsWell)" stroke="#0b0c0f" stroke-width="2"/><circle cx="264" cy="138" r="7" fill="#3a3f4a"/></g>
-</svg>`
+  const src=({dualsense:"pad/dualsense.png",xbox:"pad/xbox.png",switch:"pad/switch.png",gamecube:"pad/gamecube.png"}[kind]||"pad/dualsense.png");
+  const hots=({
+    dualsense:[["l1",15,1,16,8],["r1",69,1,16,8],["du",17.2,24,7,8],["dd",17.2,38,7,8],["dl",11.2,31,7,8],["dr",23.2,31,7,8],["ls",21.5,46,13,17],["rs",55.5,46,13,17],["b3",72.6,20.5,7.5,11],["b2",66,30,7.5,11],["b1",79.2,30,7.5,11],["b0",72.6,39,7.5,11]],
+    xbox:[["l1",8,1,18,10],["r1",74,1,18,10],["ls",16,16,16,22],["rs",57,42,15,20],["dl",22,52,7,10],["dr",33,52,7,10],["du",27.5,44,7,10],["dd",27.5,60,7,10],["b3",68,16,8,12],["b2",61,27,8,12],["b1",75,27,8,12],["b0",68,38,8,12]],
+    switch:[["l1",10,2,16,8],["r1",74,2,16,8],["ls",12,22,14,20],["rs",52,44,14,20],["du",20,48,7,9],["dd",20,64,7,9],["dl",13,56,7,9],["dr",27,56,7,9],["b3",73,24,8,12],["b2",66,36,8,12],["b1",80,36,8,12],["b0",73,47,8,12]],
+    gamecube:[["l1",8,8,16,10],["r1",76,8,16,10],["ls",14,24,18,24],["rs",64,56,14,18],["du",23,62,7,9],["dd",23,76,7,9],["dl",16,69,7,9],["dr",30,69,7,9],["b3",70,22,8,12],["b0",72,34,10,14],["b1",64,42,7,10],["b2",82,32,8,12]]
+  }[kind]||[]);
+  const keys=hots.map(([id,l,t,w,h])=>`<span class="pad-hot pad-key" data-pad="${id}" style="left:${l}%;top:${t}%;width:${w}%;height:${h}%"></span>`).join("");
+  return `<div class="pad-photo"><img src="${src}" alt="" draggable="false">${keys}</div>`
 }
 function padCls(kind){return({dualsense:"ds",xbox:"xb",switch:"nsw",gamecube:"gc",generic:"gen"}[kind]||"ds")}
 function padMount(gp){
@@ -451,6 +423,7 @@ function padMount(gp){
 function padName(gp){return (gp&&(gp.id||"").split("(")[0].trim())||cdxT("manette")}
 function padRelabel(){
   const root=a("padBody"); if(!root||!o.draft)return;
+  if(root.querySelector(".pad-photo"))return;
   const map=PAD_FACE[o.draft.game]||PAD_FACE.sf6;
   [["b0",0],["b1",1],["b2",2],["b3",3]].forEach(([id,i])=>{
     const el=root.querySelector('[data-pad="'+id+'"]');
@@ -548,7 +521,17 @@ function x(){ie();const e=o.draft,t=[e.difficulty,e.position,e.meter,b[e.game].n
     <div class="chips" style="margin:9px 0">${t}</div>
     <div class="seq">${K(e.tokens,cdxT("Aucune commande"),e.game)}</div>
     ${e.desc?`<div class="combo-desc"><span class="combo-desc-k">${cdxT("Description du combo")}</span><span class="combo-desc-v">${l(e.desc)}</span></div>`:""}
-    <div class="muted small">${cdxT("Dégâts :")} ${l(e.damage||"—")} · ${e.verified?cdxT("✓ Testé en lab"):cdxT("Non vérifié")} · ${e.favorite?cdxT("★ Favori"):"☆"}</div>`}function rt(e){const t=[];return e.name.trim()||t.push(["editName","Donne un nom au combo."]),e.tokens.length||te(e.video)||t.push([null,"Ajoute une séquence, ou seulement un lien YouTube pour un combo vidéo."]),e.damage!==""&&(!Number.isFinite(Number(e.damage))||Number(e.damage)<0)&&t.push(["editDamage","Le nombre de dégâts doit être positif."]),e.video&&!te(e.video)&&t.push(["editVideo","Le lien vidéo doit être une adresse YouTube valide (youtube.com ou youtu.be)."]),t}function be(){ie();const e=o.draft,t=rt(e);for(const c of["editName","editDamage","editVideo"])a(c).removeAttribute("aria-invalid");const n=a("editErrors");if(t.length){for(const[m]of t)m&&a(m).setAttribute("aria-invalid","true");n.innerHTML="<b>"+cdxT("Impossible d’enregistrer :")+"</b><ul>"+t.map(([,m])=>`<li>${l(cdxT(m))}</li>`).join("")+"</ul>",n.classList.remove("hidden");const c=t.find(([m])=>m);c&&a(c[0]).focus();return}n.classList.add("hidden");const s={...e,name:e.name.trim(),tokens:[...e.tokens]};harvestKeys(s.game,s.tokens);let r;if(o.mode==="edit"&&L(o.sourceId)){const{id:c,createdAt:m,...p}=s;r=ae(o.sourceId,p)}else r={...s,id:Se(),createdAt:new Date().toISOString(),parentId:o.mode==="variant"?o.sourceId:null},$e(r);const i=o.mode==="edit"?"mis à jour":"enregistré";o.game=r.game,o.char=r.character,o.focusId=r.id,o.watchId=r.video?r.id:null,o.draft=null,o.mode="create",o.sourceId=null,j("people"),g(`Combo ${i} pour ${r.character}.`)}function it(e){const g=o.draft.game,t=o.draft.tokens,dir=/^[1-9]$/.test(e),atk=(PAD_BTNS[g]||[]).includes(e),last=t[t.length-1],glue=g!=="t8"&&g!=="ssbu";const t8dir=/^(?:n|[ubf]|d(?:\/[fb])?|u\/[fb])$/.test(e),t8btn=/^(?:[1-4]|[1-4]\+[1-4])$/.test(e);if(g==="t8"&&o.insertAt==null&&t8btn&&last&&/^(?:n|[ubf]|d(?:\/[fb])?|u\/[fb])$/.test(last))t[t.length-1]=last+"+"+e;else if(glue&&o.insertAt==null&&dir&&last&&/^[1-9]{1,5}$/.test(last)&&last.length<5)t[t.length-1]=last+e;else if(glue&&o.insertAt==null&&atk&&last&&/^[1-9]{1,5}$/.test(last))t[t.length-1]=last+e;else if(o.insertAt!=null)t.splice(o.insertAt,0,e),o.insertAt++;else t.push(e);P(),Z(),x()}function ct(){V("create",st),a("editGame").onchange=e=>{ie(),o.draft.game=e.target.value,o.draft.character=T(e.target.value)[0].name,k(a("editChar"),T(e.target.value).map(t=>[t.name,charLabel(t.name)]),o.draft.character),Me(!0),Z(),x()},Object.values(se).concat(["editChar","editVerified","editFavorite"]).forEach(e=>a(e).addEventListener("input",x)),a("editChar").addEventListener("change",x),a("extrasWrap").addEventListener("change",x),a("dnaWrap").onclick=e=>{const t=e.target.closest("[data-dna]");if(!t)return;const n=o.draft.dna||(o.draft.dna=[]),s=t.dataset.dna,r=n.indexOf(s);r<0?n.push(s):n.splice(r,1),t.setAttribute("aria-pressed",r<0),x()},a("palette").onclick=e=>{const t=e.target.closest("[data-key]");t&&it(t.dataset.key)},a("padDock").onclick=e=>{const t=e.target.closest("[data-key]");t&&it(t.dataset.key)},a("customKeyForm")&&(a("customKeyForm").onsubmit=e=>{e.preventDefault();const t=normTok(a("customKey").value);if(!t.length)return;const n=o.draft.game,f=t.filter(x=>!Ae(n).includes(x));if(!f.length)return g("Commande déjà présente dans la palette.",!0);f.forEach(x=>ze(n,x)),a("customKey").value="",Z(),g("Commande ajoutée à la palette de "+b[n].name+".")}),a("sequenceEditor").onclick=e=>{const t=e.target.closest("[data-remove]");if(!t||!o.draft)return;const n=o.draft.tokens,s=Number(t.dataset.remove);Number.isFinite(s)&&n.splice(s,1);o.insertAt=null;P();x()},a("insertHint").onclick=e=>{e.target.closest("[data-cancel-insert]")&&(o.insertAt=null,P())},a("undoToken").onclick=()=>{o.draft.tokens.pop(),o.insertAt=null,P(),x()},a("clearTokens").onclick=()=>{o.draft.tokens.length>3&&!confirm(cdxT("Effacer toute la séquence ?"))||(o.draft.tokens=[],o.insertAt=null,P(),x())},a("seqNotch")&&(a("seqNotch").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.ctrlKey&&!e.metaKey){e.preventDefault();applySeqNotch()}}),a("seqNotch").addEventListener("change",applySeqNotch)),a("saveCombo").onclick=be,a("cancelEdit").onclick=()=>X(o.draft.game,o.draft.character),a("create").addEventListener("keydown",e=>{e.key==="Enter"&&(e.ctrlKey||e.metaKey)&&(e.preventDefault(),be())})}const Te=150,lt=/(?:Access Denied|Protected by Anubis|Anubis version|captcha|Just a moment|error code [a-f0-9]{8,})/i,ut=/\s*(?:→|›|>|\||,|»|\s+xx\s+)\s*/,je=e=>lt.test(e),xe=e=>normTokens(e.split(ut));function isWikiJunk(s){s=String(s||"").trim().toLowerCase();return/^(any|easy|medium|hard|very|corner|midscreen|anywhere|example|combo|toggle|notes?|title|damage|position|difficulty|team|meter|gain|this|that|the|and|with|from|into|then|works|basic|please|fill|better|documentation|template|header|notation)$/i.test(s)}
+    <div class="muted small">${cdxT("Dégâts :")} ${l(e.damage||"—")} · ${e.verified?cdxT("✓ Testé en lab"):cdxT("Non vérifié")} · ${e.favorite?cdxT("★ Favori"):"☆"}</div>`}function rt(e){const t=[];return e.name.trim()||t.push(["editName","Donne un nom au combo."]),e.tokens.length||te(e.video)||t.push([null,"Ajoute une séquence, ou seulement un lien YouTube pour un combo vidéo."]),e.damage!==""&&(!Number.isFinite(Number(e.damage))||Number(e.damage)<0)&&t.push(["editDamage","Le nombre de dégâts doit être positif."]),e.video&&!te(e.video)&&t.push(["editVideo","Le lien vidéo doit être une adresse YouTube valide (youtube.com ou youtu.be)."]),t}function openSavePop(){
+  if(!o.draft)return;
+  ie();x();
+  const e=o.draft,errs=rt(e),preview=a("editPreview").innerHTML;
+  const err=errs.length?`<div class="status bad"><b>${cdxT("Impossible d’enregistrer :")}</b><ul>${errs.map(([,m])=>`<li>${l(cdxT(m))}</li>`).join("")}</ul></div>`:"";
+  const btns=errs.length
+    ?`<div class="row" style="margin-top:14px"><button type="button" data-save-cancel>${cdxT("Fermer")}</button></div>`
+    :`<div class="row" style="margin-top:14px;gap:10px;justify-content:flex-end"><button type="button" data-save-cancel>${cdxT("Annuler")}</button><button type="button" class="save-combo" data-save-confirm>${cdxT("Enregistrer le combo")}</button></div>`;
+  ce(cdxT("Aperçu de la fiche"), `<div class="save-pop"><div class="subpanel">${preview}</div>${err}${btns}</div>`);
+}
+function be(){ie();const e=o.draft,t=rt(e);for(const c of["editName","editDamage","editVideo"])a(c).removeAttribute("aria-invalid");const n=a("editErrors");if(t.length){for(const[m]of t)m&&a(m).setAttribute("aria-invalid","true");n.innerHTML="<b>"+cdxT("Impossible d’enregistrer :")+"</b><ul>"+t.map(([,m])=>`<li>${l(cdxT(m))}</li>`).join("")+"</ul>",n.classList.remove("hidden");const c=t.find(([m])=>m);c&&a(c[0]).focus();return}n.classList.add("hidden");const s={...e,name:e.name.trim(),tokens:[...e.tokens]};harvestKeys(s.game,s.tokens);let r;if(o.mode==="edit"&&L(o.sourceId)){const{id:c,createdAt:m,...p}=s;r=ae(o.sourceId,p)}else r={...s,id:Se(),createdAt:new Date().toISOString(),parentId:o.mode==="variant"?o.sourceId:null},$e(r);const i=o.mode==="edit"?"mis à jour":"enregistré";o.game=r.game,o.char=r.character,o.focusId=r.id,o.watchId=r.video?r.id:null,o.draft=null,o.mode="create",o.sourceId=null,j("people"),g(`Combo ${i} pour ${r.character}.`)}function it(e){const g=o.draft.game,t=o.draft.tokens,dir=/^[1-9]$/.test(e),atk=(PAD_BTNS[g]||[]).includes(e),last=t[t.length-1],glue=g!=="t8"&&g!=="ssbu";const t8dir=/^(?:n|[ubf]|d(?:\/[fb])?|u\/[fb])$/.test(e),t8btn=/^(?:[1-4]|[1-4]\+[1-4])$/.test(e);if(g==="t8"&&o.insertAt==null&&t8btn&&last&&/^(?:n|[ubf]|d(?:\/[fb])?|u\/[fb])$/.test(last))t[t.length-1]=last+"+"+e;else if(glue&&o.insertAt==null&&dir&&last&&/^[1-9]{1,5}$/.test(last)&&last.length<5)t[t.length-1]=last+e;else if(glue&&o.insertAt==null&&atk&&last&&/^[1-9]{1,5}$/.test(last))t[t.length-1]=last+e;else if(o.insertAt!=null)t.splice(o.insertAt,0,e),o.insertAt++;else t.push(e);P(),Z(),x()}function ct(){V("create",st),a("editGame").onchange=e=>{ie(),o.draft.game=e.target.value,o.draft.character=T(e.target.value)[0].name,k(a("editChar"),T(e.target.value).map(t=>[t.name,charLabel(t.name)]),o.draft.character),Me(!0),Z(),x()},Object.values(se).concat(["editChar","editVerified","editFavorite"]).forEach(e=>a(e).addEventListener("input",x)),a("editChar").addEventListener("change",x),a("extrasWrap").addEventListener("change",x),a("dnaWrap").onclick=e=>{const t=e.target.closest("[data-dna]");if(!t)return;const n=o.draft.dna||(o.draft.dna=[]),s=t.dataset.dna,r=n.indexOf(s);r<0?n.push(s):n.splice(r,1),t.setAttribute("aria-pressed",r<0),x()},a("palette").onclick=e=>{const t=e.target.closest("[data-key]");t&&it(t.dataset.key)},a("padDock").onclick=e=>{const t=e.target.closest("[data-key]");t&&it(t.dataset.key)},a("customKeyForm")&&(a("customKeyForm").onsubmit=e=>{e.preventDefault();const t=normTok(a("customKey").value);if(!t.length)return;const n=o.draft.game,f=t.filter(x=>!Ae(n).includes(x));if(!f.length)return g("Commande déjà présente dans la palette.",!0);f.forEach(x=>ze(n,x)),a("customKey").value="",Z(),g("Commande ajoutée à la palette de "+b[n].name+".")}),a("sequenceEditor").onclick=e=>{const t=e.target.closest("[data-remove]");if(!t||!o.draft)return;const n=o.draft.tokens,s=Number(t.dataset.remove);Number.isFinite(s)&&n.splice(s,1);o.insertAt=null;P();x()},a("insertHint").onclick=e=>{e.target.closest("[data-cancel-insert]")&&(o.insertAt=null,P())},a("undoToken").onclick=()=>{o.draft.tokens.pop(),o.insertAt=null,P(),x()},a("clearTokens").onclick=()=>{o.draft.tokens.length>3&&!confirm(cdxT("Effacer toute la séquence ?"))||(o.draft.tokens=[],o.insertAt=null,P(),x())},a("seqNotch")&&(a("seqNotch").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.ctrlKey&&!e.metaKey){e.preventDefault();applySeqNotch()}}),a("seqNotch").addEventListener("change",applySeqNotch)),a("saveCombo").onclick=openSavePop,a("cancelEdit").onclick=()=>X(o.draft.game,o.draft.character),a("create").addEventListener("keydown",e=>{e.key==="Enter"&&(e.ctrlKey||e.metaKey)&&(e.preventDefault(),Ie()&&a("modalBody").querySelector("[data-save-confirm]")?(G(),be()):openSavePop())}),a("modalBody").addEventListener("click",e=>{if(e.target.closest("[data-save-confirm]")){e.preventDefault();G();be()}else if(e.target.closest("[data-save-cancel]")){e.preventDefault();G()}})}const Te=150,lt=/(?:Access Denied|Protected by Anubis|Anubis version|captcha|Just a moment|error code [a-f0-9]{8,})/i,ut=/\s*(?:→|›|>|\||,|»|\s+xx\s+)\s*/,je=e=>lt.test(e),xe=e=>normTokens(e.split(ut));function isWikiJunk(s){s=String(s||"").trim().toLowerCase();return/^(any|easy|medium|hard|very|corner|midscreen|anywhere|example|combo|toggle|notes?|title|damage|position|difficulty|team|meter|gain|this|that|the|and|with|from|into|then|works|basic|please|fill|better|documentation|template|header|notation)$/i.test(s)}
 function isComboCmd(s){s=String(s||"").trim();if(!s||s.length>28||/\s/.test(s))return!1;if(isWikiJunk(s))return!1;const low=s.toLowerCase();if(MECH[low])return!0;if(/^(?:n|[ubf]|d(?:\/[fb])?|u\/[fb])(?:\+[1-4](?:\+[1-4])?)?$/.test(s))return!0;if(/^(?:[1-4](?:\+[1-4])?)$/.test(s))return!0;if(/^(jc|9jc|sjc|sj|land|dash|jump|wallbreak|wb|otg|tk|dl|ws|tag|ihc|ahc|adc)$/i.test(s))return!0;if(/^(?:66|44|236|214|623|421|22|9|8|7|6|4|3|1)$/.test(s))return!0;if(/^(?:j\.|c\.|f\.|s\.|sj\.|dl\.)?(?:[1-9]\d{0,7})?[A-Za-z]{1,4}(?:\+[A-Za-z0-9]{1,4})+$/i.test(s))return!0;if(/^(?:j\.|c\.|f\.|s\.|sj\.|dl\.)?(?:LP|MP|HP|LK|MK|HK|HS|PP|KK|XX|S[12]|A[12]|[LMHSPKABCDF]|[LMH][12])$/i.test(s))return!0;if(/^(?:j\.|c\.|f\.|s\.|sj\.|dl\.)?(?:\[\d\])?[1-9]\d{0,7}(?:XX|[A-Za-z]{1,4})$/i.test(s))return!0;if(/^(?:j\.|c\.|f\.|s\.|sj\.|dl\.)?(?:\d{0,8})?\[[A-Za-z0-9]{1,10}\]$/i.test(s))return!0;if(/^(?:j\.|c\.|f\.|s\.|sj\.|dl\.)?\[\d\][A-Za-z0-9]{1,8}$/i.test(s))return!0;if(/^(?:j\.|c\.|f\.|s\.|sj\.|dl\.)[A-Za-z]{1,4}$/i.test(s))return!0;if(/^[A-Z]{2,4}$/.test(s))return!0;return!1}
 function looksLikeProse(s){s=String(s||"").trim();if(!s)return!1;if(/^(an|a|the|this|that|it'?s|its|very|extremely|basic|un|une|le|la|les|quick|easy|recommended|combo|example)\b/i.test(s))return!0;return s.length>=12&&/\s/.test(s)&&/[a-z]{4,}/.test(s)}
 function isExampleRow(s){s=String(s||"");return/example combo|please fill in better combos|this is an example combo/i.test(s)}
@@ -1360,10 +1343,20 @@ main{flex:1 1 auto}
 .pad-inline{display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:16px;padding-top:12px;border-top:1px solid var(--line)}
 .pad-inline .pad-status{text-align:center;margin:0;max-width:100%}
 .pad-inline .pad-live{margin:0;min-height:1.2em;text-align:center}
-.pad-draw{width:min(198px,100%);opacity:.98}
-.pad-draw.off{opacity:.82}
-.pad-ds .ds-svg{width:100%;height:auto;display:block;filter:drop-shadow(0 8px 14px #0007)}
-.pad-ds g.pad-key.on circle,.pad-ds g.pad-key.on rect,.pad-ds rect.pad-key.on{fill:#6b4fa3;stroke:#c9a7ff}
+.cond-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 0 10px;flex-wrap:wrap}
+.cond-head h3{margin:0}
+.cond-save{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+button.save-combo{background:#c62828;border:1px solid #ef5350;color:#fff;font-weight:800;font-size:16px;padding:12px 22px;border-radius:12px;box-shadow:0 6px 16px #c6282855}
+button.save-combo:hover{background:#e53935;border-color:#ff8a80}
+.save-pop .subpanel{margin:0}
+.editor-rest{display:block}
+.pad-draw{width:min(230px,100%);opacity:.98;background:none;border:0;padding:0;box-shadow:none}
+.pad-draw.off{opacity:.9}
+.pad-photo{position:relative;width:100%}
+.pad-photo img{width:100%;height:auto;display:block;pointer-events:none}
+.pad-hot.pad-key{position:absolute;display:block;border:0;background:transparent;box-shadow:none;color:transparent;font-size:0;border-radius:50%;padding:0}
+.pad-hot.pad-key.on{background:rgba(155,120,194,.4);box-shadow:0 0 0 2px rgba(201,167,255,.9),0 0 14px 3px rgba(155,120,194,.55);color:transparent}
+.pad-hot[data-pad="l1"],.pad-hot[data-pad="r1"]{border-radius:7px}
 .pad-key{display:flex;align-items:center;justify-content:center;border:1px solid #2a2d36;background:#22242e;color:#eceaf2;font-weight:750;font-size:10px;user-select:none}
 .pad-key.sh{width:46px;height:14px;border-radius:7px 7px 3px 3px;font-size:9px}
 .pad-key.on{background:var(--purple2);border-color:var(--purple);color:#fff;box-shadow:0 0 0 2px rgba(155,120,194,.4)}
@@ -1394,7 +1387,7 @@ main{flex:1 1 auto}
 .pad-gc .pad-face [data-pad="b2"]{background:#e8c04a;color:#1a1a1a}
 .pad-gc .pad-face [data-pad="b3"]{background:#4caf6a}
 .pad-gen{background:#101218;border:1px solid var(--line);border-radius:28px;padding:10px}
-.editor-rest{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(280px,.85fr);gap:15px;align-items:start}
+.editor-rest{display:block}
 </style>
   </head>
   <body>
@@ -1515,7 +1508,13 @@ main{flex:1 1 auto}
           </div>
           <div class="editor">
             <div class="panel cond-panel">
-              <h3 data-i18n="Conditions du combo">Conditions du combo</h3>
+              <div class="cond-head">
+                <h3 data-i18n="Conditions du combo">Conditions du combo</h3>
+                <div class="cond-save">
+                  <button id="saveCombo" class="save-combo" data-i18n="Enregistrer le combo">Enregistrer le combo</button>
+                  <p class="small muted" id="saveHint" style="margin:0"><span class="kbd" data-i18n="Ctrl + Entrée">Ctrl + Entrée</span></p>
+                </div>
+              </div>
               <div class="cond-grid">
                 <div class="field"><label for="editPosition" data-i18n="Position">Position</label><select id="editPosition"></select></div>
                 <div class="field"><label id="meterLabel" for="editMeter">Ressource</label><select id="editMeter"></select></div>
@@ -1567,6 +1566,8 @@ main{flex:1 1 auto}
                 </div>
               </div>
             </div>
+            <div id="editPreview" class="hidden"></div>
+            <div id="editErrors" class="status bad hidden"></div>
             <div class="editor-rest">
               <div class="panel">
                 <h3 data-i18n="Identité du combo">Identité du combo</h3>
@@ -1577,15 +1578,6 @@ main{flex:1 1 auto}
                 <div class="field"><label for="editName" data-i18n="Nom du combo">Nom du combo</label><input id="editName" maxlength="100" /></div>
                 <div class="field" style="grid-column:1/-1"><label for="editDesc" data-i18n="Description du combo">Description du combo</label><textarea id="editDesc" rows="2" maxlength="2000"></textarea></div>
                 <div class="field"><label for="editDifficulty" data-i18n="Difficulté">Difficulté</label><select id="editDifficulty"></select></div>
-              </div>
-              <div class="panel sticky">
-                <h3 data-i18n="Aperçu de la fiche">Aperçu de la fiche</h3>
-                <div id="editPreview" class="subpanel"></div>
-                <div id="editErrors" class="status bad hidden"></div>
-                <div class="row" style="margin-top:12px">
-                  <button id="saveCombo" class="primary grow" data-i18n="Enregistrer le combo">Enregistrer le combo</button>
-                </div>
-                <p class="small muted" id="saveHint"><span class="kbd" data-i18n="Ctrl + Entrée">Ctrl + Entrée</span> <span data-i18n="pour enregistrer">pour enregistrer</span></p>
               </div>
             </div>
           </div>
