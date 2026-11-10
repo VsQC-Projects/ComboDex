@@ -1113,6 +1113,9 @@ async function ftWikiChars(game){
         else list=(await ftQuery(src,{fields:"chara",group_by:"chara"})).map(r=>r.chara);
       }catch(err){console.warn("chars cargo",err);list=[]}
       if(!list.length) list=await ftAllpages(src);
+      else if(src.prefix&&list.length<(ke[game]||[]).length){
+        try{list=ftCleanCharList([...list,...await ftAllpages(src)])}catch{}
+      }
     }
   }catch(err){console.warn("chars",err);list=[]}
   list=ftCleanCharList(list);
