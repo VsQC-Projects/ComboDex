@@ -396,13 +396,10 @@ function root(){return a("knowledge")}
 function keepFocus(fn){var ae=document.activeElement,id=ae&&ae.id,s=null,e2=null;try{s=ae.selectionStart;e2=ae.selectionEnd}catch(x){}fn();if(id){var n=document.getElementById(id);if(n&&n!==document.activeElement){n.focus();try{if(s!=null&&n.setSelectionRange)n.setSelectionRange(s,e2)}catch(x){}}}}
 function render(){var r=root();if(!r)return;if(!r.dataset.kcBound){bind(r);r.dataset.kcBound="1"}if(corrupt){corrupt=false;try{g(T_("kc.corrupt"),true)}catch(e){}}var keep={};["kcEncList","kcEncDetail"].forEach(function(k){var n=a(k);if(n)keep[k]=n.scrollTop});keepFocus(function(){r.innerHTML=head()+(view()==="hub"?"":'<div class="kc-panel" id="kcPanel" role="tabpanel" aria-labelledby="kcTab-'+view()+'">'+panel(view())+"</div>")});Object.keys(keep).forEach(function(k){var n=a(k);if(n)n.scrollTop=keep[k]});try{hydratePortraits()}catch(e){}}
 function head(){
-  var v=view(),q=U("gq","");
+  var v=view();
   return'<div class="panel section kc-head"><div class="row between kc-title-row"><h2 class="kc-title"><span class="kc-target" aria-hidden="true"></span>'+E_(T_("kc.name"))+' <span class="beta-tag">'+E_(T_("kc.beta"))+'</span></h2></div>'
    +'<p class="muted small">'+E_(T_("kc.lead"))+'</p>'
-   +'<div class="kc-gsearch"><input id="kcQ" type="search" autocomplete="off" value="'+E_(q)+'" placeholder="'+E_(T_("kc.search"))+'" aria-label="'+E_(T_("kc.search"))+'"></div>'
-   +(q.trim()?'<div class="kc-gres" id="kcQres">'+globalResults(q)+"</div>":"")
-   +(v==="hub"?'<nav class="kc-hub" aria-label="'+E_(T_("kc.name"))+'">'+VIEWS.map(function(x){return'<button type="button" class="kc-hub-tile" data-kc="view" data-v="'+x+'"><span class="kc-hub-ico" aria-hidden="true">'+VIEW_ICON[x]+'</span><span class="kc-hub-name">'+E_(VIEW_NAME[x])+'</span><span class="kc-hub-desc">'+E_(T_("kc.vd."+x))+"</span></button>"}).join("")+"</nav>":'<div class="kc-tabs" role="tablist" aria-label="'+E_(T_("kc.name"))+'">'+VIEWS.map(function(x){return'<button type="button" role="tab" id="kcTab-'+x+'" class="kc-tab" data-kc="view" data-v="'+x+'" aria-selected="'+(x===v)+'" tabindex="'+(x===v?0:-1)+'"><span aria-hidden="true">'+VIEW_ICON[x]+"</span> "+E_(VIEW_NAME[x])+"</button>"}).join("")+"</div>")
-   +'<p class="kc-legend small muted">'+E_(T_("kc.legend"))+"</p></div>";
+   +(v==="hub"?'<nav class="kc-hub" aria-label="'+E_(T_("kc.name"))+'">'+VIEWS.map(function(x){return'<button type="button" class="kc-hub-tile" data-kc="view" data-v="'+x+'"><span class="kc-hub-ico" aria-hidden="true">'+VIEW_ICON[x]+'</span><span class="kc-hub-name">'+E_(VIEW_NAME[x])+'</span><span class="kc-hub-desc">'+E_(T_("kc.vd."+x))+"</span></button>"}).join("")+"</nav>":'<div class="kc-tabs" role="tablist" aria-label="'+E_(T_("kc.name"))+'">'+VIEWS.map(function(x){return'<button type="button" role="tab" id="kcTab-'+x+'" class="kc-tab" data-kc="view" data-v="'+x+'" aria-selected="'+(x===v)+'" tabindex="'+(x===v?0:-1)+'"><span aria-hidden="true">'+VIEW_ICON[x]+"</span> "+E_(VIEW_NAME[x])+"</button>"}).join("")+"</div>")+"</div>";
 }
 function viewHead(v){return'<div class="kc-view-head"><span class="kc-view-ico" aria-hidden="true">'+VIEW_ICON[v]+'</span><div><h3 class="kc-h">'+E_(VIEW_NAME[v])+'</h3><p class="muted small">'+E_(T_("kc.vd."+v))+"</p></div></div>"}
 function panel(v){try{return viewHead(v)+panelBody(v)}catch(e){console.warn("Knowledge Center",e);return'<div class="empty">'+E_(String(e&&e.message||e))+"</div>"}}
@@ -462,7 +459,7 @@ function infBlob(x){if(!x._blob)x._blob=norm([x.term,x.alias.join(" "),x.def,x.l
 /* Logos de jeu : une seule feuille de style, chaque logo est une classe. */
 function logoCss(){if(document.getElementById("kcLogoCss"))return;var L=window.CDX_LOGOS||{},css="";Object.keys(L).forEach(function(k){css+=".kc-gl-"+k.replace(/\W/g,"")+"{background-image:url("+L[k]+")}"});var st=document.createElement("style");st.id="kcLogoCss";st.textContent=css;document.head.appendChild(st)}
 function gl(gm){var nm=b[gm]?(b[gm].short||b[gm].name):gm;return(window.CDX_LOGOS||{})[gm]?'<i class="kc-gl kc-gl-'+gm.replace(/\W/g,"")+'" role="img" aria-label="'+E_(nm)+'" title="'+E_(b[gm]?b[gm].name:nm)+'"></i>':'<i class="kc-gt">'+E_(nm)+"</i>"}
-function gParen(x){var parts=x.games.map(gl).concat((x.labels||[]).map(function(t){return'<i class="kc-gt">'+E_(t)+"</i>"}));return parts.length?'<span class="kc-gp">('+parts.join("")+")</span>":""}
+function gParen(x){var parts=x.games.map(gl).concat((x.labels||[]).map(function(t){return'<i class="kc-gt">'+E_(t)+"</i>"}));return parts.length?'<span class="kc-gp">'+parts.join("")+"</span>":""}
 
 /* Touches : notation → manette choisie. */
 var ARW={"1":"↙","2":"↓","3":"↘","4":"←","5":"●","6":"→","7":"↖","8":"↑","9":"↗"},PI={ps:0,xb:1,sw:2};
@@ -549,13 +546,13 @@ function infCard(x){
    +(x.alias.length?'<p class="muted small">'+E_(x.alias.join(" · "))+"</p>":"")+encActions(x)
    +"<h4>"+E_(T_("kc.enc.infilDef"))+'</h4><p class="kc-inf" lang="en">'+infDef(x.def)+"</p>"
    +(x.jp?"<h4>"+E_(T_("kc.enc.jp"))+'</h4><p class="small muted">'+E_(x.jp)+"</p>":"")
-   +"<h4>"+E_(T_("kc.sources"))+'</h4><p class="small"><a href="'+E_(infUrl(x))+'" target="_blank" rel="noopener noreferrer">'+E_(T_("kc.enc.infilRead"))+" — Infil, The Fighting Game Glossary</a></p>"
-   +encNote(x)+"</article>";
+   +"<h4>"+E_(T_("kc.sources"))+'</h4><p class="small"><a href="'+E_(infUrl(x))+'" target="_blank" rel="noopener noreferrer">'+E_(T_("kc.enc.infilRead"))+" — Infil, The Fighting Game Glossary</a></p></article>";
 }
 function encCard(x){
   var t=x.txt[lang()]||x.txt.en||x.txt.fr,fav=S.fav.indexOf(x.id)>=0,st=!!S.studied[x.id];
   var perKeys=Object.keys(x.per);
-  var per=perKeys.length?'<h4>'+E_(T_("kc.enc.per"))+'</h4><dl class="kc-per">'+x.games.map(function(gm){return"<dt>"+E_(gName(gm))+"</dt><dd>"+(x.per[gm]?E_(tr(x.per[gm])):'<span class="muted">'+E_(T_("kc.enc.notDoc"))+"</span>")+"</dd>"}).join("")+"</dl>":"";
+  var noDoc=x.games.filter(function(gm){return!x.per[gm]});
+  var per=perKeys.length?'<h4>'+E_(T_("kc.enc.per"))+'</h4><dl class="kc-per">'+x.games.filter(function(gm){return x.per[gm]}).map(function(gm){return"<dt>"+E_(gName(gm))+"</dt><dd>"+E_(tr(x.per[gm]))+"</dd>"}).join("")+"</dl>"+(noDoc.length?'<p class="muted small">'+E_(T_("kc.enc.notDoc"))+" "+E_(noDoc.map(gName).join(" · "))+"</p>":""):"";
   var cmp="";
   if(perKeys.length>=2){var A=U("encCmpA",perKeys[0]),B=U("encCmpB",perKeys[1]);if(perKeys.indexOf(A)<0)A=perKeys[0];if(perKeys.indexOf(B)<0)B=perKeys[1];
     cmp='<h4>'+E_(T_("kc.enc.cmp"))+'</h4><div class="kc-filters"><select id="kcEncCmpA" aria-label="A">'+perKeys.map(function(k){return opt(k,gName(k),A)}).join("")+'</select><span class="hv-vs">VS</span><select id="kcEncCmpB" aria-label="B">'+perKeys.map(function(k){return opt(k,gName(k),B)}).join("")+'</select></div><div class="kc-cmp"><div class="subpanel"><b>'+E_(gName(A))+"</b><p>"+E_(tr(x.per[A]))+'</p></div><div class="subpanel"><b>'+E_(gName(B))+"</b><p>"+E_(tr(x.per[B]))+"</p></div></div>"}
@@ -580,7 +577,6 @@ function encCard(x){
    +(pch.length?"<h4>"+E_(T_("kc.enc.patches"))+'</h4><div class="kc-res-list">'+pch.map(function(pc){return'<button type="button" class="kc-res" data-kc="open-patch" data-id="'+E_(pc[0].id)+'"><b>'+E_(gName(pc[0].game))+" "+E_(pc[0].ver)+'</b> <span class="muted small">'+E_(tr(pc[1].txt))+"</span></button>"}).join("")+"</div>":"")
    +(x.infRow?'<details class="kc-inf-more"><summary>'+E_(T_("kc.enc.infilDef"))+'</summary><p class="kc-inf" lang="en">'+infDef(x.infRow.def)+'</p><p class="small"><a href="'+E_(infUrl(x.infRow))+'" target="_blank" rel="noopener noreferrer">'+E_(T_("kc.enc.infilRead"))+"</a></p></details>":"")
    +"<h4>"+E_(T_("kc.sources"))+'</h4><p class="small">'+srcLinks(x.src.concat(padSrc.filter(function(k){return x.src.indexOf(k)<0})))+"</p>"
-   +encNote(x)
    +'<p class="muted small">'+E_(T_("kc.id"))+" : <code>"+E_(x.id)+"</code> · "+E_(T_("kc.updated"))+" "+E_(fmtDay(x.updated))+"</p></article>";
 }
 
