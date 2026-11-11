@@ -67,10 +67,9 @@ function labelSwitch() {
 /* ---------- refs data: each game's refs spread over the modules, never twice on one page ---------- */
 const DATA = window.CDX_OBJETS || {};
 const gameName = g => { try { if (typeof b === "object" && b[g] && b[g].name) return b[g].name; } catch {} return g.toUpperCase(); };
+const PER_GAME = 4;
 const PLAN = {};
 MODULES.forEach(m => (PLAN[m] = []));
-for (const [g, rows] of Object.entries(DATA))
-  rows.forEach((r, i) => PLAN[MODULES[i % MODULES.length]].push({g, id: r[0], row: r}));
 /* row[7] = number of pieces: one ref made of several images scattered over the same page */
 const pieces = it => it.row[7] || 0;
 const label = it => it.row[1 + LI[lang()]] || it.row[1];
@@ -78,6 +77,12 @@ const hint = it => it.row[4 + LI[lang()]] || label(it);
 
 const hash = s => { let h = 2166136261; for (const c of s) h = Math.imul(h ^ c.charCodeAt(0), 16777619); return h >>> 0; };
 const rng = seed => () => { seed = seed + 0x6D2B79F5 | 0; let x = Math.imul(seed ^ seed >>> 15, 1 | seed); x = x + Math.imul(x ^ x >>> 7, 61 | x) ^ x; return ((x ^ x >>> 14) >>> 0) / 4294967296; };
+for (const m of MODULES)
+  for (const [g, rows] of Object.entries(DATA)) {
+    const r = rng(hash(m + "/" + g));
+    rows.map(row => [r(), row]).sort((a, c) => a[0] - c[0]).slice(0, PER_GAME)
+      .forEach(([, row]) => PLAN[m].push({g, id: row[0], row}));
+  }
 
 let layer, placed = [];
 function activeTab() { const s = [...document.querySelectorAll("main > .page")].find(p => !p.classList.contains("hidden")); return s ? s.id : "home"; }
