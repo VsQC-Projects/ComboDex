@@ -444,8 +444,11 @@ function loadInfil(){
   var me=document.querySelector('script[src*="cdx-kc.js"]'),v=me&&(me.src.match(/[?&]v=([^&]+)/)||[])[1];
   var sc=document.createElement("script");sc.src="cdx-kc-infil.js"+(v?"?v="+v:"");sc.async=true;
   sc.onload=function(){buildInf();if(o.tab==="knowledge")rerender(true)};sc.onerror=function(){infLoading=false};
-  document.head.appendChild(sc);
+  var st=document.createElement("script");st.src="cdx-kc-infil-tr.js"+(v?"?v="+v:"");st.async=true;
+  st.onload=function(){if(INF&&o.tab==="knowledge")rerender(true)};
+  document.head.appendChild(st);document.head.appendChild(sc);
 }
+function infText(x){var T=(window.CDX_INFIL_TR||{})[x.term],l=lang();return T&&T[l]?{t:T[l],l:l}:{t:x.def,l:"en"}}
 function buildInf(){
   var cur={};D.ENTRIES.forEach(function(x){x.term.split(" — ")[0].split(" / ").forEach(function(t){var k=termKey(t);if(k&&!cur[k])cur[k]=x})});
   INF=[];(window.CDX_INFIL||[]).forEach(function(r){
@@ -458,7 +461,7 @@ function buildInf(){
     it.alias.forEach(function(a2){var k=termKey(a2);if(!INF_T[k])INF_T[k]=INF_T[termKey(r[0])]});
   });
 }
-function infBlob(x){if(!x._blob)x._blob=norm([x.term,x.alias.join(" "),x.def,x.labels.join(" "),x.games.map(gName).join(" ")].join(" "));return x._blob}
+function infBlob(x){var T=(window.CDX_INFIL_TR||{})[x.term];if(!x._blob||x._blobT!==!!T){x._blobT=!!T;x._blob=norm([x.term,x.alias.join(" "),x.def,T?(T.fr||"")+" "+(T.es||""):"",x.labels.join(" "),x.games.map(gName).join(" ")].join(" "))}return x._blob}
 
 /* Logos de jeu : une seule feuille de style, chaque logo est une classe. */
 function logoCss(){if(document.getElementById("kcLogoCss"))return;var L=window.CDX_LOGOS||{},css="";Object.keys(L).forEach(function(k){css+=".kc-gl-"+k.replace(/\W/g,"")+"{background-image:url("+L[k]+")}"});var st=document.createElement("style");st.id="kcLogoCss";st.textContent=css;document.head.appendChild(st)}
@@ -556,7 +559,7 @@ function encNote(x){return'<label class="kc-note"><span>'+E_(T_("kc.enc.note"))+
 function infCard(x){
   return'<article class="kc-card" aria-labelledby="kcEncTitle"><h3 id="kcEncTitle" class="sr-only">'+E_(x.term)+"</h3>"
    +(x.alias.length?'<p class="muted small">'+E_(x.alias.join(" · "))+"</p>":"")
-   +'<p class="kc-inf" lang="en">'+infDef(x.def)+"</p>"
+   +(function(){var it=infText(x);return'<p class="kc-inf" lang="'+it.l+'">'+infDef(it.t)+"</p>"})()
    +'<details class="kc-src-more"><summary>'+E_(T_("kc.sources"))+'</summary><p class="small"><a href="'+E_(infUrl(x))+'" target="_blank" rel="noopener noreferrer">'+E_(T_("kc.enc.infilRead"))+" — Infil, The Fighting Game Glossary</a></p></details></article>";
 }
 function encCard(x){
@@ -586,7 +589,7 @@ function encCard(x){
    +exHtml+ft
    +(rel?"<h4>"+E_(T_("kc.enc.rel"))+'</h4><div class="kc-chips">'+rel+"</div>":"")
    +(pch.length?"<h4>"+E_(T_("kc.enc.patches"))+'</h4><div class="kc-res-list">'+pch.map(function(pc){return'<button type="button" class="kc-res" data-kc="open-patch" data-id="'+E_(pc[0].id)+'"><b>'+E_(gName(pc[0].game))+" "+E_(pc[0].ver)+'</b> <span class="muted small">'+E_(tr(pc[1].txt))+"</span></button>"}).join("")+"</div>":"")
-   +(x.infRow?'<details class="kc-inf-more"><summary>'+E_(T_("kc.enc.infilDef"))+'</summary><p class="kc-inf" lang="en">'+infDef(x.infRow.def)+'</p><p class="small"><a href="'+E_(infUrl(x.infRow))+'" target="_blank" rel="noopener noreferrer">'+E_(T_("kc.enc.infilRead"))+"</a></p></details>":"")
+   +(x.infRow?'<details class="kc-inf-more"><summary>'+E_(T_("kc.enc.infilDef"))+'</summary><p class="kc-inf" lang="'+infText(x.infRow).l+'">'+infDef(infText(x.infRow).t)+'</p><p class="small"><a href="'+E_(infUrl(x.infRow))+'" target="_blank" rel="noopener noreferrer">'+E_(T_("kc.enc.infilRead"))+"</a></p></details>":"")
    +'<details class="kc-src-more"><summary>'+E_(T_("kc.sources"))+'</summary><p class="small">'+srcLinks(x.src.concat(padSrc.filter(function(k){return x.src.indexOf(k)<0})))+"</p></details>"
    +'<p class="muted small">'+E_(T_("kc.id"))+" : <code>"+E_(x.id)+"</code> · "+E_(T_("kc.updated"))+" "+E_(fmtDay(x.updated))+"</p></article>";
 }
