@@ -18,6 +18,13 @@ var SRC={
   xkoAkali:{t:"2XKO Wiki — Akali (frame data)",u:"https://wiki.play2xko.com/en-us/Akali"},
   psFaq:{t:"PlayStation — MARVEL Tōkon FAQ",u:"https://www.playstation.com/en-us/games/marvel-tokon-fighting-souls/"},
   steamTokon:{t:"Steam — MARVEL Tōkon : Patch Update (2 novembre 2026)",u:"https://steamcommunity.com/app/3787240"},
+  wikiUmvc3:{t:"Wikipedia — Ultimate Marvel vs. Capcom 3",u:"https://en.wikipedia.org/wiki/Ultimate_Marvel_vs._Capcom_3"},
+  scwUmvc3:{t:"SuperCombo Wiki — UMVC3/Patch Notes",u:"https://srk.shib.live/w/UMVC3/Patch_Notes"},
+  nlMvc104:{t:"Nintendo Life — MvC Fighting Collection 1.0.4",u:"https://www.nintendolife.com/news/2025/06/marvel-vs-capcom-fighting-collection-receives-an-update-version-1-0-4-here-are-the-full-patch-notes"},
+  nlMvc102:{t:"Nintendo Life — MvC Fighting Collection 1.0.2",u:"https://www.nintendolife.com/news/2024/10/marvel-vs-capcom-fighting-collection-updated-for-switch-version-1-0-2-here-are-the-full-patch-notes"},
+  pnMvc:{t:"Perfectly Nintendo — MvC Fighting Collection : toutes les mises à jour",u:"https://www.perfectly-nintendo.com/marvel-vs-capcom-fighting-collection-arcade-classics-switch-all-the-updates/"},
+  pgAl45:{t:"Paramount Games — Avatar Legends Patch 4.5",u:"https://www.paramountgames.com/editorial/avatar-legends-the-fighting-game-patch-4-5"},
+  pgAl40:{t:"Paramount Games — Avatar Legends Patch 4.0",u:"https://www.paramountgames.com/editorial/avatar-legends-the-fighting-game-patch-4-0-overall-patch-notes"},
   tgTokon:{t:"Tokon Guide — archive des mises à jour",u:"https://tokonguide.com/patch-notes/"},
   grTokon:{t:"Game Rant — Day 1 Update Patch Notes",u:"https://gamerant.com/marvel-tokon-fighting-souls-launch-update-patch-notes/"},
   dlTokon:{t:"Dustloop — MTFS/Patch Notes",u:"https://dustloop.com/w/MTFS/Patch_Notes"},
@@ -537,12 +544,26 @@ var PATCHES=[
 ].forEach(function(r,i){
   PATCHES.push({id:"2xko-"+r[0].replace(/[^0-9a-z.]+/gi,"-").toLowerCase()+"-"+r[1],game:"2xko",ver:r[0],date:r[1],title:"2XKO Patch Notes "+r[0],src:[r[2]],summary:r[3],changes:r[4].map(function(c){return{cat:c[0],chars:c[1],txt:c[2],rel:c[3]||[]}})});
 });
+/* UMvC3 (SuperCombo, versions 2.xx = UMvC3), MvC2 (Fighting Collection, notes Capcom), Avatar Legends (Paramount Games). Résumés d’origine en anglais. */
+[["umvc3","",  "2017-03-07","wikiUmvc3","Digital re-release on Windows and Xbox One with all previous DLC, a gallery mode and 1080p / 60 fps."],
+ ["umvc3","",  "2016-12-03","wikiUmvc3","Digital re-release on PlayStation 4 with all previous DLC (Jill Valentine, Shuma-Gorath), a gallery mode and 1080p / 60 fps. Magneto's alternate skin removed."],
+ ["umvc3","2.03","2012-04-12","scwUmvc3","Removed Magneto alternate costume exploit. No documented balance changes."],
+ ["umvc3","2.02","2012-02-01","scwUmvc3","Internal system changes only. No documented balance changes."],
+ ["umvc3","2.01","2011-12-19","scwUmvc3","Balance changes and bug fixes."],
+ ["umvc3","2.00","2011-11-15","scwUmvc3","Ultimate Marvel vs. Capcom 3 launch version. Major balance changes and new characters."],
+ ["mvc2","1.0.4","2025-06-12","nlMvc104","Marvel vs. Capcom Fighting Collection: fixed characters not rendering at x2 internal resolution on Switch, and unintended behavior on Abyss' Temple during the stage transition (now set to appear first in player matches)."],
+ ["mvc2","",  "2025-04-15","pnMvc","Marvel vs. Capcom Fighting Collection: resolution setting, random character select (hold a direction), Versus Mode; fixes for Thanos's Gauntlet Power, M. Bison's Psycho Field, Ruby Heart's Fantôme and Rogue's standing HK."],
+ ["mvc2","1.0.2","2024-10-01","nlMvc102","Marvel vs. Capcom Fighting Collection: Cyttorak Power-Up EX setting (Juggernaut), relaxed online regional limits, online freeze fix, Thanos Cross-Over Combination fix, Venom Special Throw fix, ranking screen fix."],
+ ["al","4.5","2026-11-05","pgAl45","15-second Ranked Rematch timer (forfeit when it runs out), option to offer a mutual draw, new combo trials, bug fixes for Korra, Nightmare Korra, Zaheer, Zuko and Ozai."],
+ ["al","4.0","2026-10-28","pgAl40","New HUDs and two stages (Avatar Road, Air Temple Island), ranked first-to-3 sets, throw vs jump and jump vs Flow priority changes, character balance changes and training mode improvements."]
+].forEach(function(r){PATCHES.push({id:r[0]+"-"+(r[1]||r[2]),game:r[0],ver:r[1],date:r[2],title:r[1]?"Version "+r[1]:"Update",src:[r[3]],summary:r[4],changes:[]})});
 PATCHES.forEach(function(p){p.changes.forEach(function(c,i){c.id=p.id+"#"+i;c.rel=c.rel||[]})});
 PATCHES.sort(function(a,b){return a.date<b.date?1:a.date>b.date?-1:0});
 
 var GAME_PATCH_NOTE={
-  mvc2:X("Aucune note de patch importée pour Marvel vs. Capcom 2. ComboDex n’affiche aucune nouveauté sans source.","No patch notes imported for Marvel vs. Capcom 2. ComboDex shows no news without a source.","No hay notas de parche importadas para Marvel vs. Capcom 2. ComboDex no muestra novedades sin fuente."),
-  umvc3:X("Aucune note de patch importée pour Ultimate Marvel vs. Capcom 3. ComboDex n’affiche aucune nouveauté sans source.","No patch notes imported for Ultimate Marvel vs. Capcom 3. ComboDex shows no news without a source.","No hay notas de parche importadas para Ultimate Marvel vs. Capcom 3."),
+  mvc2:X("Mises à jour de la version Marvel vs. Capcom Fighting Collection (notes officielles Capcom).","Updates to the Marvel vs. Capcom Fighting Collection version (official Capcom notes).","Actualizaciones de la versión Marvel vs. Capcom Fighting Collection (notas oficiales de Capcom)."),
+  umvc3:X("Versions 2.00 à 2.03 (SuperCombo Wiki) et rééditions PS4 / PC / Xbox One.","Versions 2.00 to 2.03 (SuperCombo Wiki) and PS4 / PC / Xbox One re-releases.","Versiones 2.00 a 2.03 (SuperCombo Wiki) y reediciones PS4 / PC / Xbox One."),
+  al:X("Notes officielles Paramount Games des patchs 4.0 et 4.5.","Official Paramount Games notes for patches 4.0 and 4.5.","Notas oficiales de Paramount Games de los parches 4.0 y 4.5."),
   tokon:X("Toutes les mises à jour depuis la sortie du 6 août 2026, jusqu’à la version 1.004.002 du 2 novembre 2026.","Every update since the August 6, 2026 release, up to version 1.004.002 on November 2, 2026.","Todas las actualizaciones desde el lanzamiento del 6 de agosto de 2026 hasta la versión 1.004.002 del 2 de noviembre de 2026."),
   dbfz:X("Historique complet des versions (Dustloop) ; détail officiel importé pour la 1.50.","Full version history (Dustloop); official details imported for 1.50.","Historial completo (Dustloop); detalle oficial importado para la 1.50."),
   "2xko":X("Liste officielle des patchs Riot ; seuls les changements cités dans les résumés officiels sont détaillés.","Official Riot patch list; only changes named in the official summaries are detailed.","Lista oficial de Riot; solo se detallan los cambios citados en los resúmenes oficiales.")

@@ -265,6 +265,10 @@ var STR={
 "kc.pt.cmp":["Comparaison entre versions","Comparison between versions","Comparación entre versiones"],
 "kc.pt.cmpNone":["Aucun changement détaillé entre ces deux versions dans les données importées.","No detailed change between these versions in the imported data.","Ningún cambio detallado entre estas versiones en los datos importados."],
 "kc.pt.q":["Chercher dans les notes de patch","Search the patch notes","Buscar en las notas de parche"],
+"kc.pt.back":["← Jeux","← Games","← Juegos"],
+"kc.pt.n":["{0} mise(s) à jour","{0} update(s)","{0} actualización(es)"],
+"kc.pt.zero":["Pas encore de note","No notes yet","Aún sin notas"],
+"kc.pt.none":["Aucune note de patch importée pour ce jeu. ComboDex n’affiche aucune nouveauté sans source.","No patch notes imported for this game. ComboDex shows no news without a source.","No hay notas de parche importadas para este juego. ComboDex no muestra novedades sin fuente."],
 "kc.pt.empty":["Aucune note ne correspond à ces filtres.","No note matches these filters.","Ninguna nota coincide con estos filtros."],
 "kc.pt.summary":["Résumé d’origine (anglais)","Original summary (English)","Resumen original (inglés)"],
 "kc.pt.recheck":["Combos ComboDex à revérifier","ComboDex combos to re-check","Combos de ComboDex a reverificar"],
@@ -778,20 +782,26 @@ function changeAffects(p,ch,c){if(c.game!==p.game)return false;if(ch.cat==="cont
 function affected(p,ch){return combosAll().filter(function(c){return changeAffects(p,ch,c)})}
 function patchFlags(c){return D.PATCHES.filter(function(p){return p.changes.some(function(ch){return changeAffects(p,ch,c)})})}
 function patchById(id){for(var i=0;i<D.PATCHES.length;i++)if(D.PATCHES[i].id===id)return D.PATCHES[i];return null}
+function ptHome(){
+  logoCss();
+  return'<div class="kc-pt-games">'+Object.keys(b).map(function(g){var n=D.PATCHES.filter(function(p){return p.game===g}).length;return'<button type="button" class="kc-pt-game" data-kc="pt-game" data-game="'+E_(g)+'"><span class="kc-pt-logo">'+gl(g)+'</span><b>'+E_(gName(g))+'</b><span class="kc-pt-n">'+(n?E_(TF("kc.pt.n",n)):E_(T_("kc.pt.zero")))+"</span></button>"}).join("")+"</div>";
+}
 function pPatches(){
-  var gm=U("pGame","tokon");if(D.GAMES.indexOf(gm)<0)gm="tokon";var q=U("pQ",""),pc=U("pChar",""),cat=U("pCat",""),openId=U("pOpen","");
+  var gm=U("pGame","");if(!b[gm])return ptHome();var q=U("pQ",""),pc=U("pChar",""),cat=U("pCat",""),openId=U("pOpen","");
+  var note=D.GAME_PATCH_NOTE[gm]?tr(D.GAME_PATCH_NOTE[gm]):T_("kc.pt.none");
   var list=D.PATCHES.filter(function(p){return p.game===gm});
   var chars=uniq([].concat.apply([],list.map(function(p){return[].concat.apply([],p.changes.map(function(c){return c.chars}))})));
   var filt=function(c){return(!pc||c.chars.indexOf(pc)>=0)&&(!cat||c.cat===cat)&&(!q.trim()||hit(norm([tr(c.txt),c.chars.join(" "),c.chars.map(cName).join(" ")].join(" ")),q))};
   var filtering=!!(pc||cat||q.trim());
   var shown=list.filter(function(p){return!filtering||p.changes.some(filt)||(!pc&&!cat&&q.trim()&&hit(norm([p.title,p.ver,p.summary||""].join(" ")),q))});
   var from=U("pFrom",""),to=U("pTo","");
-  var top='<div class="kc-filters"><select id="kcPGame" aria-label="'+E_(T_("kc.game"))+'">'+D.GAMES.map(function(x){return opt(x,gName(x),gm)}).join("")+"</select>"
+  var ghead='<div class="kc-pt-head"><button type="button" class="tiny" data-kc="pt-home">'+E_(T_("kc.pt.back"))+'</button><span class="kc-pt-logo">'+gl(gm)+'</span><h3 class="kc-h">'+E_(gName(gm))+"</h3></div>";
+  if(!list.length)return ghead+'<div class="empty">'+E_(note)+"</div>";
+  var top=ghead+'<div class="kc-filters">'
    +'<input id="kcPQ" type="search" autocomplete="off" value="'+E_(q)+'" placeholder="'+E_(T_("kc.pt.q"))+'" aria-label="'+E_(T_("kc.pt.q"))+'">'
    +'<select id="kcPChar" aria-label="'+E_(T_("kc.char"))+'">'+opt("",T_("kc.char")+" — "+T_("kc.all"),pc)+chars.map(function(x){return opt(x,cName(x),pc)}).join("")+"</select>"
    +'<select id="kcPCat" aria-label="'+E_(T_("kc.cat"))+'">'+opt("",T_("kc.cat")+" — "+T_("kc.all"),cat)+PCATS.map(function(x){return opt(x,T_("kc.pt.cat."+x),cat)}).join("")+"</select></div>"
-   +'<p class="kc-info small">'+E_(tr(D.GAME_PATCH_NOTE[gm]))+"</p>";
-  if(!list.length)return top+'<div class="empty">'+E_(tr(D.GAME_PATCH_NOTE[gm]))+"</div>";
+   +'<p class="kc-info small">'+E_(note)+"</p>";
   var vsel=function(id,v){return'<select id="'+id+'" aria-label="'+E_(T_(id==="kcPFrom"?"kc.pt.from":"kc.pt.to"))+'">'+opt("",T_(id==="kcPFrom"?"kc.pt.from":"kc.pt.to"),v)+list.map(function(p){return opt(p.id,(p.ver||p.title)+" — "+fmtDay(p.date),v)}).join("")+"</select>"};
   var cmp='<div class="subpanel"><h3 class="kc-h">'+E_(T_("kc.pt.cmp"))+'</h3><div class="kc-filters">'+vsel("kcPFrom",from)+vsel("kcPTo",to)+"</div>"+versionDiff(patchById(from),patchById(to))+"</div>";
   var tl=shown.length?'<ol class="kc-timeline">'+shown.map(function(p){return"<li>"+patchCard(p,filtering?filt:null,openId===p.id)+"</li>"}).join("")+"</ol>":'<div class="empty">'+E_(T_("kc.pt.empty"))+"</div>";
@@ -869,7 +879,9 @@ function bind(r){
   r.addEventListener("click",function(ev){
     var el=ev.target.closest("[data-kc]");if(!el||!r.contains(el))return;var k=el.dataset.kc,id=el.dataset.id;
     switch(k){
-      case"view":go(el.dataset.v);return;
+      case"view":if(el.dataset.v==="patches")setU("pGame","");go(el.dataset.v);return;
+      case"pt-game":setU("pGame",el.dataset.game);["pChar","pCat","pFrom","pTo","pOpen","pQ"].forEach(function(k){setU(k,"")});save();rerender(true);return;
+      case"pt-home":setU("pGame","");save();rerender(true);return;
       case"open-enc":var oe2=entry(id);setU("encOpen",id);if(oe2&&U("encCat","")&&U("encCat","")!=="all"&&U("encCat","")!==oe2.cat&&!U("encQ","").trim())setU("encCat",oe2.cat);if(view()!=="encyclopedia"){go("encyclopedia");return}save();rerender(true);var dt=a("kcEncDetail");if(dt)dt.scrollTop=0;return;
       case"enc-cat":setU("encCat",el.dataset.c);setU("encOpen","");setU("encQ","");save();rerender(true);return;
       case"enc-home":setU("encCat","");setU("encOpen","");setU("encQ","");setU("encFav",false);setU("encStudied",false);save();rerender(true);return;

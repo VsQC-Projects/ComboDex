@@ -509,6 +509,19 @@ body.atelier-dragging{user-select:none}
 .kc-pick-row{align-items:center}
 .kc-pick-row .kc-actions{margin:0}
 .kc-pick{position:relative;margin-left:auto}
+.kc-pt-games{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.kc-pt-game{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 10px 12px;text-align:center;border-radius:14px;border:1px solid #2f5560;background:linear-gradient(160deg,#1a2a31,#171821 70%);transition:border-color .15s,box-shadow .2s,transform .12s}
+.kc-pt-game:hover,.kc-pt-game:focus-visible{border-color:#5fe3ff;box-shadow:0 0 0 1px #5fe3ff,0 0 16px #5fe3ff55;transform:translateY(-1px)}
+.kc-pt-game b{font-size:12.5px;line-height:1.25}
+.kc-pt-n{font-size:11px;color:#9fd8e6}
+.kc-pt-logo{display:flex;align-items:center;justify-content:center;min-height:46px}
+.kc-pt-logo .kc-gl{width:120px;height:44px;margin:0}
+.kc-pt-logo .kc-gt{font-size:13px;line-height:20px;padding:2px 8px}
+.kc-pt-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.kc-pt-head .kc-pt-logo{min-height:0}
+.kc-pt-head .kc-pt-logo .kc-gl{width:90px;height:34px}
+.kc-pt-head .kc-h{margin:0}
+@media (max-width:720px){.kc-pt-games{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.kc-pt-logo .kc-gl{width:100px;height:38px}}
 .kc-term-alt{display:block;font-size:.72em;font-weight:600;color:var(--muted)}
 .kc-pick>summary{list-style:none;display:inline-flex;align-items:center;gap:8px;padding:5px 30px 5px 10px;font-size:12px;font-weight:700;color:#9fd8e6;border:1px solid #3e8fa5;border-radius:10px;background:#16262c;cursor:pointer;position:relative;user-select:none}
 .kc-pick>summary:hover,.kc-pick[open]>summary{border-color:#5cc4dc;box-shadow:0 0 10px #5cc4dc33}
