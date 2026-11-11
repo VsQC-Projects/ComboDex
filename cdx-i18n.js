@@ -27,7 +27,9 @@ fr:{
 ,"pal.held":"Touche en main : {0}. Clique où la poser (Échap pour annuler)."
 ,"atelier.body":"ComboDex ne voit pas de compte. Sept clics sur COMBODEX, puis la clef d’atelier. Seul l’administrateur peut supprimer un combo ou un contenu."
 ,"atelier.ok":"Atelier ouvert pour cette session."
-,"atelier.font":"Police du titre — clique pour essayer. Ça reste dans l’atelier."
+,"atelier.font":"Police du titre. Clique : tout le monde la voit, même après l’atelier."
+,"atelier.font.ok":"Police gravée sur ComboDex pour tout le monde."
+,"atelier.font.fail":"Police changée ici, pas encore pour les autres."
 ,"atelier.bad":"Clef incorrecte."
 ,"atelier.out":"Atelier fermé."
 ,"atelier.wipe":"Le combo disparaît de ComboDex pour tout le monde. Entre la clef d’atelier pour confirmer."
@@ -122,7 +124,9 @@ en:{
 "pal.held":"Holding {0}. Click where to drop it (Esc to cancel).",
 "atelier.body":"ComboDex has no accounts. Seven clicks on COMBODEX, then the workshop key. Only the administrator can delete a combo or site content.",
 "atelier.ok":"Workshop open for this session.",
-"atelier.font":"Title typeface — click to try. Stays in the workshop.",
+"atelier.font":"Title typeface. Click: everyone sees it, even after the workshop.",
+"atelier.font.ok":"Typeface saved on ComboDex for everyone.",
+"atelier.font.fail":"Typeface changed here, not yet for everyone.",
 "atelier.bad":"Wrong key.",
 "atelier.out":"Workshop closed.",
 "atelier.wipe":"The combo leaves ComboDex for everyone. Enter the workshop key to confirm.",
@@ -362,7 +366,9 @@ es:{
 "pal.held":"Tienes {0} en mano. Clic donde dejarlo (Esc para cancelar).",
 "atelier.body":"ComboDex no ve cuentas. Siete clics en COMBODEX y la clave de taller. Solo el administrador puede borrar un combo o un contenido.",
 "atelier.ok":"Taller abierto en esta sesión.",
-"atelier.font":"Tipografía del título — clic para probar. Se queda en el taller.",
+"atelier.font":"Tipografía del título. Clic: todo el mundo la ve, también después del taller.",
+"atelier.font.ok":"Tipografía grabada en ComboDex para todos.",
+"atelier.font.fail":"Tipografía cambiada aquí, aún no para los demás.",
 "atelier.bad":"Clave incorrecta.",
 "atelier.out":"Taller cerrado.",
 "atelier.wipe":"El combo desaparece de ComboDex para todos. Introduce la clave de taller para confirmar.",
