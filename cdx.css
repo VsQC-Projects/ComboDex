@@ -468,6 +468,8 @@ body.is-atelier #atelierDash:not(.hidden){display:flex}
   .kc-ma-combo{flex-wrap:wrap}
   .kc-ma-combo select{max-width:100%;flex:1}
 }
+#bulkActions:not(.hidden){position:fixed;left:50%;bottom:12px;transform:translateX(-50%);z-index:40;width:min(760px,calc(100% - 20px));max-height:60vh;overflow:auto;margin:0;box-shadow:0 10px 30px #000c}
+body:has(#bulkActions:not(.hidden)) #personCombos{padding-bottom:190px}
 @media (max-width:720px){
   #charList.charlist{grid-template-columns:repeat(auto-fill,minmax(48px,1fr));gap:5px}
   #charList .tile{padding:0 0 3px;border-radius:8px}
