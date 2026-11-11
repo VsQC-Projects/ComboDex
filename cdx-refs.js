@@ -68,9 +68,9 @@ function labelSwitch() {
 /* ---------- refs data ---------- */
 const DATA = window.CDX_OBJETS || {};
 const gameName = g => { try { if (typeof b === "object" && b[g] && b[g].name) return b[g].name; } catch {} return g.toUpperCase(); };
-const PER_GAME = 4;
-const PEOPLE_DESKTOP = 8;
-const PEOPLE_MOBILE = 6;
+const PER_GAME = 6;
+const PEOPLE_DESKTOP = 12;
+const PEOPLE_MOBILE = 12;
 const PLAN = {};
 MODULES.forEach(m => (PLAN[m] = []));
 const pieces = it => it.row[7] || 0;
@@ -108,7 +108,226 @@ function obstacles(root, out) {
   walk(root);
 }
 
-function place() {
+function place() { 
+  if (activeTab() === "people") {
+    placePeople();
+    return;
+  }
+/* Placement renforcé des références — page Personnages */
+function placePeople() {
+  if (!layer) return;
+
+  layer.replaceChildren();
+  placed = [];
+  layer.dataset.tab = "people";
+
+  const mobile = window.innerWidth < 700;
+  const W = document.documentElement.clientWidth;
+  const H = Math.max(
+    document.body.scrollHeight,
+    document.documentElement.scrollHeight
+  );
+
+  const page = document.getElementById("people");
+  if (!page) return;
+
+  const limit = mobile ? PEOPLE_MOBILE : PEOPLE_DESKTOP;
+  const counts = new Map();
+
+  const items = (PLAN.people || []).filter(it => {
+    const n = counts.get(it.g) || 0;
+    if (n >= limit) return false;
+    counts.set(it.g, n + 1);
+    return true;
+  });
+
+  const random = rng(hash("people-v4-" + W));
+  const occupied = [];
+
+  const overlap = (x, y, size) =>
+    occupied.some(p =>
+      x < p.x + p.size + 3 &&
+      x + size + 3 > p.x &&
+      y < p.y + p.size + 5 &&
+      y + size + 5 > p.y
+    );
+
+  const add = (it, src, x, y, size) => {
+    x = Math.round(Math.max(3, Math.min(W - size - 3, x)));
+    y = Math.round(Math.max(3, Math.min(H - size - 3, y)));
+
+    if (overlap(x, y, size)) return false;
+
+    const img = new Image();
+    img.src = src;
+    img.alt = "";
+    img.className = "cdx-ref";
+    img.loading = "lazy";
+    img.decoding = "async";
+    img.draggable = false;
+    img.dataset.key = it.g + "/" + it.id;
+    img.title = `${label(it)} · ${gameName(it.g)}`;
+
+    img.style.cssText =
+      `left:${x}px;top:${y}px;` +
+      `width:${size}px;height:${size}px;` +
+      `--rot:${Math.round(random() * 28 - 14)}deg`;
+
+    img.onerror = () => {
+      img.remove();
+      const i = placed.findIndex(p => p.img === img);
+      if (i >= 0) placed.splice(i, 1);
+    };
+
+    layer.appendChild(img);
+    placed.push({it, img});
+    occupied.push({x, y, size});
+    return true;
+  };
+
+  const rect = el => {
+    const r = el.getBoundingClientRect();
+    return {
+      left: r.left + scrollX,
+      right: r.right + scrollX,
+      top: r.top + scrollY,
+      bottom: r.bottom + scrollY
+    };
+  };
+
+  const panels = [...page.querySelectorAll(
+    ".panel, .card, .character-panel, .section"
+  )]
+    .map(rect)
+    .filter(p => p.right - p.left > W * 0.45)
+    .sort((a, b) => a.top - b.top);
+
+  const mainRect = rect(page);
+
+  // En-tête : zone libre entre le logo et les langues.
+  const header = document.querySelector(".head");
+  const brand = document.querySelector(
+    ".brand, .brand-word, .brand-btn"
+  );
+  const languages = document.querySelector(".lang-switch");
+
+  let headerZone = null;
+
+  if (!mobile && header && brand && languages) {
+    const h = rect(header);
+    const b = rect(brand);
+    const l = rect(languages);
+
+    if (l.left - b.right > 60) {
+      headerZone = {
+        left: b.right + 8,
+        right: l.left - 8,
+        top: h.top + 4,
+        bottom: h.bottom - 4
+      };
+    }
+  }
+
+  // Les positions verticales sont réparties sur toute la page.
+  const top = Math.max(5, mainRect.top - (mobile ? 12 : 0));
+  const bottom = Math.min(H - 48, mainRect.bottom + 12);
+  const span = Math.max(1, bottom - top);
+
+  const shuffled = items
+    .map(it => ({it, sort: random()}))
+    .sort((a, b) => a.sort - b.sort)
+    .map(x => x.it);
+
+  shuffled.forEach((it, index) => {
+    const count = Math.max(1, shuffled.length);
+
+    // Dimensions originales des références.
+    const size = Math.round(
+      (mobile ? 30 : 40) +
+      random() * (mobile ? 14 : 24)
+    );
+
+    const n = pieces(it);
+    const src = `objets/${it.g}/${it.id}${n ? "-1" : ""}.webp`;
+
+    // On alterne gauche/droite et on varie la profondeur.
+    const leftSide = index % 2 === 0;
+    const depth = random();
+
+    const yBase =
+      top + ((index + 0.5) / count) * span;
+
+    let success = false;
+
+    // Plusieurs essais autour de la position souhaitée.
+    for (let attempt = 0; attempt < 45 && !success; attempt++) {
+      const offset =
+        attempt === 0 ? 0 :
+        (attempt % 2 ? 1 : -1) *
+        Math.ceil(attempt / 2) * (size + 7);
+
+      const y = Math.max(
+        4,
+        Math.min(H - size - 4, yBase + offset)
+      );
+
+      let x;
+
+      if (mobile) {
+        // Une partie reste visible sur les bords du cadre.
+        // Zigzag horizontal, sans sortir du téléphone.
+        const nearby = panels.find(p =>
+          y + size > p.top && y < p.bottom
+        );
+
+        const edge = leftSide
+          ? nearby?.left ?? W * 0.09
+          : nearby?.right ?? W * 0.91;
+
+        const visiblePart = size * (0.48 + depth * 0.37);
+
+        x = leftSide
+          ? edge - visiblePart
+          : edge - (size - visiblePart);
+
+        // Variation pour éviter une ligne verticale parfaite.
+        x += (random() - 0.5) * 14;
+      } else {
+        // Ordinateur : marges latérales.
+        const band = Math.min(120, W * 0.13);
+        x = leftSide
+          ? 5 + random() * band
+          : W - size - 5 - random() * band;
+      }
+
+      success = add(it, src, x, y, size);
+    }
+  });
+
+  // Références supplémentaires dans l'en-tête sur ordinateur.
+  if (headerZone && shuffled.length) {
+    const width = headerZone.right - headerZone.left;
+    const height = headerZone.bottom - headerZone.top;
+    const size = Math.min(34, Math.max(20, height - 8));
+    const capacity = Math.min(8, Math.floor(width / (size + 8)));
+
+    for (let i = 0; i < capacity; i++) {
+      const it = shuffled[i % shuffled.length];
+      const x = headerZone.left +
+        (i + 0.5) * width / capacity - size / 2;
+      const y = headerZone.top + (height - size) / 2;
+
+      const n = pieces(it);
+      const src =
+        `objets/${it.g}/${it.id}${n ? "-1" : ""}.webp`;
+
+      add(it, src, x, y, size);
+    }
+  }
+
+  if (game && game.tab === "people") relink();
+}
+
   if (!layer) return;
   layer.textContent = "";
   placed = [];
