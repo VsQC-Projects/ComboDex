@@ -26,6 +26,9 @@ function labRequests(){return(d.combos||[]).filter(c=>labState(c)==="pending")}
 function publishQuiet(list){const rows=queueWiki(list);rows.forEach(upsertCombo);return saveWikiLive()}
 function pendingXRows(){const seen=new Set(),rows=[];for(const c of d.combos||[]){const id=xid(c.video);if(!id||xApproved(id)||seen.has(id))continue;seen.add(id);rows.push({id,combo:c,href:xHref(c.video),name:c.name||id,game:c.game,char:c.character})}return rows}
 async function Fe(e){try{return await navigator.clipboard.writeText(e),!0}catch{const t=document.createElement("textarea");t.value=e,document.body.appendChild(t),t.select();const n=document.execCommand("copy");return t.remove(),n}}
+const GUESS_PRIO=["sf6","t8","ggst","2xko","tokon","dbfz","gbvsr","cotw","al","bbcf","umvc3","mvc2","sf4","mkxl","ssbu"];
+const GUESS_SHORT=new Set(["vi","ky","jp","2b"]);
+const GUESS_STOP=new Set(["black","doctor","captain","iron","green","ghost","star","spider","silver","super","king","lord","the","omega","dark","shin","young","evil","true","great","mister","miss","lady","master","kid","big","little"]);
 function guessFromTitle(title){
   const blob=" "+w(title)+" ";
   let bestG=null,bestGS=0;
@@ -36,26 +39,29 @@ function guessFromTitle(title){
     if(S.short&&w(S.short).length>=3&&blob.includes(" "+w(S.short)+" ")) sc+=4;
     if(sc>bestGS){bestGS=sc;bestG=game}
   }
+  const has=s=>blob.includes(" "+s+" ");
   const hits=[];
   for(const[game,chars] of Object.entries(ke)){
-    for(const v of chars){
-      const n=w(v);
-      if(!n||n.length<3)continue;
+    const names=chars.map(w);
+    chars.forEach((v,i)=>{
+      const n=names[i];
+      if(!n||(n.length<3&&!GUESS_SHORT.has(n)))return;
       const parts=n.split(" ");
-      if(blob.includes(" "+n+" ")||(parts.length>1&&(blob.includes(" "+parts.join("")+" ")||parts.every(p=>p.length>=3&&blob.includes(" "+p+" "))))) hits.push({game,char:v,len:n.length,gsc:game===bestG?2:0});
-    }
+      if(has(n)||(parts.length>1&&(has(parts.join(""))||parts.every(p=>p.length>=3&&has(p))))){hits.push({game,char:v,strong:1,score:n.length+10});return}
+      if(parts.length<2)return;
+      const word=[parts[0],parts[parts.length-1]].find(p=>p.length>=4&&!GUESS_STOP.has(p)&&has(p)&&names.filter(m=>m.split(" ").includes(p)).length===1);
+      if(word)hits.push({game,char:v,strong:0,score:word.length});
+    });
   }
-  hits.sort((x,y)=>(y.len+y.gsc)-(x.len+x.gsc));
   if(!hits.length)return{game:bestGS>0?bestG:null,char:null,chars:[]};
-  let game=null;
-  const uniqueGames=[...new Set(hits.map(h=>h.game))];
-  if(bestGS>0) game=bestG;
-  else if(uniqueGames.length===1) game=uniqueGames[0];
-  else{
-    const top=hits[0],same=hits.filter(h=>w(h.char)===w(top.char));
-    if(same.every(h=>h.game===same[0].game)) game=same[0].game;
+  let game=bestGS>0?bestG:null;
+  if(!game){
+    const rank={};
+    for(const h of hits){const r=rank[h.game]||(rank[h.game]={strong:0,score:0});r.strong+=h.strong;r.score+=h.score}
+    const prio=g=>{const i=GUESS_PRIO.indexOf(g);return i<0?99:i};
+    game=Object.keys(rank).sort((x,y)=>rank[y].strong-rank[x].strong||rank[y].score-rank[x].score||prio(x)-prio(y))[0];
   }
-  const chars=[...new Set(hits.filter(h=>!game||h.game===game).map(h=>h.char))];
+  const chars=[...new Set(hits.filter(h=>h.game===game).sort((x,y)=>y.score-x.score).map(h=>h.char))];
   return{game,char:chars[0]||null,chars};
 }
 async function ytTitleOf(id){
