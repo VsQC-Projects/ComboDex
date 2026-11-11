@@ -102,8 +102,6 @@ var STR={
 "kc.inp.ctx.super":["pendant une super","during a super","durante un súper"],
 "kc.inp.txt.hyper":["commande de super du perso suivant","next character’s super input","comando de súper del siguiente personaje"],
 "kc.enc.q":["Chercher une notion ou une notation (ex. j., [H], DHC)","Search a notion or notation (e.g. j., [H], DHC)","Buscar una noción o notación (ej. j., [H], DHC)"],
-"kc.enc.favOnly":["Favoris","Favorites","Favoritos"],
-"kc.enc.studiedOnly":["Étudiées","Studied","Estudiadas"],
 "kc.enc.count":["{0} fiche(s)","{0} entry(ies)","{0} ficha(s)"],
 "kc.enc.empty":["Aucune fiche ne correspond à ces filtres.","No entry matches these filters.","Ninguna ficha coincide con estos filtros."],
 "kc.enc.pick":["Choisis une fiche dans la liste.","Pick an entry from the list.","Elige una ficha de la lista."],
@@ -120,10 +118,6 @@ var STR={
 "kc.enc.rel":["Notions associées","Related notions","Nociones relacionadas"],
 "kc.enc.patches":["Modifiée par des patchs","Changed by patches","Modificada por parches"],
 "kc.enc.games":["Jeux concernés","Games","Juegos"],
-"kc.enc.fav":["☆ Favori","☆ Favorite","☆ Favorito"],
-"kc.enc.faved":["★ Favori","★ Favorite","★ Favorito"],
-"kc.enc.study":["Marquer comme étudiée","Mark as studied","Marcar como estudiada"],
-"kc.enc.studied":["✓ Étudiée","✓ Studied","✓ Estudiada"],
 "kc.enc.note":["Ta note sur cette fiche","Your note on this entry","Tu nota sobre esta ficha"],
 "kc.team.new":["Nouvelle équipe","New team","Nuevo equipo"],
 "kc.team.none":["Aucune équipe enregistrée. Choisis un jeu puis crée ta première équipe.","No saved team. Pick a game then create your first team.","Ningún equipo guardado. Elige un juego y crea tu primer equipo."],
@@ -290,8 +284,6 @@ var STR={
 "kc.ma.noCombos":["Aucun combo ComboDex pour ce personnage.","No ComboDex combo for this character.","Ningún combo de ComboDex para este personaje."],
 "kc.ma.chal":["Défis réalisés","Challenges done","Desafíos realizados"],
 "kc.ma.chalLine":["{0} tentative(s), {1} réussite(s) déclarée(s), 0 réussite vérifiée par analyse.","{0} attempt(s), {1} declared success(es), 0 verified by analysis.","{0} intento(s), {1} acierto(s) declarados, 0 verificados por análisis."],
-"kc.ma.notions":["Notions techniques étudiées","Technical notions studied","Nociones técnicas estudiadas"],
-"kc.ma.notionsLine":["{0} fiche(s) étudiée(s) sur {1} concernant {2}.","{0} studied out of {1} entries about {2}.","{0} estudiadas de {1} fichas sobre {2}."],
 "kc.ma.mu":["Matchups consultés","Matchups viewed","Matchups consultados"],
 "kc.ma.teams":["Équipes avec ce personnage","Teams with this character","Equipos con este personaje"],
 "kc.ma.patches":["Changements de patch documentés","Documented patch changes","Cambios de parche documentados"],
@@ -509,8 +501,8 @@ function viewIcon(v){return catIcon(VIEW_CAT[v])}
 function catIcon(c){return'<svg class="kc-ico" viewBox="0 0 24 24" aria-hidden="true">'+(CAT_ICON[c]||CAT_ICON.all)+"</svg>"}
 
 function encPool(){
-  var gm=U("encGame",""),fav=U("encFav",false),st=U("encStudied",false);
-  var ok=function(x){return(!gm||x.games.indexOf(gm)>=0)&&(!fav||S.fav.indexOf(x.id)>=0)&&(!st||S.studied[x.id])};
+  var gm=U("encGame","");
+  var ok=function(x){return!gm||x.games.indexOf(gm)>=0};
   return{ours:D.ENTRIES.filter(ok),inf:(INF||[]).filter(ok)};
 }
 function encFiltered(){
@@ -522,20 +514,18 @@ function encBar(){
   var gm=U("encGame",""),pm=padMode();
   return'<div class="kc-enc-bar"><div class="kc-enc-search"><svg class="kc-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="kcEncQ" type="search" autocomplete="off" value="'+E_(U("encQ",""))+'" placeholder="'+E_(T_("kc.enc.q"))+'" aria-label="'+E_(T_("kc.enc.q"))+'"></div>'
    +'<div class="kc-enc-tools"><select id="kcEncGame" aria-label="'+E_(T_("kc.game"))+'">'+opt("",T_("kc.allGames"),gm)+D.GAMES.map(function(x){return opt(x,gName(x),gm)}).join("")+"</select>"
-   +'<select id="kcEncPad" aria-label="'+E_(T_("kc.enc.pad"))+'">'+["num","ps","xb","sw"].map(function(k){return opt(k,T_("kc.enc.pad")+" : "+T_("kc.pad."+k),pm)}).join("")+"</select>"
-   +'<label class="kc-check"><input type="checkbox" id="kcEncFav"'+(U("encFav",false)?" checked":"")+"> "+E_(T_("kc.enc.favOnly"))+"</label>"
-   +'<label class="kc-check"><input type="checkbox" id="kcEncStudied"'+(U("encStudied",false)?" checked":"")+"> "+E_(T_("kc.enc.studiedOnly"))+"</label></div></div>";
+   +'<select id="kcEncPad" aria-label="'+E_(T_("kc.enc.pad"))+'">'+["num","ps","xb","sw"].map(function(k){return opt(k,T_("kc.enc.pad")+" : "+T_("kc.pad."+k),pm)}).join("")+"</select></div></div>";
 }
 function termHtml(t){var m=/^(.*?)\s*(\([^()]*\))\s*$/.exec(t||"");return m&&m[1]?E_(m[1])+'<span class="kc-term-alt">'+E_(m[2])+"</span>":E_(t)}
 function encItem(x,open){
   var sel=open&&open.id===x.id;
-  return'<button type="button" class="kc-item'+(sel?" sel":"")+'" data-kc="open-enc" data-id="'+E_(x.id)+'" aria-current="'+!!sel+'"><span class="kc-item-main"><b>'+termHtml(x.term)+"</b>"+(S.fav.indexOf(x.id)>=0?' <span aria-hidden="true">★</span>':"")+(S.studied[x.id]?' <span class="good" aria-hidden="true">✓</span>':"")+"</span></button>";
+  return'<button type="button" class="kc-item'+(sel?" sel":"")+'" data-kc="open-enc" data-id="'+E_(x.id)+'" aria-current="'+!!sel+'"><span class="kc-item-main"><b>'+termHtml(x.term)+"</b></span></button>";
 }
 function pEnc(){
   logoCss();loadInfil();
   var cat=U("encCat",""),q=U("encQ","").trim(),open=entry(U("encOpen",""));
   if(open&&!cat&&!q){cat=open.cat;setU("encCat",cat)}
-  if(!cat&&!q&&!U("encFav",false)&&!U("encStudied",false)){
+  if(!cat&&!q){
     var p=encPool(),n=function(c){return p.ours.concat(p.inf).filter(function(x){return c==="all"||x.cat===c}).length};
     return encBar()+'<div class="kc-enc-home">'+D.CATS.concat(["all"]).map(function(c){var nm=c==="all"?T_("kc.enc.az"):T_("kc.cat."+c),ex=c==="all"?T_("kc.enc.azex"):T_("kc.catex."+c);return'<button type="button" class="kc-enc-tile'+(c==="all"?" kc-enc-all":"")+'" data-kc="enc-cat" data-c="'+c+'">'+catIcon(c)+'<b>'+E_(nm)+'</b><span class="muted small">'+E_(ex)+'</span><span class="kc-enc-n">'+n(c)+"</span></button>"}).join("")+"</div>"
      +(INF?"":'<p class="muted small kc-enc-load">'+E_(T_("kc.enc.loading"))+"</p>");
@@ -548,13 +538,13 @@ function pEnc(){
    +(INF?"":'<div class="muted small kc-enc-load">'+E_(T_("kc.enc.loading"))+"</div>");
   var pick='<details class="kc-pick"><summary>'+E_(T_("kc.enc.ours"))+' <span class="kc-pick-n">'+all.length+"</span></summary>"
    +'<div class="kc-list" id="kcEncList" aria-label="'+E_(TF("kc.enc.count",all.length))+'">'+(all.length||!INF?items:'<div class="empty">'+E_(T_("kc.enc.empty"))+"</div>")+"</div></details>";
-  var head='<div class="kc-pick-row"><h3 class="kc-pick-term">'+(open?termHtml(open.term):E_(T_("kc.enc.pick")))+'</h3><span class="kc-h kc-pick-cat">'+(cat&&!q?catIcon(cat):"")+E_(title)+' <span class="count">'+all.length+"</span></span>"+(open?encActions(open):"")+"</div>";
-  return encBar()+'<div class="kc-enc-crumb"><button type="button" class="tiny" data-kc="enc-home">'+E_(T_("kc.enc.back"))+"</button>"+pick+"</div>"
+  var catLbl='<span class="kc-h kc-pick-cat">'+(cat&&!q?catIcon(cat):"")+E_(title)+' <span class="count">'+all.length+"</span></span>";
+  var head='<div class="kc-pick-row"><h3 class="kc-pick-term">'+(open?termHtml(open.term):E_(T_("kc.enc.pick")))+"</h3></div>";
+  return encBar()+'<div class="kc-enc-crumb"><button type="button" class="tiny" data-kc="enc-home">'+E_(T_("kc.enc.back"))+'</button><div class="kc-pick-col">'+pick+catLbl+"</div></div>"
    +'<div class="kc-detail kc-enc-page" id="kcEncDetail">'+head+(open?(open.inf?infCard(open):encCard(open)):'<div class="empty">'+E_(T_("kc.enc.pick"))+"</div>")+"</div>";
 }
 function infDef(s){return E_(s).replace(/⟦([^|⟧]*)\|([^⟧]*)⟧/g,function(m,t,lab){var id=INF_T[termKey(t)];return id?'<button type="button" class="kc-link" data-kc="open-enc" data-id="'+E_(id)+'">'+lab+"</button>":lab}).replace(/\n/g,"<br>")}
 function infUrl(x){return"https://glossary.infil.net/?t="+encodeURIComponent(x.term)}
-function encActions(x){var fav=S.fav.indexOf(x.id)>=0,st=!!S.studied[x.id];return'<div class="row kc-actions"><button type="button" class="tiny" data-kc="enc-fav" data-id="'+E_(x.id)+'" aria-pressed="'+fav+'">'+E_(T_(fav?"kc.enc.faved":"kc.enc.fav"))+'</button><button type="button" class="tiny" data-kc="enc-study" data-id="'+E_(x.id)+'" aria-pressed="'+st+'">'+E_(T_(st?"kc.enc.studied":"kc.enc.study"))+"</button></div>"}
 function encNote(x){return'<label class="kc-note"><span>'+E_(T_("kc.enc.note"))+" "+badge("personal")+'</span><textarea id="kcEncNote" rows="3">'+E_(S.encNotes[x.id]||"")+"</textarea></label>"}
 function infCard(x){
   return'<article class="kc-card" aria-labelledby="kcEncTitle"><h3 id="kcEncTitle" class="sr-only">'+E_(x.term)+"</h3>"
@@ -838,8 +828,6 @@ function masteryHtml(gm,chn){
   var mastered=combos.filter(function(c){return S.mastery[c.id]==="mastered"}).length;
   var hist=S.hist.filter(function(h){return h.game===gm&&h.char===chn});
   var att=0,ok=0;combos.forEach(function(c){var t0=trainOf(c.id);att+=t0.attempts||0;ok+=t0.successes||0});
-  var gEntries=D.ENTRIES.filter(function(x){return x.games.indexOf(gm)>=0});
-  var studied=gEntries.filter(function(x){return S.studied[x.id]});
   var seen=S.seen.filter(function(s){return s.game===gm&&(s.a===chn||s.b===chn)});
   var sits=S.sits.filter(function(s){return s.game===gm&&(s.a===chn||s.b===chn)});
   var teams=S.teams.filter(function(t){return t.game===gm&&members(t).indexOf(chn)>=0});
@@ -851,7 +839,6 @@ function masteryHtml(gm,chn){
    +'<p class="kc-ma-ind"><b>'+E_(TF("kc.ma.indicator",mastered,combos.length))+'</b></p><p class="muted small">'+E_(T_("kc.ma.calc"))+"</p>"
    +sec(T_("kc.ma.combos")+" ("+combos.length+")",badge("imported")+rows)
    +sec(T_("kc.ma.chal"),'<p class="small">'+E_(TF("kc.ma.chalLine",att,ok))+(hist.length?" · "+E_(T_("kc.ch.last"))+" : "+E_(fmtIso(hist[hist.length-1].at)):"")+"</p>",goBtn("challenge",' data-game="'+gm+'" data-c="'+E_(chn)+'"'))
-   +sec(T_("kc.ma.notions"),'<p class="small">'+E_(TF("kc.ma.notionsLine",studied.length,gEntries.length,gName(gm)))+"</p>"+(studied.length?'<div class="kc-chips">'+studied.map(function(x){return'<button type="button" class="kc-chip" data-kcm="enc" data-id="'+x.id+'">'+E_(x.term)+"</button>"}).join("")+"</div>":""),goBtn("encyclopedia",' data-game="'+gm+'"'))
    +sec(T_("kc.ma.mu"),seen.length||sits.length?'<div class="kc-chips">'+seen.slice(0,10).map(function(s){var other=s.a===chn?s.b:s.a;return'<button type="button" class="kc-chip" data-kcm="mu" data-game="'+gm+'" data-a="'+E_(chn)+'" data-b="'+E_(other)+'">vs '+E_(cName(other))+"</button>"}).join("")+"</div>"+'<p class="small">'+E_(T_("kc.mu.mine"))+" : "+sits.length+"</p>":'<p class="muted small">'+E_(T_("kc.ma.none"))+"</p>",goBtn("matchups",' data-game="'+gm+'" data-a="'+E_(chn)+'"'))
    +sec(T_("kc.ma.teams"),teams.length?'<div class="kc-chips">'+teams.map(function(t){return'<button type="button" class="kc-chip" data-kcm="team" data-id="'+E_(t.id)+'">'+E_(t.name)+"</button>"}).join("")+"</div>":'<p class="muted small">'+E_(T_("kc.ma.none"))+"</p>",goBtn("teams"))
    +sec(T_("kc.ma.patches"),pch.length?'<ul class="kc-ul">'+pch.slice(0,8).map(function(pc){return'<li><button type="button" class="linklike" data-kcm="patch" data-id="'+E_(pc[0].id)+'">'+E_(pc[0].ver||fmtDay(pc[0].date))+"</button> — "+E_(tr(pc[1].txt))+"</li>"}).join("")+"</ul>":'<p class="muted small">'+E_(T_("kc.ma.none"))+"</p>",goBtn("patches",' data-game="'+gm+'" data-c="'+E_(chn)+'"'))
@@ -887,9 +874,7 @@ function bind(r){
       case"pt-home":setU("pGame","");save();rerender(true);return;
       case"open-enc":var oe2=entry(id);setU("encOpen",id);if(oe2&&U("encCat","")&&U("encCat","")!=="all"&&U("encCat","")!==oe2.cat&&!U("encQ","").trim())setU("encCat",oe2.cat);if(view()!=="encyclopedia"){go("encyclopedia");return}save();rerender(true);var dt=a("kcEncDetail");if(dt)dt.scrollTop=0;return;
       case"enc-cat":setU("encCat",el.dataset.c);setU("encOpen","");setU("encQ","");save();rerender(true);return;
-      case"enc-home":setU("encCat","");setU("encOpen","");setU("encQ","");setU("encFav",false);setU("encStudied",false);save();rerender(true);return;
-      case"enc-fav":var i=S.fav.indexOf(id);if(i>=0)S.fav.splice(i,1);else S.fav.push(id);save();rerender(true);return;
-      case"enc-study":if(S.studied[id])delete S.studied[id];else S.studied[id]=now();save();rerender(true);return;
+      case"enc-home":setU("encCat","");setU("encOpen","");setU("encQ","");save();rerender(true);return;
       case"open-combo":openCombo(id);return;
       case"open-char":openChar(el.dataset.game,el.dataset.c);return;
       case"open-ft":openFrames(el.dataset.game);return;
@@ -932,7 +917,6 @@ function bind(r){
     if(el.dataset.kcSel==="mstate"){if(el.value)S.mastery[el.dataset.id]=el.value;else delete S.mastery[el.dataset.id];save();return}
     var map={kcEncGame:"encGame",kcEncPad:"pad",kcEncCmpA:"encCmpA",kcEncCmpB:"encCmpB",kcNewTeamGame:"newTeamGame",kcTeamCmpA:"teamCmpA",kcTeamCmpB:"teamCmpB",kcTeamVs:"teamVs",kcPartnerGame:"partnerGame",kcPartnerChar:"partnerChar",kcMGame:"mGame",kcMA:"mA",kcMB:"mB",kcHGame:"hGame",kcHChar:"hChar",kcPGame:"pGame",kcPChar:"pChar",kcPCat:"pCat",kcPFrom:"pFrom",kcPTo:"pTo"};
     if(map[id]){setU(map[id],el.value);if(id==="kcPartnerGame")setU("partnerChar","");if(id==="kcMGame"){setU("mA","");setU("mB","");setU("mTeam","")}if(id==="kcMA"||id==="kcMB")setU("mEdit","");if(id==="kcPGame"){setU("pChar","");setU("pFrom","");setU("pTo","");setU("pOpen","")}if(id==="kcHGame")setU("hChar","");save();rerender(true);return}
-    if(id==="kcEncFav"||id==="kcEncStudied"){setU(id==="kcEncFav"?"encFav":"encStudied",el.checked);save();rerender(true);return}
     if(id==="kcTeamName"&&t){t.name=(el.value.trim()||t.name).slice(0,60);touch(t);rerender(true);return}
     if(id==="kcTeamFuse"&&t){t.fuse=el.value;touch(t);return}
     if(id==="kcTeamTag"&&t){t.tag=TEAM_TAGS.indexOf(el.value)>=0?el.value:"";touch(t);return}
