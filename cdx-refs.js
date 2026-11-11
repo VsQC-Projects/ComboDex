@@ -14,14 +14,14 @@ const TXT = {
   en: {wood: "Wood", official: "Official", dojo: "Dojo", da: "Art direction",
     title: "Mini-game: find the object!", find: "Find this object hidden on the page:", from: "Game",
     quit: "Give up", again: "Play again", found: "Found it!", miss: "Not that one…",
-    time: "Time", scroll: "It can be anywhere on the page, scroll around.",
+    time: "Time", scroll: "It can be anywhere in the page, scroll around.",
     all: "They are scattered across the page: find them all.", got: "Found",
     gave: "You gave up… it was right here!", gaveN: "You gave up… they were right here!", close: "Close"},
   es: {wood: "Madera", official: "Oficial", dojo: "Dojo", da: "Dirección artística",
     title: "Minijuego: ¡encuentra el objeto!", find: "Encuentra este objeto escondido en la página:", from: "Juego",
     quit: "Rendirse", again: "Jugar otra vez", found: "¡Encontrado!", miss: "Ese no es…",
     time: "Tiempo", scroll: "Puede estar en cualquier parte de la página, desplázate.",
-    all: "Están repartidas por la página: encuéntralas todas.", got: "Encontradas",
+    all: "Están repartidas por la página: encuentra todas.", got: "Encontradas",
     gave: "Te rendiste… ¡estaba aquí!", gaveN: "Te rendiste… ¡estaban aquí!", close: "Cerrar"},
 };
 const lang = () => (TXT[window.cdxLang] ? window.cdxLang : "fr");
@@ -69,7 +69,8 @@ function labelSwitch() {
 const DATA = window.CDX_OBJETS || {};
 const gameName = g => { try { if (typeof b === "object" && b[g] && b[g].name) return b[g].name; } catch {} return g.toUpperCase(); };
 const PER_GAME = 4;
-const PEOPLE_PER_GAME = 8;
+const PEOPLE_DESKTOP = 8;
+const PEOPLE_MOBILE = 6;
 const PLAN = {};
 MODULES.forEach(m => (PLAN[m] = []));
 const pieces = it => it.row[7] || 0;
@@ -81,7 +82,7 @@ const rng = seed => () => { seed = seed + 0x6D2B79F5 | 0; let x = Math.imul(seed
 for (const m of MODULES)
   for (const [g, rows] of Object.entries(DATA)) {
     const r = rng(hash(m + "/" + g));
-    rows.map(row => [r(), row]).sort((a, c) => a[0] - c[0]).slice(0, m === "people" ? PEOPLE_PER_GAME : PER_GAME)
+    rows.map(row => [r(), row]).sort((a, c) => a[0] - c[0]).slice(0, m === "people" ? PEOPLE_DESKTOP : PER_GAME)
       .forEach(([, row]) => PLAN[m].push({g, id: row[0], row}));
   }
 
@@ -113,16 +114,34 @@ function place() {
   placed = [];
   const tab = activeTab();
   layer.dataset.tab = tab;
-  const items = PLAN[tab] || [];
+  const small = innerWidth < 700;
+  const allItems = PLAN[tab] || [];
+  const perGameCounts = new Map();
+  const items = tab === "people" && small
+    ? allItems.filter(it => {
+        const count = perGameCounts.get(it.g) || 0;
+        if (count >= PEOPLE_MOBILE) return false;
+        perGameCounts.set(it.g, count + 1);
+        return true;
+      })
+    : allItems;
   if (tab === "home" || !items.length) return;
-  const W = document.documentElement.scrollWidth, Hh = document.documentElement.scrollHeight;
+
+  const W = document.documentElement.scrollWidth;
+  const Hh = document.documentElement.scrollHeight;
   const boxes = [];
-  [".head", ".studio-footer"].forEach(s => { const e = document.querySelector(s); if (e) obstacles(e, boxes); });
+  [".head", ".studio-footer"].forEach(s => {
+    const e = document.querySelector(s);
+    if (e) obstacles(e, boxes);
+  });
   boxes.push(...[".nav"].map(s => document.querySelector(s)).filter(Boolean).map(e => {
-    const r = e.getBoundingClientRect(); return [r.left + scrollX, r.top + scrollY, r.right + scrollX, r.bottom + scrollY];
+    const r = e.getBoundingClientRect();
+    return [r.left + scrollX, r.top + scrollY, r.right + scrollX, r.bottom + scrollY];
   }));
   obstacles(document.getElementById(tab), boxes);
-  const CELL = 8, cw = Math.ceil(W / CELL), ch = Math.ceil(Hh / CELL), grid = new Uint8Array(cw * ch);
+
+  const CELL = 8, cw = Math.ceil(W / CELL), ch = Math.ceil(Hh / CELL);
+  const grid = new Uint8Array(cw * ch);
   const mark = (x0, y0, x1, y1) => {
     for (let y = Math.max(0, y0 / CELL | 0); y < Math.min(ch, Math.ceil(y1 / CELL)); y++)
       grid.fill(1, y * cw + Math.max(0, x0 / CELL | 0), y * cw + Math.min(cw, Math.ceil(x1 / CELL)));
@@ -135,36 +154,68 @@ function place() {
   };
   const M = 12;
   boxes.forEach(([a, b2, c, d]) => mark(a - M, b2 - M, c + M, d + M));
-  const small = innerWidth < 700;
+
   const r = rng(hash(tab + W));
   const order = items.map(it => [r(), it]).sort((x, y) => x[0] - y[0]).map(x => x[1]);
   const gap = small ? 16 : 30;
+
+  // Personnages mobile : zigzags dans les marges entre le téléphone et les cartes.
+  // Dimensions d'origine conservées.
+  const page = document.getElementById(tab);
+  const cards = tab === "people" && page
+    ? [...page.querySelectorAll(".card, .panel, .box, .section, .character-panel")]
+        .map(el => el.getBoundingClientRect())
+        .filter(a => a.width > W * .42 && a.height > 60)
+        .map(a => ({
+          left: a.left + scrollX,
+          right: a.right + scrollX,
+          top: a.top + scrollY,
+          bottom: a.bottom + scrollY
+        }))
+    : [];
+
   const candidate = size => {
-    if (tab !== "people") return [r() * (W - size), r() * (Hh - size)];
-    const maxX = Math.max(0, W - size), maxY = Math.max(0, Hh - size);
-    const page = document.getElementById("people");
-    const panels = page ? [...page.querySelectorAll(".card, .panel, .box, .section, .character-panel")]
-      .map(el => el.getBoundingClientRect())
-      .filter(rect => rect.width > 100 && rect.height > 40) : [];
-    if (small && panels.length && r() < .45) {
-      const rect = panels[Math.floor(r() * panels.length)];
-      const x = r() < .5 ? rect.left + scrollX - size - 6 : rect.right + scrollX + 6;
-      const y = rect.top + scrollY + r() * Math.max(0, rect.height - size);
-      return [Math.max(4, Math.min(maxX - 4, x)), Math.max(4, Math.min(maxY - 4, y))];
+    const maxX = Math.max(4, W - size - 4);
+    const maxY = Math.max(4, Hh - size - 4);
+    if (tab !== "people") {
+      return [4 + r() * (maxX - 4), 4 + r() * (maxY - 4)];
     }
+
+    const y = 4 + r() * (maxY - 4);
+    const nearby = cards.filter(c => y + size > c.top && y < c.bottom);
+    const panel = nearby.sort((a, b) => (b.right - b.left) - (a.right - a.left))[0];
+
+    if (small && panel && r() < .82) {
+      const left = r() < .5;
+      const lo = left ? 4 : panel.right + 2;
+      const hi = left ? panel.left - size - 2 : W - size - 4;
+
+      // Variation horizontale : effet zigzag, pas une ligne rigide.
+      if (hi >= lo) return [lo + r() * (hi - lo), y];
+
+      const otherLo = left ? panel.right + 2 : 4;
+      const otherHi = left ? W - size - 4 : panel.left - size - 2;
+      if (otherHi >= otherLo) {
+        return [otherLo + r() * (otherHi - otherLo), y];
+      }
+    }
+
     const band = Math.min(maxX / 2, Math.max(small ? 48 : 90, W * (small ? .22 : .18)));
-    const side = r() < .5 ? r() * band : maxX - r() * band;
-    const x = r() < (small ? .65 : .84) ? side : r() * maxX;
-    const zone = Math.floor(r() * 3);
-    const y = small ? (zone + r()) / 3 * maxY :
-      (r() < .60 ? Math.pow(r(), 1.7) * maxY : r() * maxY);
-    return [x, y];
+    const x = r() < .65
+      ? (r() < .5 ? 4 + r() * band : maxX - r() * band)
+      : 4 + r() * (maxX - 4);
+    return [Math.max(4, Math.min(maxX, x)), y];
   };
+
   const put = (it, src, x, y, size) => {
     mark(x - gap, y - gap, x + size + gap, y + size + gap);
     const img = new Image();
     img.src = src;
-    img.alt = ""; img.className = "cdx-ref"; img.loading = "lazy"; img.decoding = "async"; img.draggable = false;
+    img.alt = "";
+    img.className = "cdx-ref";
+    img.loading = "lazy";
+    img.decoding = "async";
+    img.draggable = false;
     img.title = `${label(it)} · ${gameName(it.g)}`;
     img.style.cssText = `left:${x | 0}px;top:${y | 0}px;width:${size}px;height:${size}px;--rot:${Math.round(r() * 40 - 20)}deg`;
     img.dataset.key = it.g + "/" + it.id;
@@ -172,6 +223,7 @@ function place() {
     layer.appendChild(img);
     placed.push({it, img});
   };
+
   for (const it of order) {
     const n = pieces(it);
     if (n) {
@@ -190,6 +242,7 @@ function place() {
       }
       continue;
     }
+
     const size = Math.round((small ? 30 : 40) + r() * (small ? 14 : 24));
     let spot = null;
     for (let k = 0; k < 160 && !spot; k++) {
@@ -206,60 +259,95 @@ function schedule(ms = 250) { clearTimeout(timer); timer = setTimeout(place, ms)
 
 /* ---------- mini-game ---------- */
 let game = null, audio = null;
-function ctx() { try { audio = audio || new (window.AudioContext || window.webkitAudioContext)(); if (audio.state === "suspended") audio.resume(); } catch {} return audio; }
+function ctx() {
+  try {
+    audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+    if (audio.state === "suspended") audio.resume();
+  } catch {}
+  return audio;
+}
 function tone(ac, f, at, dur, type = "square", vol = 0.08) {
   const o = ac.createOscillator(), g = ac.createGain();
-  o.type = type; o.frequency.setValueAtTime(f, at);
-  g.gain.setValueAtTime(0, at); g.gain.linearRampToValueAtTime(vol, at + 0.012);
-  g.gain.setValueAtTime(vol, at + dur * 0.7); g.gain.exponentialRampToValueAtTime(0.0008, at + dur);
-  o.connect(g).connect(ac.destination); o.start(at); o.stop(at + dur + 0.02);
+  o.type = type;
+  o.frequency.setValueAtTime(f, at);
+  g.gain.setValueAtTime(0, at);
+  g.gain.linearRampToValueAtTime(vol, at + 0.012);
+  g.gain.setValueAtTime(vol, at + dur * 0.7);
+  g.gain.exponentialRampToValueAtTime(0.0008, at + dur);
+  o.connect(g).connect(ac.destination);
+  o.start(at);
+  o.stop(at + dur + 0.02);
 }
 function fanfare() {
   const ac = ctx(); if (!ac) return;
   const n = ac.currentTime + 0.05, s = 0.105;
-  [392, 415.3, 440, 466.2, 493.9, 523.3, 554.4, 587.3].forEach((f, i) => tone(ac, f, n + i * s, s * 1.1, "triangle", 0.07));
+  [392, 415.3, 440, 466.2, 493.9, 523.3, 554.4, 587.3].forEach((f, i) =>
+    tone(ac, f, n + i * s, s * 1.1, "triangle", 0.07)
+  );
   const end = n + 8 * s;
-  [[523.3, 659.3, 784], [587.3, 740, 880]].forEach((ch, i) => ch.forEach(f => tone(ac, f, end + i * 0.3, i ? 1.1 : 0.28, "square", 0.035)));
+  [[523.3, 659.3, 784], [587.3, 740, 880]].forEach((ch, i) =>
+    ch.forEach(f => tone(ac, f, end + i * 0.3, i ? 1.1 : 0.28, "square", 0.035))
+  );
   tone(ac, 1174.7, end + 0.3, 1.1, "triangle", 0.05);
 }
 function jingle(ok) {
   const ac = ctx(); if (!ac) return;
   const n = ac.currentTime + 0.02;
-  (ok ? [784, 988, 1175, 1568] : [330, 262]).forEach((f, i) => tone(ac, f, n + i * 0.09, ok ? 0.16 : 0.2, ok ? "square" : "sawtooth", 0.05));
+  (ok ? [784, 988, 1175, 1568] : [330, 262]).forEach((f, i) =>
+    tone(ac, f, n + i * 0.09, ok ? 0.16 : 0.2, ok ? "square" : "sawtooth", 0.05)
+  );
 }
 
 function panel() {
   let p = document.getElementById("cdxHunt");
   if (!p) {
     p = document.createElement("div");
-    p.id = "cdxHunt"; p.className = "cdx-hunt"; p.setAttribute("role", "dialog"); p.setAttribute("aria-live", "polite");
+    p.id = "cdxHunt";
+    p.className = "cdx-hunt";
+    p.setAttribute("role", "dialog");
+    p.setAttribute("aria-live", "polite");
     document.body.appendChild(p);
   }
   return p;
 }
 function renderPanel(state) {
-  const p = panel(); if (!game) { p.remove(); return; }
-  const it = game.target.it, secs = Math.floor(((game.end || Date.now()) - game.start) / 1000);
-  const done = state === "found" || state === "gave", need = game.need, src = `objets/${it.g}/${it.id}${pieces(it) ? "-1" : ""}.webp`;
-  const prog = need > 1 ? `<div class="hunt-prog"><b>${t("got")} : ${game.got.size}/${need}</b> · ${t("all")}</div>` : "";
+  const p = panel();
+  if (!game) { p.remove(); return; }
+  const it = game.target.it;
+  const secs = Math.floor(((game.end || Date.now()) - game.start) / 1000);
+  const done = state === "found" || state === "gave";
+  const need = game.need;
+  const src = `objets/${it.g}/${it.id}${pieces(it) ? "-1" : ""}.webp`;
+  const prog = need > 1
+    ? `<div class="hunt-prog"><b>${t("got")} : ${game.got.size}/${need}</b> · ${t("all")}</div>`
+    : "";
   const head = state === "gave" ? t(need > 1 ? "gaveN" : "gave") : t("found");
+
   p.innerHTML = `<div class="hunt-top"><b>${t("title")}</b><span class="hunt-time">${t("time")} ${secs}s</span></div>
-    ${done ? `<div class="hunt-found"><img src="${src}" alt=""><div><b>${head}</b><div class="muted small">${gameName(it.g)}</div></div></div>`
-      : `<div class="small muted">${t("find")}</div><div class="hunt-hint">« ${hint(it)} »</div>${prog}<div class="muted small">${t("from")} : ${gameName(it.g)} · ${t("scroll")}</div>`}
+    ${done
+      ? `<div class="hunt-found"><img src="${src}" alt=""><div><b>${head}</b><div>${label(it)}</div><div class="muted small">${gameName(it.g)}</div></div></div>`
+      : `<div class="small muted">${t("find")}</div><div class="hunt-hint">« ${hint(it)} »</div>${prog}<div class="small muted">${t("from")} : ${gameName(it.g)} · ${t("scroll")}</div>`}
     ${state === "miss" ? `<div class="hunt-miss">${t("miss")}</div>` : ""}
     <div class="hunt-btns"><button type="button" class="tiny" data-h="${done ? "close" : "quit"}">${done ? t("close") : t("quit")}</button><button type="button" class="tiny primary" data-h="again">${t("again")}</button></div>`;
+
   p.onclick = e => {
-    const b = e.target.closest("[data-h]"); if (!b) return;
-    if (b.dataset.h === "quit") giveUp(); else if (b.dataset.h === "close") stop(); else start();
+    const b = e.target.closest("[data-h]");
+    if (!b) return;
+    if (b.dataset.h === "quit") giveUp();
+    else if (b.dataset.h === "close") stop();
+    else start();
   };
 }
 function giveUp() {
   if (!game || game.end) return;
-  game.end = Date.now(); game.gave = true; clearInterval(game.tick);
+  game.end = Date.now();
+  game.gave = true;
+  clearInterval(game.tick);
   const imgs = placed.filter(p => p.img.dataset.key === game.key).map(p => p.img);
   imgs.forEach(i => i.classList.add("hunt-reveal"));
   if (imgs[0]) imgs[0].scrollIntoView({behavior: "smooth", block: "center"});
-  jingle(false); renderPanel("gave");
+  jingle(false);
+  renderPanel("gave");
 }
 function relink() {
   if (!game) return;
@@ -276,24 +364,38 @@ function start() {
     tab = MODULES[Math.floor(Math.random() * MODULES.length)];
     const btn = document.querySelector(`.nav .tab[data-tab="${tab}"]`);
     if (btn) btn.click();
-    clearTimeout(timer); place();
+    clearTimeout(timer);
+    place();
   }
   if (!placed.length) return;
   if (game) clearInterval(game.tick);
-  document.querySelectorAll(".cdx-ref.hunt-win,.cdx-ref.hunt-got,.cdx-ref.hunt-reveal").forEach(i => i.classList.remove("hunt-win", "hunt-got", "hunt-reveal"));
+  document.querySelectorAll(".cdx-ref.hunt-win,.cdx-ref.hunt-got,.cdx-ref.hunt-reveal")
+    .forEach(i => i.classList.remove("hunt-win", "hunt-got", "hunt-reveal"));
   const keys = [...new Set(placed.map(p => p.img.dataset.key))];
   const key = keys[Math.floor(Math.random() * keys.length)];
   const target = placed.find(p => p.img.dataset.key === key);
-  game = {tab, target, key, need: placed.filter(p => p.img.dataset.key === key).length, got: new Set(), start: Date.now(), end: 0};
+  game = {
+    tab, target, key,
+    need: placed.filter(p => p.img.dataset.key === key).length,
+    got: new Set(),
+    start: Date.now(),
+    end: 0
+  };
   document.documentElement.classList.add("cdx-hunting");
   renderPanel();
-  game.tick = setInterval(() => { if (game && !game.end) { const el = document.querySelector("#cdxHunt .hunt-time"); if (el) el.textContent = `${t("time")} ${Math.floor((Date.now() - game.start) / 1000)}s`; } }, 1000);
+  game.tick = setInterval(() => {
+    if (game && !game.end) {
+      const el = document.querySelector("#cdxHunt .hunt-time");
+      if (el) el.textContent = `${t("time")} ${Math.floor((Date.now() - game.start) / 1000)}s`;
+    }
+  }, 1000);
 }
 function stop() {
   if (game) clearInterval(game.tick);
   game = null;
   document.documentElement.classList.remove("cdx-hunting");
-  document.querySelectorAll(".cdx-ref.hunt-win,.cdx-ref.hunt-got,.cdx-ref.hunt-reveal").forEach(i => i.classList.remove("hunt-win", "hunt-got", "hunt-reveal"));
+  document.querySelectorAll(".cdx-ref.hunt-win,.cdx-ref.hunt-got,.cdx-ref.hunt-reveal")
+    .forEach(i => i.classList.remove("hunt-win", "hunt-got", "hunt-reveal"));
   renderPanel();
 }
 function onRefClick(e) {
@@ -304,31 +406,59 @@ function onRefClick(e) {
     game.got.add(img.src);
     if (game.got.size < game.need) {
       img.classList.add("hunt-got");
-      const ac = ctx(); if (ac) tone(ac, 988, ac.currentTime + 0.02, 0.14, "square", 0.05);
-      renderPanel(); return;
+      const ac = ctx();
+      if (ac) tone(ac, 988, ac.currentTime + 0.02, 0.14, "square", 0.05);
+      renderPanel();
+      return;
     }
-    game.end = Date.now(); clearInterval(game.tick);
-    placed.forEach(p => { if (game.got.has(p.img.src)) { p.img.classList.remove("hunt-got"); p.img.classList.add("hunt-win"); } });
-    jingle(true); renderPanel("found");
+    game.end = Date.now();
+    clearInterval(game.tick);
+    placed.forEach(p => {
+      if (game.got.has(p.img.src)) {
+        p.img.classList.remove("hunt-got");
+        p.img.classList.add("hunt-win");
+      }
+    });
+    jingle(true);
+    renderPanel("found");
   } else {
-    img.classList.remove("hunt-shake"); void img.offsetWidth; img.classList.add("hunt-shake");
-    jingle(false); renderPanel("miss");
+    img.classList.remove("hunt-shake");
+    void img.offsetWidth;
+    img.classList.add("hunt-shake");
+    jingle(false);
+    renderPanel("miss");
   }
 }
 
-/* brand long-press: 5 s opens the mini-game; short taps keep the original behaviour */
+/* brand long-press: 5 s opens the mini-game */
 function bindBrand() {
-  const hb = document.getElementById("homeBrand"); if (!hb) return;
+  const hb = document.getElementById("homeBrand");
+  if (!hb) return;
   let hold = 0, fired = false;
-  const cancel = () => { clearTimeout(hold); hb.classList.remove("brand-charging"); };
+  const cancel = () => {
+    clearTimeout(hold);
+    hb.classList.remove("brand-charging");
+  };
   hb.addEventListener("pointerdown", e => {
     if (e.button > 0) return;
-    fired = false; ctx();
+    fired = false;
+    ctx();
     hb.classList.add("brand-charging");
-    hold = setTimeout(() => { fired = true; hb.classList.remove("brand-charging"); fanfare(); start(); }, 5000);
+    hold = setTimeout(() => {
+      fired = true;
+      hb.classList.remove("brand-charging");
+      fanfare();
+      start();
+    }, 5000);
   });
   ["pointerup", "pointerleave", "pointercancel"].forEach(ev => hb.addEventListener(ev, cancel));
-  hb.addEventListener("click", e => { if (fired) { fired = false; e.stopImmediatePropagation(); e.preventDefault(); } }, true);
+  hb.addEventListener("click", e => {
+    if (fired) {
+      fired = false;
+      e.stopImmediatePropagation();
+      e.preventDefault();
+    }
+  }, true);
   hb.addEventListener("contextmenu", e => e.preventDefault());
 }
 
@@ -336,20 +466,36 @@ function init() {
   setTheme(readUI().theme || document.documentElement.dataset.theme || "official");
   buildSwitch();
   layer = document.createElement("div");
-  layer.id = "cdxRefs"; layer.className = "cdx-refs"; layer.setAttribute("aria-hidden", "true");
+  layer.id = "cdxRefs";
+  layer.className = "cdx-refs";
+  layer.setAttribute("aria-hidden", "true");
   layer.addEventListener("click", onRefClick);
   document.body.appendChild(layer);
   bindBrand();
   const main = document.getElementById("main");
   if (main) new ResizeObserver(() => schedule(300)).observe(main);
   if (main) new MutationObserver(() => {
-    if (layer.dataset.tab !== activeTab()) { layer.textContent = ""; placed = []; layer.dataset.tab = activeTab(); }
+    if (layer.dataset.tab !== activeTab()) {
+      layer.textContent = "";
+      placed = [];
+      layer.dataset.tab = activeTab();
+    }
     schedule(400);
-  }).observe(main, {subtree: true, childList: true, attributes: true, attributeFilter: ["class"]});
+  }).observe(main, {
+    subtree: true,
+    childList: true,
+    attributes: true,
+    attributeFilter: ["class"]
+  });
   addEventListener("resize", () => schedule(300));
   addEventListener("hashchange", () => schedule(120));
-  window.addEventListener("cdx-lang", () => { labelSwitch(); placed.forEach(p => (p.img.title = `${label(p.it)} · ${gameName(p.it.g)}`)); if (game) renderPanel(game.end ? "found" : ""); });
+  window.addEventListener("cdx-lang", () => {
+    labelSwitch();
+    placed.forEach(p => (p.img.title = `${label(p.it)} · ${gameName(p.it.g)}`));
+    if (game) renderPanel(game.end ? "found" : "");
+  });
   (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => schedule(300));
 }
-if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init); else init();
+if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+else init();
 })();
