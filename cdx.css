@@ -42,6 +42,8 @@ main{flex:1 1 auto;padding-bottom:0}
 .pal-tok.is-held>button{outline:2px solid var(--purple);outline-offset:2px}
 .pal-ghost{position:fixed;z-index:95;pointer-events:none;padding:5px 8px;border-radius:7px;background:#40394d;border:1px solid #c9a7ff;font-weight:750;font-size:13px;box-shadow:0 8px 18px #0008}
 .pal-holding,.pal-holding button{cursor:grabbing}
+.pal-group.pal-empty{display:none}
+.pal-holding .pal-group.pal-empty{display:block;min-height:44px;border:1px dashed #5cc4dc88;border-radius:10px;padding:6px 8px}
 .beta-tag{font-size:11px;font-weight:700;letter-spacing:.04em;color:#c9a7ff;text-transform:lowercase}
 .nav .beta-tag{display:block;margin-top:1px;font-size:10px;color:#b7a3d8}
 .ra-fold{margin-top:12px;padding-top:10px;border-top:1px solid var(--line)}
