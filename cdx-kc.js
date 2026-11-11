@@ -540,7 +540,7 @@ function pEnc(){
    +'<div class="kc-list" id="kcEncList" aria-label="'+E_(TF("kc.enc.count",all.length))+'">'+(all.length||!INF?items:'<div class="empty">'+E_(T_("kc.enc.empty"))+"</div>")+"</div></details>";
   var catLbl=function(where){return'<span class="kc-h kc-pick-cat kc-cat-'+where+'"'+(where==="m"?' aria-hidden="true"':"")+">"+(cat&&!q?catIcon(cat):"")+E_(title)+' <span class="count">'+all.length+"</span></span>"};
   var head='<div class="kc-pick-row"><h3 class="kc-pick-term">'+(open?termHtml(open.term):E_(T_("kc.enc.pick")))+"</h3>"+catLbl("m")+"</div>";
-  return encBar()+'<div class="kc-enc-crumb"><button type="button" class="tiny" data-kc="enc-home">'+E_(T_("kc.enc.back"))+'</button><div class="kc-pick-col">'+pick+catLbl("d")+"</div></div>"
+  return encBar()+catLbl("d")+'<div class="kc-enc-crumb"><button type="button" class="tiny" data-kc="enc-home">'+E_(T_("kc.enc.back"))+"</button>"+pick+"</div>"
    +'<div class="kc-detail kc-enc-page" id="kcEncDetail">'+head+(open?(open.inf?infCard(open):encCard(open)):'<div class="empty">'+E_(T_("kc.enc.pick"))+"</div>")+"</div>";
 }
 function infDef(s){return E_(s).replace(/⟦([^|⟧]*)\|([^⟧]*)⟧/g,function(m,t,lab){var id=INF_T[termKey(t)];return id?'<button type="button" class="kc-link" data-kc="open-enc" data-id="'+E_(id)+'">'+lab+"</button>":lab}).replace(/\n/g,"<br>")}
