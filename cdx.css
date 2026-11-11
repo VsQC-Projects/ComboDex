@@ -8,7 +8,7 @@ main{flex:1 1 auto;padding-bottom:0}
 .lang-switch{display:flex;gap:4px;align-items:center}
 .lang-switch button{padding:6px 11px;min-width:42px;font-size:12px;font-weight:800;letter-spacing:.06em}
 .lang-switch button[aria-pressed=true]{background:linear-gradient(135deg,#6b4fa3,#4f3c7c);border-color:#8a6cc8;color:#fff}
-.nav{grid-template-columns:repeat(6,minmax(0,1fr))}
+.nav{grid-template-columns:repeat(7,minmax(0,1fr))}
 .ra-layout{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(260px,.75fr);gap:16px;align-items:stretch}
 .ra-left,.ra-right{display:grid;gap:12px;min-width:0;align-content:start}
 .ra-side-pad .pad-status{text-align:left;font-size:12px;flex:1;min-width:0}
@@ -215,7 +215,11 @@ body.on-home .brand-mark{font-size:.52em}
   .hv-create-toks em:nth-child(n+4),.hv-drop em:nth-child(n+5){display:none}
   .hv-pad{width:88px;height:52px}
   .hv-url{font-size:12px}.hv-url-sub{font-size:10px}
+  .hv-compare{gap:4px;padding:6px 4px}
+  .hv-cmp-lab{font-size:10px;white-space:nowrap}
+  .hv-cmp-note{display:none}
   .hv-cmp-line em{font-size:9px;padding:2px 4px}
+  .hv-compare .hv-vs{font-size:10px}
   .hv-ft-tag{font-size:8px}
   .home-tile.home-kc{flex-direction:column;align-items:flex-start;gap:10px;padding:14px}
   .home-kc-icon{width:36px;height:36px}
@@ -375,8 +379,10 @@ body.is-atelier #atelierDash:not(.hidden){display:flex}
 .kc-panel{display:flex;flex-direction:column;gap:14px;min-width:0}
 .kc-panel>*{min-width:0}
 .kc-filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.kc-filters input[type=search]{flex:1 1 220px;min-width:0}
-.kc-filters select{max-width:100%}
+.kc-filters>input[type=search]{flex:1 1 220px;width:auto}
+.kc-filters>select,.kc-filters>label select,.kc-filters>.kc-inline{flex:0 1 auto;width:auto;max-width:100%}
+.kc-check input{width:auto}
+.kc-goal input{width:90px}
 .kc-fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
 .kc-fgrid select{width:100%}
 .kc-inline{display:inline-flex}
