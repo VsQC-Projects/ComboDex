@@ -549,7 +549,7 @@ function atelierMark(){document.body.classList.toggle("is-atelier",atelierLive);
 function atelierForget(){atelierLive=!1;try{localStorage.removeItem(ATELIER_K)}catch{}atelierMark();const dash=a("atelierDash");if(dash)dash.innerHTML=""}
 async function atelierHash(s){const buf=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(String(s||"").trim()));return[...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,"0")).join("")}
 function askAtelier(after){
-  ce(cdxT("Clef d'atelier"),`<p>${l(cdxT("atelier.body"))}</p><form id="atelierForm"><input id="atelierKey" type="password" autocomplete="off" autofocus placeholder="${l(cdxT("Clef d'atelier"))}"><div class="row" style="margin-top:10px"><button type="submit" class="primary">${l(cdxT("Ouvrir"))}</button></div></form>`);
+  ce(cdxT("Clef d'atelier"),`<form id="atelierForm"><input id="atelierKey" type="password" autocomplete="off" autofocus placeholder="${l(cdxT("Clef d'atelier"))}"><div class="row" style="margin-top:10px"><button type="submit" class="primary">${l(cdxT("Ouvrir"))}</button></div></form>`);
   const form=a("atelierForm");if(form)form.onsubmit=async e=>{e.preventDefault();const h=await atelierHash((a("atelierKey")||{}).value||"");if(h!==ATELIER_H){g(cdxT("atelier.bad"),!0);return}atelierLive=!0;atelierMark();G();loadWiki().then(()=>{try{C()}catch{}try{renderAtelierDash()}catch{}try{if(o.tab==="replay"){raVid="";raRender()}}catch{}});const n=reportedCombos().length+pendingXRows().length+labRequests().length+editRequests().length+reviewRows().length;g(n?cdxT("atelier.notif.some").replace("{0}",n):cdxT("atelier.ok"));after&&after()};
 }
 let atelierView="home",atelierTop=0,atelierW=0,atelierY=-1;

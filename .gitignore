@@ -11,6 +11,12 @@
 !img/
 !img/akali-5m-hitbox.png
 !cdx.css
+!cdx-theme.css
+!cdx-refs.js
+!cdx-objets.js
+!objets/
+!objets/*/
+!objets/*/*.webp
 !.gitignore
 !.nojekyll
 !pad/
