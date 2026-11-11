@@ -63,6 +63,7 @@ fr:{
 ,"x.open":"Ouvrir sur X ↗"
 ,"x.pending":"Vidéo X enregistrée. Elle s’affiche après acceptation dans l’atelier."
 ,"x.need":"Colle un lien YouTube ou X."
+,"x.novid":"Pas de fichier vidéo sur ce post X. ComboDex n’affiche que la vidéo, pas le tweet."
 ,"Vidéo YouTube ou X (facultatif)":"Vidéo YouTube ou X (facultatif)"
 ,"atelier.out":"Atelier fermé."
 ,"atelier.wipe":"Le combo disparaît de ComboDex pour tout le monde. Entre la clef d’atelier pour confirmer."
@@ -347,6 +348,7 @@ en:{
 "Vidéo YouTube (facultatif)":"YouTube video (optional)",
 "Vidéo YouTube ou X (facultatif)":"YouTube or X video (optional)",
 "x.need":"Paste a YouTube or X link.",
+"x.novid":"No video file on this X post. ComboDex only plays the video, not the tweet.",
 "Vérifié et testé en lab":"Verified and lab-tested",
 "Ajouter aux favoris":"Add to favorites",
 "Notes de lab (facultatif)":"Lab notes (optional)",
@@ -658,6 +660,7 @@ es:{
 "Vidéo YouTube (facultatif)":"Vídeo de YouTube (opcional)",
 "Vidéo YouTube ou X (facultatif)":"Vídeo de YouTube o X (opcional)",
 "x.need":"Pega un enlace de YouTube o X.",
+"x.novid":"No hay archivo de vídeo en este post de X. ComboDex solo pone el vídeo, no el tuit.",
 "Vérifié et testé en lab":"Verificado y probado en lab",
 "Ajouter aux favoris":"Añadir a favoritos",
 "Notes de lab (facultatif)":"Notas de lab (opcional)",
