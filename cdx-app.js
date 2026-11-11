@@ -1873,7 +1873,7 @@ function raInkAlpha(s,now){
 function raInkFit(){
   const c=a("raInk"),stage=a("raStage");
   if(!c||!stage)return;
-  const r=stage.getBoundingClientRect(),dpr=window.devicePixelRatio||1;
+  const r=(a("raPlayerHost")||stage).getBoundingClientRect(),dpr=window.devicePixelRatio||1;
   c.width=Math.max(1,Math.round(r.width*dpr));
   c.height=Math.max(1,Math.round(r.height*dpr));
   c.style.width=r.width+"px";

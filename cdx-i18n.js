@@ -146,7 +146,7 @@ fr:{
 ,"bot.meter":"A : {0}. B : {1}."
 ,"bot.fallback":"Je suis un bot basique. Je compare les commandes, les dégâts, la fin. Demande : qui tape plus fort, la fin, ce qui change."
 ,"home.create":"Créer — écrire une séquence au clavier, en cliquant sur les commandes, ou avec votre manette (bêta)."
-,"compare.lead":"Deux combos d’un même perso. Pour voir si 5H peut remplacer 2H, ou si la fin en Limit Strike vaut mieux qu’un super niveau 3."
+,"compare.lead":"Deux combos, du même perso ou d’autres. Pour voir si 5H peut remplacer 2H, ou si la fin en Limit Strike vaut mieux qu’un super niveau 3."
 ,"Limit Strike":"Limit Strike"
 ,"home.import":"Importer — lien URL / vidéo (YouTube, X, Dustloop, SuperCombo...)."
 ,"home.font.pick":"Polices arcade — clique pour essayer"
@@ -206,7 +206,7 @@ en:{
 "bot.fallback":"I’m a basic bot. I compare commands, damage, the ender. Ask: who hits harder, the ender, what changes.",
 "home.replay":"Video editor.",
 "home.create":"Create — write a sequence on the keyboard, by clicking the commands, or with your controller (beta).",
-"compare.lead":"Two combos of one character. To see if 5H can replace 2H, or if a Limit Strike ender beats a level 3.",
+"compare.lead":"Two combos, from the same character or others. To see if 5H can replace 2H, or if a Limit Strike ender beats a level 3.",
 "Limit Strike":"Limit Strike",
 "Vidéo éditeur":"Video editor",
 "home.import":"Import — URL / video link (YouTube, X, Dustloop, SuperCombo...).",
@@ -538,7 +538,7 @@ es:{
 "bot.fallback":"Soy un bot básico. Comparo comandos, daño, el final. Pregunta: quién pega más, el final, qué cambia.",
 "home.replay":"Editor de vídeo.",
 "home.create":"Crear — escribir una secuencia con el teclado, haciendo clic en los comandos, o con tu mando (beta).",
-"compare.lead":"Dos combos de un mismo personaje. Para ver si 5H puede sustituir a 2H, o si un Limit Strike vale más que un super de nivel 3.",
+"compare.lead":"Dos combos, del mismo personaje u otros. Para ver si 5H puede sustituir a 2H, o si un Limit Strike vale más que un super de nivel 3.",
 "Limit Strike":"Limit Strike",
 "Vidéo éditeur":"Editor de vídeo",
 "home.import":"Importar — enlace URL / vídeo (YouTube, X, Dustloop, SuperCombo...).",
