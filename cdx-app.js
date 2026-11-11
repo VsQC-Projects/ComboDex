@@ -552,7 +552,10 @@ function askAtelier(after){
   ce(cdxT("Clef d'atelier"),`<p>${l(cdxT("atelier.body"))}</p><form id="atelierForm"><input id="atelierKey" type="password" autocomplete="off" autofocus placeholder="${l(cdxT("Clef d'atelier"))}"><div class="row" style="margin-top:10px"><button type="submit" class="primary">${l(cdxT("Ouvrir"))}</button></div></form>`);
   const form=a("atelierForm");if(form)form.onsubmit=async e=>{e.preventDefault();const h=await atelierHash((a("atelierKey")||{}).value||"");if(h!==ATELIER_H){g(cdxT("atelier.bad"),!0);return}atelierLive=!0;atelierMark();G();loadWiki().then(()=>{try{C()}catch{}try{renderAtelierDash()}catch{}try{if(o.tab==="replay"){raVid="";raRender()}}catch{}});const n=reportedCombos().length+pendingXRows().length+labRequests().length+editRequests().length+reviewRows().length;g(n?cdxT("atelier.notif.some").replace("{0}",n):cdxT("atelier.ok"));after&&after()};
 }
-let atelierView="home",atelierTop=0;
+let atelierView="home",atelierTop=0,atelierW=0,atelierY=-1;
+function atelierBoxApply(){const dash=a("atelierDash");if(!dash)return;if(atelierW){dash.style.width=atelierW+"px";document.body.style.setProperty("--at-w",atelierW+"px")}if(atelierY>=0){dash.style.top=atelierY+"px";dash.style.bottom="0";dash.style.height="auto"}}
+function atelierDrag(e,el,onMove){e.preventDefault();el.setPointerCapture(e.pointerId);const up=()=>{el.removeEventListener("pointermove",onMove);el.removeEventListener("pointerup",up);el.removeEventListener("pointercancel",up);document.body.classList.remove("atelier-dragging")};document.body.classList.add("atelier-dragging");el.addEventListener("pointermove",onMove);el.addEventListener("pointerup",up);el.addEventListener("pointercancel",up)}
+document.addEventListener("pointerdown",e=>{const gx=e.target.closest("#atelierGripX");if(gx){atelierDrag(e,gx,ev=>{atelierW=Math.round(Math.max(260,Math.min(innerWidth*.85,innerWidth-ev.clientX)));atelierBoxApply()});return}const hd=e.target.closest("#atelierDash .atelier-head");if(!hd||e.target.closest("button,a,input,select"))return;const dash=a("atelierDash"),off=e.clientY-dash.getBoundingClientRect().top;atelierDrag(e,hd,ev=>{atelierY=Math.round(Math.max(0,Math.min(innerHeight-hd.offsetHeight,ev.clientY-off)));atelierBoxApply()})});
 function atelierTopApply(){const bd=document.querySelector("#atelierDash .atelier-body");if(bd&&atelierTop)bd.style.setProperty("--at-top",atelierTop+"px")}
 document.addEventListener("pointerdown",e=>{const sp=e.target.closest("#atelierSplit");if(!sp)return;const bd=sp.parentElement;e.preventDefault();sp.setPointerCapture(e.pointerId);const mv=ev=>{const r=bd.getBoundingClientRect();atelierTop=Math.round(Math.max(60,Math.min(r.height-80,ev.clientY-r.top)));atelierTopApply()},up=()=>{sp.removeEventListener("pointermove",mv);sp.removeEventListener("pointerup",up);sp.removeEventListener("pointercancel",up)};sp.addEventListener("pointermove",mv);sp.addEventListener("pointerup",up);sp.addEventListener("pointercancel",up)});
 document.addEventListener("keydown",e=>{if(!e.target.closest||!e.target.closest("#atelierSplit")||(e.key!=="ArrowDown"&&e.key!=="ArrowUp"))return;e.preventDefault();const bd=e.target.parentElement,r=bd.getBoundingClientRect(),cur=atelierTop||bd.querySelector(".atelier-tree").getBoundingClientRect().height;atelierTop=Math.round(Math.max(60,Math.min(r.height-80,cur+(e.key==="ArrowDown"?24:-24))));atelierTopApply()});
@@ -589,7 +592,7 @@ function renderAtelierDash(){
   }).join("");
   const fonts=["now","pixel","cabinet","marquee","stencil"].map(id=>`<button type="button" data-home-font="${id}" aria-pressed="${homeFontId===id}">${l(cdxT("home.font."+id))}</button>`).join("");
   const work=atelierWorkHtml(pend,fonts);
-  dash.innerHTML=`<div class="atelier-head"><b>${l(cdxT("atelier.dash"))}</b><button type="button" class="tiny" id="atelierOut">${l(cdxT("Fermer l’atelier"))}</button></div>
+  dash.innerHTML=`<div class="atelier-grip-x" id="atelierGripX" role="separator" aria-orientation="vertical"></div><div class="atelier-head"><b>${l(cdxT("atelier.dash"))}</b><button type="button" class="tiny" id="atelierOut">${l(cdxT("Fermer l’atelier"))}</button></div>
     <div class="atelier-bell" id="atelierBell">${bell||`<span class="muted small">🔔 ${l(cdxT("atelier.notif.none"))}</span>`}</div>
     <div class="atelier-crumb">${l(atelierPath())}</div>
     <div class="atelier-body">
@@ -609,7 +612,7 @@ function renderAtelierDash(){
       </nav><div class="atelier-split" id="atelierSplit" role="separator" aria-orientation="horizontal" tabindex="0"></div>
       <div class="atelier-work" id="atelierWork">${work}</div>
     </div>`;
-  atelierTopApply();
+  atelierTopApply();atelierBoxApply();
   dash.onclick=e=>{
     const go=e.target.closest("[data-go-combo]"),done=e.target.closest("[data-rep-done]"),lab=e.target.closest("[data-lab-set]");
     if(go){const c=L(go.dataset.goCombo);if(c){o.game=c.game;o.char=c.character;o.focusId=c.id;j("people")}return}

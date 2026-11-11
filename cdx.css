@@ -334,6 +334,10 @@ body.is-atelier #atelierDash:not(.hidden){display:flex}
 .atelier-head b{letter-spacing:.04em;font-size:13px}
 .atelier-crumb{padding:8px 12px 0;font-size:11px;color:var(--muted);letter-spacing:.02em;word-break:break-word}
 .atelier-body{display:grid;grid-template-rows:var(--at-top,38%) 10px minmax(0,1fr);min-height:0;flex:1}
+.atelier-grip-x{position:absolute;left:-5px;top:0;bottom:0;width:10px;cursor:col-resize;touch-action:none;z-index:2}
+.atelier-grip-x:hover{background:linear-gradient(90deg,transparent 4px,#a37ee0 4px,#a37ee0 6px,transparent 6px)}
+.atelier-head{cursor:grab;touch-action:none}
+body.atelier-dragging{user-select:none}
 .atelier-split{cursor:row-resize;touch-action:none;display:flex;align-items:center;justify-content:center;background:#181822}
 .atelier-split::before{content:"";width:44px;height:4px;border-radius:4px;background:#4a4466}
 .atelier-split:hover::before,.atelier-split:focus-visible::before{background:#a37ee0}
