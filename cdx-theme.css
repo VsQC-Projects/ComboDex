@@ -581,3 +581,8 @@ html[data-theme="dojo"] .cdx-ref{filter:drop-shadow(3px 3px 0 #1d1d2240)}
 .cdx-hunt .hunt-btns{display:flex;justify-content:flex-end;gap:6px}
 @keyframes huntIn{from{opacity:0;transform:translate(-50%,-16px)}}
 @media (prefers-reduced-motion:reduce){.cdx-ref,.cdx-hunt,.cdx-ref.hunt-win{animation:none;transition:none}}
+
+/* Références décoratives : sous les panneaux, navigation et sélecteurs. */
+#main{position:relative;z-index:1}
+.cdx-refs{z-index:0}
+html[data-theme="official"] .cdx-ref{opacity:1;filter:none}
