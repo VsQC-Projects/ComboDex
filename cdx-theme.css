@@ -586,3 +586,39 @@ html[data-theme="dojo"] .cdx-ref{filter:drop-shadow(3px 3px 0 #1d1d2240)}
 #main{position:relative;z-index:1}
 .cdx-refs{z-index:0}
 html[data-theme="official"] .cdx-ref{opacity:1;filter:none}
+
+/* Références décoratives : placement derrière les cadres */
+body {
+  position: relative;
+}
+
+.cdx-refs {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.cdx-ref {
+  position: absolute;
+  object-fit: contain;
+  max-width: none;
+  pointer-events: auto;
+}
+
+html[data-theme="official"] .cdx-ref {
+  opacity: 0.88;
+  filter: none;
+}
+
+@media (max-width: 699px) {
+  .cdx-refs {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .cdx-ref {
+    opacity: 1;
+  }
+}
