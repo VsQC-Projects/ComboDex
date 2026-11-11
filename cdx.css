@@ -469,7 +469,7 @@ body.is-atelier #atelierDash:not(.hidden){display:flex}
   .kc-ma-combo select{max-width:100%;flex:1}
 }
 @media (max-width:720px){
-  #charList.charlist{grid-template-columns:repeat(auto-fill,minmax(58px,1fr));gap:6px}
+  #charList.charlist{grid-template-columns:repeat(auto-fill,minmax(48px,1fr));gap:5px}
   #charList .tile{padding:0 0 3px;border-radius:8px}
   #charList .tile-name{font-size:9.5px;padding:3px 2px 0}
   #charList .tile .orphan-tag{font-size:8px}
@@ -479,7 +479,9 @@ body.is-atelier #atelierDash:not(.hidden){display:flex}
   #compare .grid2:not(#compareOut)>.field:first-child{grid-column:1/-1}
   #compare .field label{font-size:11px}
   #compare .field select{padding:8px;font-size:13px}
-  #compare .row.between{flex-direction:column;align-items:stretch}
+  #compare .panel>.row.between{flex-direction:column;align-items:stretch}
+  #compareOut .compare-card .row.between{gap:4px;align-items:flex-start;flex-wrap:nowrap}
+  #compareOut .cmp-badge{flex:none}
   #compareBot{width:100%}
   .compare-hero{flex-wrap:wrap;justify-content:center;gap:6px 8px;padding:6px 8px}
   .compare-hero .portrait{width:36px;height:36px}
