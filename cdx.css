@@ -471,6 +471,13 @@ body.is-atelier #atelierDash:not(.hidden){display:flex}
 #bulkActions:not(.hidden){position:fixed;left:50%;bottom:12px;transform:translateX(-50%);z-index:40;width:min(760px,calc(100% - 20px));max-height:60vh;overflow:auto;margin:0;box-shadow:0 10px 30px #000c}
 body:has(#bulkActions:not(.hidden)) #personCombos{padding-bottom:190px}
 @media (max-width:720px){
+  #personCombos article.combo>.row.between:first-child{flex-wrap:nowrap;gap:6px}
+  #personCombos article.combo .rename-row{min-width:0}
+  #personCombos article.combo .rename-row h3{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;font-size:15px}
+  #personCombos article.combo>.row.between:first-child>.row{flex-wrap:nowrap;flex-shrink:0;gap:5px}
+  #personCombos article.combo .select-combo{font-size:0;gap:0}
+  #personCombos article.combo .select-combo input{margin:0;width:18px;height:18px}
+  #personCombos article.combo>.row.between:first-child .pill{font-size:11px;padding:2px 7px}
   #charList.charlist{grid-template-columns:repeat(auto-fill,minmax(48px,1fr));gap:5px}
   #charList .tile{padding:0 0 3px;border-radius:8px}
   #charList .tile-name{font-size:9.5px;padding:3px 2px 0}
