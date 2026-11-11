@@ -41,7 +41,8 @@ function guessFromTitle(title){
     for(const v of chars){
       const n=w(v);
       if(!n||n.length<3)continue;
-      if(blob.includes(" "+n+" ")) hits.push({game,char:v,len:n.length,gsc:game===bestG?2:0});
+      const parts=n.split(" ");
+      if(blob.includes(" "+n+" ")||(parts.length>1&&(blob.includes(" "+parts.join("")+" ")||parts.every(p=>p.length>=3&&blob.includes(" "+p+" "))))) hits.push({game,char:v,len:n.length,gsc:game===bestG?2:0});
     }
   }
   hits.sort((x,y)=>(y.len+y.gsc)-(x.len+x.gsc));
@@ -932,13 +933,16 @@ function showVidPop(url,field){
     g("Combo vidéo ajouté pour "+chars.map(charLabel).join(" · ")+".");
   });
 }
+function importManual(){o.importChars=[];const v=((a("importYouTube")||{}).value||"").trim();if(v)o.importGuessFor=v}
 function ve(){
   const e=a("importYouTube").value.trim();
   if(!e)return;
-  const x=xid(e);
+  const x=xid(e),manual=o.importGuessFor===e;
+  o.importGuessFor=e;
   if(x&&!te(e)){
-    applyXGuess(x,{fillImport:!0}).then(info=>{
+    (manual?Promise.resolve(null):applyXGuess(x,{fillImport:!0})).then(info=>{
       showVidPop(e,"importYouTube");
+      if(manual)return;
       if(info&&info.game&&info.chars&&info.chars.length) A("Vidéo reconnue : "+b[info.game].name+" · "+info.chars.map(charLabel).join(" · ")+".");
       else A(cdxT("x.hint"));
     });
@@ -946,12 +950,13 @@ function ve(){
   }
   const id=te(e);
   if(!id){g(cdxT("x.need"),!0);return}
-  applyYtGuess(id,{fillImport:!0}).then(info=>{
+  (manual?Promise.resolve(null):applyYtGuess(id,{fillImport:!0})).then(info=>{
     showVidPop(e,"importYouTube");
+    if(manual)return;
     if(info&&info.game&&info.char) A("Vidéo reconnue : "+b[info.game].name+" · "+info.char+".");
   });
 }
-function Lt(){V("import",yt),a("importGame").onchange=e=>{me(e.target.value),N()},a("importChar").onchange=N,a("importURL").oninput=()=>{o.importIdentity=null,a("importIdentity").className="status",a("importIdentity").textContent=cdxT("Clique sur Importer pour identifier la destination."),a("importResults").innerHTML="",o.importPreview=[]},a("importForm").onsubmit=e=>{e.preventDefault(),St()},a("parsePaste").onclick=kt,a("importHTML").onchange=async e=>{const t=e.target.files[0];t&&de(await t.text()),e.target.value=""},a("importResults").onclick=e=>{e.target.closest("#commitImport")&&Ct();const t=e.target.closest("[data-check]");t&&document.querySelectorAll(".candidate").forEach(n=>n.checked=t.dataset.check==="all")},a("importYouTube").addEventListener("change",ve);const ytBtn=a("importYtBtn");if(ytBtn)ytBtn.onclick=()=>{const u=(a("importYouTube").value||"").trim();if(!u)return A(cdxT("x.need"),!0);if(!a("importURL").value.trim())a("importURL").value=u;if(!hasVid(u))return A(cdxT("x.bad"),!0);ve()}}const De=()=>Object.entries(b).map(([e,t])=>[e,t.name]).sort((x,y)=>x[1].localeCompare(y[1],"fr",{sensitivity:"base"}));function pe(){const e=q(o.game,o.char).filter(n=>!a("onlyFavorites").checked||d.fav.has(n.id)).filter(n=>[...o.dnaFilter].every(t=>(n.dna||[]).includes(t))),t={recent:(n,s)=>String(s.createdAt||"").localeCompare(String(n.createdAt||"")),name:(n,s)=>n.name.localeCompare(s.name,"fr",{numeric:!0}),damage:(n,s)=>(Number(s.damage)||0)-(Number(n.damage)||0),difficulty:(n,s)=>z.indexOf(n.difficulty)-z.indexOf(s.difficulty),favorite:(n,s)=>+!!s.favorite-+!!n.favorite}[o.sort];return t?[...e].sort(t):e}function $t(e){const t=l(e.id),n=o.selected.has(e.id),s=e.damage!==""&&e.damage!=null,view=comboView(e),r=[e.position,e.meter,b[e.game]&&b[e.game].noAssist?null:e.assist,e.special&&e.special!=="Aucune"?e.special:null,...extraChips(e)].filter(Boolean).map(i=>`<span class="chip">${l(cdxT(i))}</span>`).join("")+dnaHtml(e);return`<article class="combo ${n?"checked":""}" data-combo="${t}">
+function Lt(){V("import",yt),a("importGame").onchange=e=>{importManual(),me(e.target.value),N()},a("importChar").onchange=()=>{importManual(),N()},a("importURL").oninput=()=>{o.importIdentity=null,a("importIdentity").className="status",a("importIdentity").textContent=cdxT("Clique sur Importer pour identifier la destination."),a("importResults").innerHTML="",o.importPreview=[]},a("importForm").onsubmit=e=>{e.preventDefault(),St()},a("parsePaste").onclick=kt,a("importHTML").onchange=async e=>{const t=e.target.files[0];t&&de(await t.text()),e.target.value=""},a("importResults").onclick=e=>{e.target.closest("#commitImport")&&Ct();const t=e.target.closest("[data-check]");t&&document.querySelectorAll(".candidate").forEach(n=>n.checked=t.dataset.check==="all")},a("importYouTube").addEventListener("change",ve);const ytBtn=a("importYtBtn");if(ytBtn)ytBtn.onclick=()=>{const u=(a("importYouTube").value||"").trim();if(!u)return A(cdxT("x.need"),!0);if(!a("importURL").value.trim())a("importURL").value=u;if(!hasVid(u))return A(cdxT("x.bad"),!0);ve()}}const De=()=>Object.entries(b).map(([e,t])=>[e,t.name]).sort((x,y)=>x[1].localeCompare(y[1],"fr",{sensitivity:"base"}));function pe(){const e=q(o.game,o.char).filter(n=>!a("onlyFavorites").checked||d.fav.has(n.id)).filter(n=>[...o.dnaFilter].every(t=>(n.dna||[]).includes(t))),t={recent:(n,s)=>String(s.createdAt||"").localeCompare(String(n.createdAt||"")),name:(n,s)=>n.name.localeCompare(s.name,"fr",{numeric:!0}),damage:(n,s)=>(Number(s.damage)||0)-(Number(n.damage)||0),difficulty:(n,s)=>z.indexOf(n.difficulty)-z.indexOf(s.difficulty),favorite:(n,s)=>+!!s.favorite-+!!n.favorite}[o.sort];return t?[...e].sort(t):e}function $t(e){const t=l(e.id),n=o.selected.has(e.id),s=e.damage!==""&&e.damage!=null,view=comboView(e),r=[e.position,e.meter,b[e.game]&&b[e.game].noAssist?null:e.assist,e.special&&e.special!=="Aucune"?e.special:null,...extraChips(e)].filter(Boolean).map(i=>`<span class="chip">${l(cdxT(i))}</span>`).join("")+dnaHtml(e);return`<article class="combo ${n?"checked":""}" data-combo="${t}">
     <div class="row between">
       <div class="rename-row"><h3>${l(e.name)}</h3><button class="rename-button" data-action="rename" data-id="${t}" title="${cdxT("Renommer")}" aria-label="${cdxT("Renommer")} ${l(e.name)}">✎</button></div>
       <div class="row">
