@@ -2043,6 +2043,8 @@ function homeFaces(){
   const faces=[["bbcf","Ragna the Bloodedge"],["mvc2","Shuma-Gorath"],["tokon","Captain America"],["sf6","Ryu"],["ggst","Sol"],["2xko","Ahri"],["al","Aang"],["umvc3","Dante"],["dbfz","Krillin"],["gbvsr","Avatar Belial"]];
   const people=a("hvPeople");
   if(people)people.innerHTML=faces.map(([g,c])=>portrait(g,c,"home")).join("");
+  const vs=a("hvCompare");
+  if(vs)vs.innerHTML=portrait("sf6","Ryu","home")+'<span class="hv-vs">VS</span>'+portrait("sf6","Ken","home");
   try{hydratePortraits()}catch{}
 }
 try{homeFaces()}catch{}

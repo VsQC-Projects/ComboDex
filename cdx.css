@@ -158,11 +158,10 @@ body.on-home .brand-mark{font-size:.52em}
 .hv-stick{position:absolute;inset:0;width:100%;height:100%;z-index:1}
 .hv-ft-bar{display:flex;gap:3px;height:10px;flex:none}
 .hv-ft-bar i{flex:1;border-radius:3px}
-.hv-compare{gap:12px;padding:12px 14px}
-.hv-vs-col{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0;flex:1}
-.hv-vs-col b{font-size:15px;font-weight:850;letter-spacing:.01em}
-.hv-vs-col em{font-style:normal;font-size:12px;font-weight:750;color:#c9a7ff}
-.hv-vs{font-size:13px;font-weight:900;letter-spacing:.08em;color:#f6e7a3}
+.hv-compare{gap:10px;padding:10px 12px;justify-content:center}
+.hv-compare .portrait.home{width:42%;aspect-ratio:3/4;height:auto;max-height:148px;border-radius:10px;border-width:2px}
+.hv-compare .portrait.home:last-of-type img{transform:scaleX(-1)}
+.hv-vs{font-size:13px;font-weight:900;letter-spacing:.08em;color:#f6e7a3;flex:none}
 .hv-replay{padding:0}
 .hv-screen{position:relative;width:100%;height:100%;border-radius:11px;background:radial-gradient(120% 80% at 50% 40%,#1a1b28,#07070c);border:0;overflow:hidden}
 .hv-edit-tag{position:absolute;top:8px;left:8px;z-index:2;font-size:9px;font-weight:900;letter-spacing:.12em;padding:2px 6px;border-radius:4px;background:#f6e7a3;color:#2c2614;display:flex;align-items:center;gap:4px}

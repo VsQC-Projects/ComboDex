@@ -4,7 +4,8 @@ fr:{
 "ft.help":"L’avantage « on block » indique qui peut agir en premier après un coup bloqué. Un coup à +2 laisse l’attaquant agir 2 frames avant l’adversaire. Un coup à −8 peut être puni si l’adversaire a une attaque assez rapide et à portée. D’autres propriétés (pushback, portée) jouent aussi."
 ,"ra.lead":"Pause, image par image, pose chaque touche au moment où elle sort. La séquence se construit toute seule, puis Enregistrer l’édition la met dans le dossier Replay Analyzer du perso. YouTube ne change pas : c’est un calque."
 ,"ra.hits.lead":"Au moment où le coup sort, clique la touche. Elle s’affiche sur la vidéo et s’ajoute à la séquence."
-,"home.replay":"Replay Analyzer — éditer la vidéo."
+,"home.replay":"Vidéo éditeur."
+,"Vidéo éditeur":"Vidéo éditeur"
 ,"ra.keys":"ESPACE : lecture — ← → : image — R : replay — H : HUD — M : marquer"
 ,"ra.tool.play":"Lecture / pause sur la vidéo"
 ,"ra.tool.pen":"Dessine sur le calque — YouTube ne change pas."
@@ -58,8 +59,8 @@ fr:{
 ,"home.lead":"Six modules. Passe la souris pour la légende, clique pour entrer."
 ,"home.people":"Personnages — fiches combo, favoris, entraînement."
 ,"home.frames":"Frame Theater — données de frames, hitbox, on-block."
-,"home.compare":"Comparer — deux combos entre eux, pour voir les faiblesses ou les forces de chacun."
-,"home.create":"Créer — écrire une séquence au clavier, ou en cliquant sur les commandes."
+,"home.compare":"Comparer — un match face à face."
+,"home.create":"Créer — écrire une séquence au clavier, en cliquant sur les commandes. Ou avec votre manette (bêta)."
 ,"home.import":"Importer — lien URL / vidéo (YouTube, X, Dustloop, SuperCombo...)."
 ,"home.font.pick":"Polices arcade — clique pour essayer"
 ,"home.font.now":"Actuelle"
@@ -83,9 +84,10 @@ en:{
 "home.lead":"Six modules. Hover for the legend, click to enter.",
 "home.people":"Characters — combo sheets, favorites, training.",
 "home.frames":"Frame Theater — frame data, hitboxes, on-block.",
-"home.compare":"Compare — two combos side by side, to see each one’s weaknesses or strengths.",
-"home.replay":"Replay Analyzer — edit the video.",
-"home.create":"Create — write a sequence on the keyboard, or by clicking the commands.",
+"home.compare":"Compare — a face-off.",
+"home.replay":"Video editor.",
+"home.create":"Create — write a sequence on the keyboard, by clicking the commands. Or with your controller (beta).",
+"Vidéo éditeur":"Video editor",
 "home.import":"Import — URL / video link (YouTube, X, Dustloop, SuperCombo...).",
 "home.font.pick":"Arcade typefaces — click to try",
 "home.font.now":"Current",
@@ -325,9 +327,10 @@ es:{
 "home.lead":"Seis módulos. Pasa el cursor para la leyenda, clic para entrar.",
 "home.people":"Personajes — fichas de combo, favoritos, entrenamiento.",
 "home.frames":"Frame Theater — datos de frames, hitbox, on-block.",
-"home.compare":"Comparar — dos combos entre sí, para ver las debilidades o las fuerzas de cada uno.",
-"home.replay":"Replay Analyzer — editar el vídeo.",
-"home.create":"Crear — escribir una secuencia con el teclado, o haciendo clic en los comandos.",
+"home.compare":"Comparar — un cara a cara.",
+"home.replay":"Editor de vídeo.",
+"home.create":"Crear — escribir una secuencia con el teclado, haciendo clic en los comandos. O con tu mando (beta).",
+"Vidéo éditeur":"Editor de vídeo",
 "home.import":"Importar — enlace URL / vídeo (YouTube, X, Dustloop, SuperCombo...).",
 "home.font.pick":"Tipografías arcade — clic para probar",
 "home.font.now":"Actual",
