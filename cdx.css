@@ -629,7 +629,8 @@ body.atelier-dragging{user-select:none}
   .kc-enc-n{top:9px;right:8px;font-size:10px;padding:1px 6px}
   .kc-pick-term{font-size:19px}
   .kc-pick-col{flex-direction:row;margin-left:auto}
-  .kc-cat-d{display:none}
+  .kc-enc-crumb .kc-cat-d{display:none}
+  .kc-enc-crumb>.tiny,.kc-pick>summary{white-space:nowrap}
   .kc-pick .kc-list{left:auto;right:0}
   .kc-pick-row{display:flex;align-items:flex-start;gap:12px}
   .kc-pick-row .kc-pick-term{flex:1 1 0;min-width:0}
