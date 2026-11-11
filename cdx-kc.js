@@ -521,7 +521,7 @@ function encBar(){
 }
 function encItem(x,open){
   var sel=open&&open.id===x.id;
-  return'<button type="button" class="kc-item'+(sel?" sel":"")+'" data-kc="open-enc" data-id="'+E_(x.id)+'" aria-current="'+!!sel+'"><span class="kc-item-main"><b>'+E_(x.term)+"</b> "+gParen(x)+(S.fav.indexOf(x.id)>=0?' <span aria-hidden="true">★</span>':"")+(S.studied[x.id]?' <span class="good" aria-hidden="true">✓</span>':"")+listInp(x)+"</span></button>";
+  return'<button type="button" class="kc-item'+(sel?" sel":"")+'" data-kc="open-enc" data-id="'+E_(x.id)+'" aria-current="'+!!sel+'"><span class="kc-item-main"><b>'+E_(x.term)+"</b>"+(S.fav.indexOf(x.id)>=0?' <span aria-hidden="true">★</span>':"")+(S.studied[x.id]?' <span class="good" aria-hidden="true">✓</span>':"")+"</span></button>";
 }
 function pEnc(){
   logoCss();loadInfil();
@@ -538,22 +538,25 @@ function pEnc(){
   var items=(f.ours.length?'<div class="kc-list-h">'+E_(T_("kc.enc.ours"))+"</div>"+f.ours.map(function(x){return encItem(x,open)}).join(""):"")
    +(f.inf.length?'<div class="kc-list-h">'+E_(T_("kc.enc.infil"))+"</div>"+f.inf.map(function(x){return encItem(x,open)}).join(""):"")
    +(INF?"":'<div class="muted small kc-enc-load">'+E_(T_("kc.enc.loading"))+"</div>");
+  var pick='<div class="kc-pick-row"><details class="kc-pick"><summary><span class="kc-pick-term">'+(open?E_(open.term):E_(T_("kc.enc.pick")))+'</span><span class="kc-pick-n">'+E_(T_("kc.enc.ours"))+" · "+all.length+"</span></summary>"
+   +'<div class="kc-list" id="kcEncList" aria-label="'+E_(TF("kc.enc.count",all.length))+'">'+(all.length||!INF?items:'<div class="empty">'+E_(T_("kc.enc.empty"))+"</div>")+"</div></details>"
+   +(open?encActions(open):"")+"</div>";
   return encBar()+'<div class="kc-enc-crumb"><button type="button" class="tiny" data-kc="enc-home">'+E_(T_("kc.enc.back"))+'</button><h3 class="kc-h">'+(cat&&!q?catIcon(cat):"")+E_(title)+' <span class="count">'+all.length+"</span></h3></div>"
-   +'<div class="kc-split kc-enc-split"><div class="kc-list" id="kcEncList" aria-label="'+E_(TF("kc.enc.count",all.length))+'">'+(all.length||!INF?items:'<div class="empty">'+E_(T_("kc.enc.empty"))+"</div>")+'</div><div class="kc-detail" id="kcEncDetail">'+(open?(open.inf?infCard(open):encCard(open)):'<div class="empty">'+E_(T_("kc.enc.pick"))+"</div>")+"</div></div>";
+   +'<div class="kc-detail kc-enc-page" id="kcEncDetail">'+pick+(open?(open.inf?infCard(open):encCard(open)):'<div class="empty">'+E_(T_("kc.enc.pick"))+"</div>")+"</div>";
 }
 function infDef(s){return E_(s).replace(/⟦([^|⟧]*)\|([^⟧]*)⟧/g,function(m,t,lab){var id=INF_T[termKey(t)];return id?'<button type="button" class="kc-link" data-kc="open-enc" data-id="'+E_(id)+'">'+lab+"</button>":lab}).replace(/\n/g,"<br>")}
 function infUrl(x){return"https://glossary.infil.net/?t="+encodeURIComponent(x.term)}
 function encActions(x){var fav=S.fav.indexOf(x.id)>=0,st=!!S.studied[x.id];return'<div class="row kc-actions"><button type="button" class="tiny" data-kc="enc-fav" data-id="'+E_(x.id)+'" aria-pressed="'+fav+'">'+E_(T_(fav?"kc.enc.faved":"kc.enc.fav"))+'</button><button type="button" class="tiny" data-kc="enc-study" data-id="'+E_(x.id)+'" aria-pressed="'+st+'">'+E_(T_(st?"kc.enc.studied":"kc.enc.study"))+"</button></div>"}
 function encNote(x){return'<label class="kc-note"><span>'+E_(T_("kc.enc.note"))+" "+badge("personal")+'</span><textarea id="kcEncNote" rows="3">'+E_(S.encNotes[x.id]||"")+"</textarea></label>"}
 function infCard(x){
-  return'<article class="kc-card" aria-labelledby="kcEncTitle"><h3 id="kcEncTitle">'+E_(x.term)+" "+gParen(x)+"</h3>"
-   +(x.alias.length?'<p class="muted small">'+E_(x.alias.join(" · "))+"</p>":"")+encActions(x)
+  return'<article class="kc-card" aria-labelledby="kcEncTitle"><h3 id="kcEncTitle" class="sr-only">'+E_(x.term)+"</h3>"
+   +(x.alias.length?'<p class="muted small">'+E_(x.alias.join(" · "))+"</p>":"")
    +"<h4>"+E_(T_("kc.enc.infilDef"))+'</h4><p class="kc-inf" lang="en">'+infDef(x.def)+"</p>"
    +(x.jp?"<h4>"+E_(T_("kc.enc.jp"))+'</h4><p class="small muted">'+E_(x.jp)+"</p>":"")
    +'<details class="kc-src-more"><summary>'+E_(T_("kc.sources"))+'</summary><p class="small"><a href="'+E_(infUrl(x))+'" target="_blank" rel="noopener noreferrer">'+E_(T_("kc.enc.infilRead"))+" — Infil, The Fighting Game Glossary</a></p></details></article>";
 }
 function encCard(x){
-  var t=x.txt[lang()]||x.txt.en||x.txt.fr,fav=S.fav.indexOf(x.id)>=0,st=!!S.studied[x.id];
+  var t=x.txt[lang()]||x.txt.en||x.txt.fr;
   var perKeys=Object.keys(x.per);
   var noDoc=x.games.filter(function(gm){return!x.per[gm]});
   var per=perKeys.length?'<h4>'+E_(T_("kc.enc.per"))+'</h4><dl class="kc-per">'+x.games.filter(function(gm){return x.per[gm]}).map(function(gm){return"<dt>"+E_(gName(gm))+"</dt><dd>"+E_(tr(x.per[gm]))+"</dd>"}).join("")+"</dl>"+(noDoc.length?'<p class="muted small">'+E_(T_("kc.enc.notDoc"))+" "+E_(noDoc.map(gName).join(" · "))+"</p>":""):"";
@@ -568,9 +571,9 @@ function encCard(x){
   var pch=[];D.PATCHES.forEach(function(p){p.changes.forEach(function(c){if(c.rel.indexOf(x.id)>=0)pch.push([p,c])})});
   var pm=padMode(),keys=x.games.map(function(gm){var s=x.inp?x.inp[gm]:null;return'<div class="kc-key-row">'+gl(gm)+'<span class="kc-key-g">'+E_(gName(gm))+'</span><span class="kc-inp">'+E_(inpText(gm,s,pm))+"</span></div>"}).join("");
   var padSrc=[];x.games.forEach(function(gm){var P=D.PADS[gm];if(P&&x.inp&&x.inp[gm]&&x.inp[gm]!=="-")P.src.forEach(function(k){if(padSrc.indexOf(k)<0)padSrc.push(k)})});
-  return'<article class="kc-card" aria-labelledby="kcEncTitle"><div class="row between"><h3 id="kcEncTitle">'+E_(x.term)+" "+gParen(x)+"</h3>"+badge(x.st==="ok"?"documented":"partial")+"</div>"
+  return'<article class="kc-card" aria-labelledby="kcEncTitle"><h3 id="kcEncTitle" class="sr-only">'+E_(x.term)+"</h3>"
    +(x.alias.length?'<p class="muted small">'+E_(x.alias.join(" · "))+"</p>":"")
-   +encActions(x)
+   +'<p class="kc-card-mark">'+badge(x.st==="ok"?"documented":"partial")+" "+gParen(x)+"</p>"
    +'<div class="kc-keys"><h4>'+E_(T_("kc.enc.keys"))+' <span class="muted small">· '+E_(T_("kc.pad."+pm))+"</span></h4>"+keys+"</div>"
    +"<h4>"+E_(T_("kc.enc.def"))+"</h4><p>"+E_(t[0])+"</p><h4>"+E_(T_("kc.enc.how"))+"</h4><p>"+E_(t[1])+"</p>"
    +(t[2]?"<h4>"+E_(T_("kc.enc.cond"))+"</h4><p>"+E_(t[2])+"</p>":"")
