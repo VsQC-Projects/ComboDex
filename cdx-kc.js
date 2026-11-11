@@ -519,9 +519,10 @@ function encBar(){
    +'<label class="kc-check"><input type="checkbox" id="kcEncFav"'+(U("encFav",false)?" checked":"")+"> "+E_(T_("kc.enc.favOnly"))+"</label>"
    +'<label class="kc-check"><input type="checkbox" id="kcEncStudied"'+(U("encStudied",false)?" checked":"")+"> "+E_(T_("kc.enc.studiedOnly"))+"</label></div></div>";
 }
+function termHtml(t){var m=/^(.*?)\s*(\([^()]*\))\s*$/.exec(t||"");return m&&m[1]?E_(m[1])+'<span class="kc-term-alt">'+E_(m[2])+"</span>":E_(t)}
 function encItem(x,open){
   var sel=open&&open.id===x.id;
-  return'<button type="button" class="kc-item'+(sel?" sel":"")+'" data-kc="open-enc" data-id="'+E_(x.id)+'" aria-current="'+!!sel+'"><span class="kc-item-main"><b>'+E_(x.term)+"</b>"+(S.fav.indexOf(x.id)>=0?' <span aria-hidden="true">★</span>':"")+(S.studied[x.id]?' <span class="good" aria-hidden="true">✓</span>':"")+"</span></button>";
+  return'<button type="button" class="kc-item'+(sel?" sel":"")+'" data-kc="open-enc" data-id="'+E_(x.id)+'" aria-current="'+!!sel+'"><span class="kc-item-main"><b>'+termHtml(x.term)+"</b>"+(S.fav.indexOf(x.id)>=0?' <span aria-hidden="true">★</span>':"")+(S.studied[x.id]?' <span class="good" aria-hidden="true">✓</span>':"")+"</span></button>";
 }
 function pEnc(){
   logoCss();loadInfil();
@@ -540,7 +541,7 @@ function pEnc(){
    +(INF?"":'<div class="muted small kc-enc-load">'+E_(T_("kc.enc.loading"))+"</div>");
   var pick='<details class="kc-pick"><summary>'+E_(T_("kc.enc.ours"))+' <span class="kc-pick-n">'+all.length+"</span></summary>"
    +'<div class="kc-list" id="kcEncList" aria-label="'+E_(TF("kc.enc.count",all.length))+'">'+(all.length||!INF?items:'<div class="empty">'+E_(T_("kc.enc.empty"))+"</div>")+"</div></details>";
-  var head='<div class="kc-pick-row"><h3 class="kc-pick-term">'+(open?E_(open.term):E_(T_("kc.enc.pick")))+'</h3><span class="kc-h kc-pick-cat">'+(cat&&!q?catIcon(cat):"")+E_(title)+' <span class="count">'+all.length+"</span></span>"+(open?encActions(open):"")+"</div>";
+  var head='<div class="kc-pick-row"><h3 class="kc-pick-term">'+(open?termHtml(open.term):E_(T_("kc.enc.pick")))+'</h3><span class="kc-h kc-pick-cat">'+(cat&&!q?catIcon(cat):"")+E_(title)+' <span class="count">'+all.length+"</span></span>"+(open?encActions(open):"")+"</div>";
   return encBar()+'<div class="kc-enc-crumb"><button type="button" class="tiny" data-kc="enc-home">'+E_(T_("kc.enc.back"))+"</button>"+pick+"</div>"
    +'<div class="kc-detail kc-enc-page" id="kcEncDetail">'+head+(open?(open.inf?infCard(open):encCard(open)):'<div class="empty">'+E_(T_("kc.enc.pick"))+"</div>")+"</div>";
 }
