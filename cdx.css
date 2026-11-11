@@ -515,10 +515,17 @@ body.is-atelier #atelierDash:not(.hidden){display:flex}
 .home-tile.home-kc{border-color:#5cc4dcaa;box-shadow:0 0 0 1px #5cc4dc33,0 0 12px #5cc4dc4d,0 0 28px #5cc4dc22;transition:border-color .18s,box-shadow .18s,background .18s}
 .home-tile.home-kc:hover,.home-tile.home-kc:focus-visible{border-color:#7fe3f5;box-shadow:0 0 0 1px #7fe3f5,0 0 18px #5cc4dc99,0 0 42px #5cc4dc55,inset 0 0 16px #5cc4dc26}
 .kc-head{box-shadow:0 0 0 1px #5cc4dc22,0 0 14px #5cc4dc26}
+@media (min-width:721px){
+  body.on-home .head{display:block;position:relative;padding-top:0}
+  body.on-home .head .lang-switch{position:absolute;top:2px;right:2px}
+  body.on-home .head h1.brand{font-size:calc(var(--cdx-brand-size,clamp(46px,8vw,88px)) * 1.1)!important;margin:0}
+  .home-hero{margin:4px 0 28px}
+  .home-hero p{font-size:15.5px;letter-spacing:.02em}
+}
 @media (min-width:640px) and (max-height:900px){
-  body.on-home .head h1.brand{font-size:clamp(36px,6.4vh,64px)!important;margin:0}
+  body.on-home .head h1.brand{font-size:clamp(40px,7vh,70px)!important;margin:0}
   body.on-home .head{gap:2px 12px}
-  .home-hero{margin:2px 0 8px}
+  .home-hero{margin:2px 0 14px}
   .home-grid{gap:10px}
   .home-tile:not(.home-kc){min-height:0;padding:10px 12px 9px;gap:7px}
   .home-visual,.home-visual.hv-people{height:max(110px,calc(50vh - 196px))}

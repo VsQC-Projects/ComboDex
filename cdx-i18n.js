@@ -109,7 +109,7 @@ fr:{
 ,"ra.related":"Même vidéo, même perso, commandes en commun — calculé en arrière-plan."
 ,"Aucun combo lié.":"Aucun combo lié."
 ,"Choisir un combo":"Choisir un combo"
-,"home.lead":"Sept modules. Passe la souris pour la légende, clique pour entrer."
+,"home.lead":"Combos, frame data et lab des jeux de combat."
 ,"home.people":"Personnages — fiches combo, favoris, entraînement."
 ,"home.frames":"Frame Theater — données de frames, hitbox, on-block."
 ,"home.compare":"Comparer — deux combos, du même perso ou d’autres."
@@ -168,7 +168,7 @@ en:{
 "Frame Theater":"Frame Theater",
 "Comparer":"Compare",
 "Replay Analyzer":"Replay Analyzer",
-"home.lead":"Seven modules. Hover for the legend, click to enter.",
+"home.lead":"Combos, frame data and lab for fighting games.",
 "home.people":"Characters — combo sheets, favorites, training.",
 "home.frames":"Frame Theater — frame data, hitboxes, on-block.",
 "home.compare":"Compare — two combos, from the same character or others.",
@@ -500,7 +500,7 @@ es:{
 "Frame Theater":"Frame Theater",
 "Comparer":"Comparar",
 "Replay Analyzer":"Replay Analyzer",
-"home.lead":"Siete módulos. Pasa el cursor para la leyenda, clic para entrar.",
+"home.lead":"Combos, frame data y laboratorio de juegos de lucha.",
 "home.people":"Personajes — fichas de combo, favoritos, entrenamiento.",
 "home.frames":"Frame Theater — datos de frames, hitbox, on-block.",
 "home.compare":"Comparar — dos combos, del mismo personaje u otros.",
