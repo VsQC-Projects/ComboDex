@@ -10,16 +10,16 @@
     <script>
 (function(){var p=location.pathname;if(!p.endsWith("/")&&!/\.html$/i.test(p))history.replaceState(null,"",p+"/"+location.search+location.hash);})();
 </script>
-    <script src="cdx-i18n.js?v=20261110ax"></script>
-    <link rel="stylesheet" href="pad/gpv/overlay.css?v=20261110ax" />
+    <script src="cdx-i18n.js?v=20261110be"></script>
+    <link rel="stylesheet" href="pad/gpv/overlay.css?v=20261110be" />
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%235b456d'/%3E%3Ctext x='16' y='22' font-size='16' font-family='sans-serif' font-weight='700' text-anchor='middle' fill='%23f5f3f8'%3ECD%3C/text%3E%3C/svg%3E" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Audiowide&family=Black+Ops+One&family=Bungee&family=Press+Start+2P&display=swap" />
-    <link rel="stylesheet" href="cdx.css?v=20261110ax" />
+    <link rel="stylesheet" href="cdx.css?v=20261110be" />
     <script src="cdx-portraits.js"></script>
-    <script src="cdx-ft.js?v=20261110ax"></script>
-    <script defer src="cdx-app.js?v=20261110ax"></script>
+    <script src="cdx-ft.js?v=20261110be"></script>
+    <script defer src="cdx-app.js?v=20261110be"></script>
   </head>
 <body>
     <a class="skip" href="#main" data-i18n="Aller au contenu">Aller au contenu</a>
@@ -70,15 +70,15 @@
                         <stop offset="0%" stop-color="#e8fbff"/>
                         <stop offset="18%" stop-color="#7ae4ff"/>
                         <stop offset="70%" stop-color="#3ec7ff"/>
-                        <stop offset="100%" stop-color="#7ad0ff" stop-opacity=".2"/>
+                        <stop offset="100%" stop-color="#7ad0ff" stop-opacity=".55"/>
                       </linearGradient>
                     </defs>
                     <rect width="260" height="150" fill="#10131c"/>
                     <line x1="12" y1="142" x2="248" y2="142" stroke="#3a3d4c" stroke-width="2"/>
-                    <ellipse cx="198" cy="62" rx="72" ry="34" fill="#3ec7ff" opacity=".22"/>
-                    <path d="M128 34 C168 22 208 24 258 32 L258 92 C208 100 168 98 128 86 Z" fill="url(#hvBeam)"/>
-                    <path d="M132 46 C176 36 214 38 258 46 L258 78 C214 86 176 84 132 74 Z" fill="#f4fcff" opacity=".88"/>
-                    <path d="M138 54 C186 48 222 50 258 56 L258 68 C222 74 186 72 138 66 Z" fill="#fff" opacity=".7"/>
+                    <ellipse cx="210" cy="62" rx="86" ry="34" fill="#3ec7ff" opacity=".22"/>
+                    <path d="M128 34 C176 20 228 22 260 30 L260 94 C228 102 176 100 128 86 Z" fill="url(#hvBeam)"/>
+                    <path d="M132 46 C186 34 232 36 260 44 L260 80 C232 88 186 86 132 74 Z" fill="#f4fcff" opacity=".88"/>
+                    <path d="M138 54 C196 46 236 48 260 54 L260 70 C236 76 196 74 138 66 Z" fill="#fff" opacity=".7"/>
                     <g fill="none" stroke="#f0c93a" stroke-width="6.4" stroke-linecap="round" stroke-linejoin="round">
                       <path d="M64 58 L60 98"/>
                       <path d="M64 60 L102 54 L138 58"/>
@@ -102,10 +102,10 @@
                     <circle cx="75" cy="23" r="3.6" fill="#fff6c4" opacity=".55"/>
                     <circle cx="138" cy="62" r="14" fill="#dff8ff" opacity=".5"/>
                     <rect x="36" y="10" width="58" height="132" rx="4" fill="url(#hvHurtFill)" stroke="#60a5fa" stroke-width="2"/>
-                    <rect x="132" y="30" width="122" height="64" rx="6" fill="#ef4444" fill-opacity=".36" stroke="#ef4444" stroke-width="2"/>
+                    <rect x="132" y="30" width="126" height="64" rx="6" fill="#ef4444" fill-opacity=".36" stroke="#ef4444" stroke-width="2"/>
                   </svg>
                 </span>
-                <span class="hv-ft-bar"><i class="f-startup"></i><i class="f-startup"></i><i class="f-startup"></i><i class="f-active"></i><i class="f-recovery"></i><i class="f-recovery"></i><i class="f-recovery"></i><i class="f-recovery"></i></span>
+                <span class="hv-ft-bar"><i class="f-startup"></i><i class="f-startup"></i><i class="f-startup"></i><i class="f-startup"></i><i class="f-startup"></i><i class="f-startup"></i><i class="f-startup"></i><i class="f-active"></i><i class="f-active"></i><i class="f-active"></i><i class="f-recovery"></i><i class="f-recovery"></i><i class="f-recovery"></i><i class="f-recovery"></i><i class="f-recovery"></i><i class="f-recovery"></i><i class="f-recovery"></i><i class="f-recovery"></i><i class="f-recovery"></i><i class="f-recovery"></i></span>
               </span>
               <span class="home-tile-name" data-i18n="Frame Theater">Frame Theater</span>
             </button>
@@ -150,7 +150,7 @@
                   <span class="hv-scub"><i></i></span>
                 </span>
               </span>
-              <span class="home-tile-name" data-i18n="Vidéo éditeur">Vidéo éditeur</span>
+              <span class="home-tile-name"><span data-i18n="Replay Analyzer">Replay Analyzer</span> <span class="beta-tag">(bêta)</span></span>
             </button>
             <button type="button" class="home-tile" data-tab="import" data-i18n-tip="home.import">
               <span class="home-visual hv-import" aria-hidden="true">
@@ -230,7 +230,13 @@
         <!-- Comparer -->
         <section id="compare" class="page hidden">
           <div class="panel section">
-            <h2 data-i18n="Comparer deux combos">Comparer deux combos</h2>
+            <div class="row between" style="gap:10px;align-items:flex-start">
+              <div>
+                <h2 data-i18n="Comparer deux combos" style="margin:0">Comparer deux combos</h2>
+                <p class="muted small" data-i18n="compare.lead">Deux combos d’un même perso. Pour voir si 5H peut remplacer 2H, ou si la fin en Limit Strike vaut mieux qu’un super niveau 3.</p>
+              </div>
+              <button type="button" id="compareBot" class="primary" data-i18n="Comparer par le bot">Comparer par le bot</button>
+            </div>
             <div class="grid2">
               <div class="field"><label for="compareGame" data-i18n="Jeu">Jeu</label><select id="compareGame"></select></div>
               <div class="field"><label for="compareChar" data-i18n="Personnage">Personnage</label><select id="compareChar"></select></div>
@@ -253,11 +259,11 @@
             <div class="grid2 ra-ids">
               <div class="field"><label for="raGame" data-i18n="Jeu">Jeu</label><select id="raGame"></select></div>
               <div class="field"><label for="raChar" data-i18n="Personnage">Personnage</label><select id="raChar"></select></div>
-              <div class="field"><label for="raCombo" data-i18n="Combo">Combo</label><select id="raCombo"></select></div>
+              <div class="field"><label for="raCombo" data-i18n="Combo vidéo">Combo vidéo</label><select id="raCombo"></select></div>
               <div class="field">
-                <label for="raUrl" data-i18n="Vidéo YouTube (facultatif)">Vidéo YouTube (facultatif)</label>
+                <label for="raUrl" data-i18n="Vidéo YouTube ou X (facultatif)">Vidéo YouTube ou X (facultatif)</label>
                 <div class="row">
-                  <input class="grow" id="raUrl" type="url" placeholder="https://www.youtube.com/watch?v=…" autocomplete="off" />
+                  <input class="grow" id="raUrl" type="url" placeholder="https://www.youtube.com/watch?v=…  ·  https://x.com/compte/status/…" autocomplete="off" />
                   <button type="button" id="raUrlImport" class="save-combo" data-i18n="Importer">Importer</button>
                 </div>
               </div>
@@ -271,7 +277,7 @@
                 <canvas id="raInk" class="ra-ink" aria-hidden="true"></canvas>
                 <div id="raGhosts" class="ra-ghosts" aria-hidden="true"></div>
                 <div id="raLive" class="ra-live" aria-hidden="true"></div>
-                <div id="raEmpty" class="empty ra-empty" data-i18n="Colle un lien YouTube pour l’analyser.">Colle un lien YouTube pour l’analyser.</div>
+                <div id="raEmpty" class="empty ra-empty" data-i18n="x.need">Colle un lien YouTube ou X.</div>
                 <div id="raHud" class="ra-hud">
                   <div class="ra-hotkeys" data-i18n="ra.keys">ESPACE : lecture — ← → : image — R : replay — H : HUD — M : marquer</div>
                   <div class="ra-bars">
@@ -446,7 +452,7 @@
                   <div class="field"><label for="editDesc" data-i18n="Description du combo">Description du combo</label><textarea id="editDesc" rows="2" maxlength="2000"></textarea></div>
                   <div class="field span"><span class="label" data-i18n="Combo DNA">Combo DNA</span><div id="dnaWrap" class="chip-row"></div></div>
                   <div class="field"><label for="editDamage" data-i18n="Dégâts (facultatif)">Dégâts (facultatif)</label><input type="number" min="0" step="1" inputmode="numeric" id="editDamage" /></div>
-                  <div class="field"><label for="editVideo" data-i18n="Vidéo YouTube (facultatif)">Vidéo YouTube (facultatif)</label><input type="url" id="editVideo" placeholder="https://www.youtube.com/watch?v=…" /></div>
+                  <div class="field"><label for="editVideo" data-i18n="Vidéo YouTube ou X (facultatif)">Vidéo YouTube ou X (facultatif)</label><input type="url" id="editVideo" placeholder="https://www.youtube.com/watch?v=…  ·  https://x.com/compte/status/…" /></div>
                 </details>
                 <details id="labDetails" class="span">
                   <summary data-i18n="Notes de lab (facultatif)">Notes de lab (facultatif)</summary>
@@ -525,6 +531,10 @@
               <li data-i18n="Colle un lien Dustloop ou SuperCombo et clique sur « Importer ».">Colle un lien Dustloop ou SuperCombo et clique sur « Importer ».</li>
               <li data-i18n="Vérifie le jeu, le personnage et les lignes cochées, puis ajoute-les.">Vérifie le jeu, le personnage et les lignes cochées, puis ajoute-les.</li>
             </ol>
+            <div class="grid2">
+              <div class="field"><label for="importGame" data-i18n="Jeu de destination">Jeu de destination</label><select id="importGame"></select></div>
+              <div class="field"><label for="importChar" data-i18n="Personnage">Personnage</label><select id="importChar"></select></div>
+            </div>
             <div class="field">
               <label for="importURL" data-i18n="Source">Source</label>
               <form class="row" id="importForm">
@@ -532,16 +542,13 @@
                 <button id="importFetch" class="save-combo" type="submit" data-i18n="Importer">Importer</button>
               </form>
             </div>
-            <div class="grid2">
-              <div class="field"><label for="importGame" data-i18n="Jeu de destination">Jeu de destination</label><select id="importGame"></select></div>
-              <div class="field"><label for="importChar" data-i18n="Personnage">Personnage</label><select id="importChar"></select></div>
-            </div>
             <div class="field">
-              <label for="importYouTube" data-i18n="Vidéo YouTube (facultatif)">Vidéo YouTube (facultatif)</label>
+              <label for="importYouTube" data-i18n="Vidéo YouTube ou X (facultatif)">Vidéo YouTube ou X (facultatif)</label>
               <div class="row">
-                <input class="grow" type="url" id="importYouTube" placeholder="https://www.youtube.com/watch?v=…" />
+                <input class="grow" type="url" id="importYouTube" placeholder="https://www.youtube.com/watch?v=…  ·  https://x.com/compte/status/…" />
                 <button type="button" id="importYtBtn" class="save-combo" data-i18n="Importer">Importer</button>
               </div>
+              <p class="muted small" data-i18n="x.hint">La vidéo X s’affiche pour tout le monde après acceptation dans l’atelier.</p>
             </div>
             <details id="manualImport">
               <summary data-i18n="Coller des combos ou un fichier HTML">Coller des combos ou un fichier HTML</summary>
@@ -582,6 +589,8 @@
       <p data-i18n-html="cookie.body">Les combos (écrits et vidéo) restent <b>sur ComboDex pour tout le monde</b>, comme un wiki. Favoris et entraînement restent sur cet appareil. Un cookie retient seulement que tu as vu ce message.</p>
       <button type="button" class="primary" id="cookieOk">OK</button>
     </div>
+
+    <aside id="atelierDash" class="atelier-dash hidden" aria-label="Atelier VSQC"></aside>
 
     <div id="toast" class="toast" aria-live="polite"></div>
 

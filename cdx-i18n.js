@@ -31,7 +31,39 @@ fr:{
 ,"atelier.font":"Police du titre. Clique : tout le monde la voit, même après l’atelier."
 ,"atelier.font.ok":"Police gravée sur ComboDex pour tout le monde."
 ,"atelier.font.fail":"Police changée ici, pas encore pour les autres."
+,"atelier.x":"Vidéo X. Colle le lien, accepte : ComboDex la lit ensuite comme une vidéo YouTube."
+,"atelier.x.none":"Aucune vidéo X en attente."
+,"atelier.dash":"Atelier VSQC"
+,"atelier.path":"Cheminement"
+,"atelier.crumb":"Cheminement"
+,"atelier.ask":"Voulez-vous importer cette vidéo ?"
+,"atelier.yes":"Oui, importer"
+,"atelier.no":"Non"
+,"atelier.waiting":"en attente"
+,"atelier.tree.font":"Police"
+,"atelier.tree.x":"Vidéos X"
+,"atelier.tree.import":"Importer"
+,"atelier.tree.people":"Personnages"
+,"atelier.tree.portraits":"Portraits"
+,"atelier.tree.keys":"Commandes"
+,"atelier.tree.replay":"Replay Analyzer"
+,"atelier.tree.site":"Site"
+,"atelier.dash.lead":"ComboDex reste à gauche. À droite : le chemin de l’atelier, comme un tableau de bord."
+,"atelier.dash.import":"L’import est à gauche. Une vidéo X n’est jamais acceptée toute seule : Oui, puis Accepter ici."
+,"atelier.dash.portraits":"Le portrait du perso ouvert est à gauche, sur la fiche."
+,"atelier.dash.replay":"Le Replay Analyzer est à gauche. Une vidéo X s’y lit seulement après Accepter."
 ,"atelier.bad":"Clef incorrecte."
+,"Vidéo X (facultatif)":"Vidéo X (facultatif)"
+,"x.hint":"La vidéo X s’affiche pour tout le monde après acceptation dans l’atelier."
+,"x.wait":"Cette vidéo X attend l’atelier VSQC."
+,"x.accept":"Accepter cette vidéo X"
+,"x.ok":"Vidéo X acceptée : tout le monde la voit."
+,"x.fail":"Acceptée ici, pas encore pour les autres."
+,"x.bad":"Lien X non reconnu (x.com ou twitter.com /status/…)."
+,"x.open":"Ouvrir sur X ↗"
+,"x.pending":"Vidéo X enregistrée. Elle s’affiche après acceptation dans l’atelier."
+,"x.need":"Colle un lien YouTube ou X."
+,"Vidéo YouTube ou X (facultatif)":"Vidéo YouTube ou X (facultatif)"
 ,"atelier.out":"Atelier fermé."
 ,"atelier.wipe":"Le combo disparaît de ComboDex pour tout le monde. Entre la clef d’atelier pour confirmer."
 ,"atelier.wiped":"Combo retiré de ComboDex."
@@ -59,8 +91,42 @@ fr:{
 ,"home.lead":"Six modules. Passe la souris pour la légende, clique pour entrer."
 ,"home.people":"Personnages — fiches combo, favoris, entraînement."
 ,"home.frames":"Frame Theater — données de frames, hitbox, on-block."
-,"home.compare":"Comparer — un match face à face."
-,"home.create":"Créer — écrire une séquence au clavier, en cliquant sur les commandes. Ou avec votre manette (bêta)."
+,"home.compare":"Comparer — deux combos du même perso, côte à côte."
+,"Comparer par le bot":"Comparer par le bot"
+,"bot.need":"Choisis d’abord deux combos du même perso. Ensuite j’ouvre la fenêtre."
+,"bot.tag":"Bot basique · il lit les deux fiches, pas le lab. Il ne voit pas tes doigts."
+,"bot.ask":"Pose une question…"
+,"bot.send":"Envoyer"
+,"bot.chip.dmg":"Qui tape plus fort ?"
+,"bot.chip.end":"La fin du combo"
+,"bot.chip.diff":"Ce qui change"
+,"bot.chip.short":"Le plus court ?"
+,"bot.hello":"Salut. Je suis le bot ComboDex — une petite tête, pas un cerveau de labo."
+,"bot.who":"On parle de {0} sur {1}."
+,"bot.cmd.one":"1 commande"
+,"bot.cmd.many":"{0} commandes"
+,"bot.vs":"A · {0} ({1}). B · {2} ({3})."
+,"bot.dmg.a":"A tape plus fort sur la fiche : {0} contre {1}."
+,"bot.dmg.b":"B tape plus fort sur la fiche : {0} contre {1}."
+,"bot.dmg.same":"Même dégâts sur les deux fiches."
+,"bot.dmg.miss":"Les dégâts ne sont pas écrits. Je ne les invente pas."
+,"bot.only.a":"Rien que dans A : {0}."
+,"bot.only.b":"Rien que dans B : {0}."
+,"bot.same.seq":"Les commandes sont les mêmes. Cherche ailleurs : dégâts, position, assist."
+,"bot.end.limit":"{0} finit comme un Limit Strike."
+,"bot.end.lv3":"{0} finit comme un super niveau 3."
+,"bot.end.hit":"{0} finit par {1}."
+,"bot.end.mix":"A finit par {0}. B finit par {1}. Limit Strike ou niveau 3 : c’est exactement ce duel-là."
+,"bot.swap":"A passe par {0}, B par {1}. Même perso, autre route — 5H à la place de 2H, par exemple."
+,"bot.len.a":"A est plus court ({0} contre {1}). Moins de coups, souvent plus simple à coller."
+,"bot.len.b":"B est plus court ({0} contre {1})."
+,"bot.len.same":"Même longueur : {0} commandes."
+,"bot.pick":"Je ne tranche pas à ta place. Sur la fiche, {0} a l’air plus lourd. En lab, le plus court gagne souvent. Teste les deux."
+,"bot.meter":"A : {0}. B : {1}."
+,"bot.fallback":"Je suis un bot basique. Je compare les commandes, les dégâts, la fin. Demande : qui tape plus fort, la fin, ce qui change."
+,"home.create":"Créer — écrire une séquence au clavier, en cliquant sur les commandes, ou avec votre manette (bêta)."
+,"compare.lead":"Deux combos d’un même perso. Pour voir si 5H peut remplacer 2H, ou si la fin en Limit Strike vaut mieux qu’un super niveau 3."
+,"Limit Strike":"Limit Strike"
 ,"home.import":"Importer — lien URL / vidéo (YouTube, X, Dustloop, SuperCombo...)."
 ,"home.font.pick":"Polices arcade — clique pour essayer"
 ,"home.font.now":"Actuelle"
@@ -84,9 +150,43 @@ en:{
 "home.lead":"Six modules. Hover for the legend, click to enter.",
 "home.people":"Characters — combo sheets, favorites, training.",
 "home.frames":"Frame Theater — frame data, hitboxes, on-block.",
-"home.compare":"Compare — a face-off.",
+"home.compare":"Compare — two combos of the same character, side by side.",
+"Comparer par le bot":"Compare with the bot",
+"bot.need":"Pick two combos of the same character first. Then I open the window.",
+"bot.tag":"Basic bot · it reads the two cards, not the lab. It can’t see your hands.",
+"bot.ask":"Ask a question…",
+"bot.send":"Send",
+"bot.chip.dmg":"Who hits harder?",
+"bot.chip.end":"The combo ender",
+"bot.chip.diff":"What changes",
+"bot.chip.short":"Which is shorter?",
+"bot.hello":"Hi. I’m the ComboDex bot — a small brain, not a lab coach.",
+"bot.who":"We’re talking about {0} on {1}.",
+"bot.cmd.one":"1 command",
+"bot.cmd.many":"{0} commands",
+"bot.vs":"A · {0} ({1}). B · {2} ({3}).",
+"bot.dmg.a":"A hits harder on the card: {0} vs {1}.",
+"bot.dmg.b":"B hits harder on the card: {0} vs {1}.",
+"bot.dmg.same":"Same damage on both cards.",
+"bot.dmg.miss":"Damage isn’t written. I won’t invent it.",
+"bot.only.a":"Only in A: {0}.",
+"bot.only.b":"Only in B: {0}.",
+"bot.same.seq":"The commands match. Look elsewhere: damage, position, assist.",
+"bot.end.limit":"{0} ends like a Limit Strike.",
+"bot.end.lv3":"{0} ends like a level 3 super.",
+"bot.end.hit":"{0} ends with {1}.",
+"bot.end.mix":"A ends with {0}. B ends with {1}. Limit Strike or level 3: that’s the duel.",
+"bot.swap":"A goes through {0}, B through {1}. Same character, other route — 5H instead of 2H, for example.",
+"bot.len.a":"A is shorter ({0} vs {1}). Fewer hits, often easier to land.",
+"bot.len.b":"B is shorter ({0} vs {1}).",
+"bot.len.same":"Same length: {0} commands.",
+"bot.pick":"I won’t pick for you. On the card, {0} looks heavier. In lab, the shorter one often wins. Test both.",
+"bot.meter":"A: {0}. B: {1}.",
+"bot.fallback":"I’m a basic bot. I compare commands, damage, the ender. Ask: who hits harder, the ender, what changes.",
 "home.replay":"Video editor.",
-"home.create":"Create — write a sequence on the keyboard, by clicking the commands. Or with your controller (beta).",
+"home.create":"Create — write a sequence on the keyboard, by clicking the commands, or with your controller (beta).",
+"compare.lead":"Two combos of one character. To see if 5H can replace 2H, or if a Limit Strike ender beats a level 3.",
+"Limit Strike":"Limit Strike",
 "Vidéo éditeur":"Video editor",
 "home.import":"Import — URL / video link (YouTube, X, Dustloop, SuperCombo...).",
 "home.font.pick":"Arcade typefaces — click to try",
@@ -129,7 +229,39 @@ en:{
 "atelier.font":"Title typeface. Click: everyone sees it, even after the workshop.",
 "atelier.font.ok":"Typeface saved on ComboDex for everyone.",
 "atelier.font.fail":"Typeface changed here, not yet for everyone.",
+"atelier.x":"X video. Paste the link, accept: ComboDex then plays it like a YouTube video.",
+"atelier.x.none":"No X video waiting.",
+"atelier.dash":"VSQC workshop",
+"atelier.path":"Path",
+"atelier.crumb":"Path",
+"atelier.ask":"Do you want to import this video?",
+"atelier.yes":"Yes, import",
+"atelier.no":"No",
+"atelier.waiting":"waiting",
+"atelier.tree.font":"Typeface",
+"atelier.tree.x":"X videos",
+"atelier.tree.import":"Import",
+"atelier.tree.people":"Characters",
+"atelier.tree.portraits":"Portraits",
+"atelier.tree.keys":"Commands",
+"atelier.tree.replay":"Replay Analyzer",
+"atelier.tree.site":"Site",
+"atelier.dash.lead":"ComboDex stays on the left. On the right: the workshop path, like a dashboard.",
+"atelier.dash.import":"Import is on the left. An X video is never accepted by itself: Yes, then Accept here.",
+"atelier.dash.portraits":"The open character’s portrait is on the left, on the card.",
+"atelier.dash.replay":"Replay Analyzer is on the left. An X video plays there only after Accept.",
 "atelier.bad":"Wrong key.",
+"Vidéo X (facultatif)":"X video (optional)",
+"x.hint":"The X video shows for everyone after workshop approval.",
+"x.wait":"This X video is waiting for the VSQC workshop.",
+"x.accept":"Accept this X video",
+"x.ok":"X video accepted: everyone can see it.",
+"x.fail":"Accepted here, not yet for everyone.",
+"x.bad":"X link not recognized (x.com or twitter.com /status/…).",
+"x.open":"Open on X ↗",
+"x.pending":"X video saved. It shows after workshop approval.",
+"Ajoute une séquence, ou seulement un lien YouTube ou X pour un combo vidéo.":"Add a sequence, or just a YouTube or X link for a video combo.",
+"Le lien vidéo doit être YouTube (youtube.com, youtu.be) ou X (x.com, twitter.com).":"The video link must be YouTube (youtube.com, youtu.be) or X (x.com, twitter.com).",
 "atelier.out":"Workshop closed.",
 "atelier.wipe":"The combo leaves ComboDex for everyone. Enter the workshop key to confirm.",
 "atelier.wiped":"Combo removed from ComboDex.",
@@ -213,6 +345,8 @@ en:{
 "Combo DNA":"Combo DNA",
 "Dégâts (facultatif)":"Damage (optional)",
 "Vidéo YouTube (facultatif)":"YouTube video (optional)",
+"Vidéo YouTube ou X (facultatif)":"YouTube or X video (optional)",
+"x.need":"Paste a YouTube or X link.",
 "Vérifié et testé en lab":"Verified and lab-tested",
 "Ajouter aux favoris":"Add to favorites",
 "Notes de lab (facultatif)":"Lab notes (optional)",
@@ -327,9 +461,43 @@ es:{
 "home.lead":"Seis módulos. Pasa el cursor para la leyenda, clic para entrar.",
 "home.people":"Personajes — fichas de combo, favoritos, entrenamiento.",
 "home.frames":"Frame Theater — datos de frames, hitbox, on-block.",
-"home.compare":"Comparar — un cara a cara.",
+"home.compare":"Comparar — dos combos del mismo personaje, lado a lado.",
+"Comparer par le bot":"Comparar con el bot",
+"bot.need":"Elige primero dos combos del mismo personaje. Luego abro la ventana.",
+"bot.tag":"Bot básico · lee las dos fichas, no el lab. No ve tus manos.",
+"bot.ask":"Haz una pregunta…",
+"bot.send":"Enviar",
+"bot.chip.dmg":"¿Quién pega más fuerte?",
+"bot.chip.end":"El final del combo",
+"bot.chip.diff":"Qué cambia",
+"bot.chip.short":"¿Cuál es más corto?",
+"bot.hello":"Hola. Soy el bot ComboDex — una cabeza pequeña, no un coach de lab.",
+"bot.who":"Hablamos de {0} en {1}.",
+"bot.cmd.one":"1 comando",
+"bot.cmd.many":"{0} comandos",
+"bot.vs":"A · {0} ({1}). B · {2} ({3}).",
+"bot.dmg.a":"A pega más fuerte en la ficha: {0} contra {1}.",
+"bot.dmg.b":"B pega más fuerte en la ficha: {0} contra {1}.",
+"bot.dmg.same":"Mismo daño en las dos fichas.",
+"bot.dmg.miss":"El daño no está escrito. No lo invento.",
+"bot.only.a":"Solo en A: {0}.",
+"bot.only.b":"Solo en B: {0}.",
+"bot.same.seq":"Los comandos son iguales. Mira otra cosa: daño, posición, assist.",
+"bot.end.limit":"{0} termina como un Limit Strike.",
+"bot.end.lv3":"{0} termina como un super de nivel 3.",
+"bot.end.hit":"{0} termina con {1}.",
+"bot.end.mix":"A termina con {0}. B termina con {1}. Limit Strike o nivel 3: ese es el duelo.",
+"bot.swap":"A pasa por {0}, B por {1}. Mismo personaje, otra ruta — 5H en lugar de 2H, por ejemplo.",
+"bot.len.a":"A es más corto ({0} contra {1}). Menos golpes, a menudo más fácil de clavar.",
+"bot.len.b":"B es más corto ({0} contra {1}).",
+"bot.len.same":"Misma longitud: {0} comandos.",
+"bot.pick":"No elijo por ti. En la ficha, {0} parece más pesado. En lab, el más corto gana a menudo. Prueba los dos.",
+"bot.meter":"A: {0}. B: {1}.",
+"bot.fallback":"Soy un bot básico. Comparo comandos, daño, el final. Pregunta: quién pega más, el final, qué cambia.",
 "home.replay":"Editor de vídeo.",
-"home.create":"Crear — escribir una secuencia con el teclado, haciendo clic en los comandos. O con tu mando (beta).",
+"home.create":"Crear — escribir una secuencia con el teclado, haciendo clic en los comandos, o con tu mando (beta).",
+"compare.lead":"Dos combos de un mismo personaje. Para ver si 5H puede sustituir a 2H, o si un Limit Strike vale más que un super de nivel 3.",
+"Limit Strike":"Limit Strike",
 "Vidéo éditeur":"Editor de vídeo",
 "home.import":"Importar — enlace URL / vídeo (YouTube, X, Dustloop, SuperCombo...).",
 "home.font.pick":"Tipografías arcade — clic para probar",
@@ -372,7 +540,39 @@ es:{
 "atelier.font":"Tipografía del título. Clic: todo el mundo la ve, también después del taller.",
 "atelier.font.ok":"Tipografía grabada en ComboDex para todos.",
 "atelier.font.fail":"Tipografía cambiada aquí, aún no para los demás.",
+"atelier.x":"Vídeo de X. Pega el enlace, acepta: ComboDex lo lee luego como un vídeo de YouTube.",
+"atelier.x.none":"Ningún vídeo de X en espera.",
+"atelier.dash":"Taller VSQC",
+"atelier.path":"Camino",
+"atelier.crumb":"Camino",
+"atelier.ask":"¿Quieres importar este vídeo?",
+"atelier.yes":"Sí, importar",
+"atelier.no":"No",
+"atelier.waiting":"en espera",
+"atelier.tree.font":"Tipografía",
+"atelier.tree.x":"Vídeos de X",
+"atelier.tree.import":"Importar",
+"atelier.tree.people":"Personajes",
+"atelier.tree.portraits":"Retratos",
+"atelier.tree.keys":"Comandos",
+"atelier.tree.replay":"Replay Analyzer",
+"atelier.tree.site":"Sitio",
+"atelier.dash.lead":"ComboDex se queda a la izquierda. A la derecha: el camino del taller, como un panel.",
+"atelier.dash.import":"La importación está a la izquierda. Un vídeo de X nunca se acepta solo: Sí, luego Aceptar aquí.",
+"atelier.dash.portraits":"El retrato del personaje abierto está a la izquierda, en la ficha.",
+"atelier.dash.replay":"Replay Analyzer está a la izquierda. Un vídeo de X se lee allí solo después de Aceptar.",
 "atelier.bad":"Clave incorrecta.",
+"Vidéo X (facultatif)":"Vídeo de X (opcional)",
+"x.hint":"El vídeo de X se muestra a todos después de la aceptación en el taller.",
+"x.wait":"Este vídeo de X espera al taller VSQC.",
+"x.accept":"Aceptar este vídeo de X",
+"x.ok":"Vídeo de X aceptado: todo el mundo lo ve.",
+"x.fail":"Aceptado aquí, aún no para los demás.",
+"x.bad":"Enlace de X no reconocido (x.com o twitter.com /status/…).",
+"x.open":"Abrir en X ↗",
+"x.pending":"Vídeo de X guardado. Se muestra tras la aceptación en el taller.",
+"Ajoute une séquence, ou seulement un lien YouTube ou X pour un combo vidéo.":"Añade una secuencia, o solo un enlace de YouTube o X para un combo de vídeo.",
+"Le lien vidéo doit être YouTube (youtube.com, youtu.be) ou X (x.com, twitter.com).":"El enlace de vídeo debe ser YouTube (youtube.com, youtu.be) o X (x.com, twitter.com).",
 "atelier.out":"Taller cerrado.",
 "atelier.wipe":"El combo desaparece de ComboDex para todos. Introduce la clave de taller para confirmar.",
 "atelier.wiped":"Combo retirado de ComboDex.",
@@ -456,6 +656,8 @@ es:{
 "Combo DNA":"ADN del combo",
 "Dégâts (facultatif)":"Daño (opcional)",
 "Vidéo YouTube (facultatif)":"Vídeo de YouTube (opcional)",
+"Vidéo YouTube ou X (facultatif)":"Vídeo de YouTube o X (opcional)",
+"x.need":"Pega un enlace de YouTube o X.",
 "Vérifié et testé en lab":"Verificado y probado en lab",
 "Ajouter aux favoris":"Añadir a favoritos",
 "Notes de lab (facultatif)":"Notas de lab (opcional)",
