@@ -544,6 +544,9 @@ body.atelier-dragging{user-select:none}
 .kc-hub-tile:nth-child(n+4){grid-column:span 3}
 .kc-hub-ico{grid-row:1/3;font-size:30px;line-height:1}
 .kc-view-ico{font-size:24px;line-height:1}
+.kc-hub-ico .kc-ico{width:30px;height:30px;color:#5cc4dc;filter:drop-shadow(0 0 6px #5cc4dc66)}
+.kc-view-ico .kc-ico{width:28px;height:28px;color:#5cc4dc;filter:drop-shadow(0 0 6px #5cc4dc66)}
+.kc-tab .kc-ico,.kc-ma .tiny .kc-ico{width:16px;height:16px;vertical-align:-3px;color:#7fd3e6}
 .kc-hub-name{font-weight:800;font-size:16px;color:var(--ink)}
 .kc-hub-desc{font-size:12.5px;line-height:1.35;color:var(--muted)}
 .kc-hub-tile:hover,.kc-hub-tile:focus-visible{border-color:#5fe3ff;box-shadow:0 0 0 1px #5fe3ff,0 0 16px #5fe3ff55,0 0 34px #5fe3ff22;transform:translateY(-1px)}

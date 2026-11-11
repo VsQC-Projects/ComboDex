@@ -399,9 +399,9 @@ function head(){
   var v=view();
   return'<div class="panel section kc-head"><div class="row between kc-title-row"><h2 class="kc-title"><span class="kc-target" aria-hidden="true"></span>'+E_(T_("kc.name"))+' <span class="beta-tag">'+E_(T_("kc.beta"))+'</span></h2></div>'
    +'<p class="muted small">'+E_(T_("kc.lead"))+'</p>'
-   +(v==="hub"?'<nav class="kc-hub" aria-label="'+E_(T_("kc.name"))+'">'+VIEWS.map(function(x){return'<button type="button" class="kc-hub-tile" data-kc="view" data-v="'+x+'"><span class="kc-hub-ico" aria-hidden="true">'+VIEW_ICON[x]+'</span><span class="kc-hub-name">'+E_(VIEW_NAME[x])+'</span><span class="kc-hub-desc">'+E_(T_("kc.vd."+x))+"</span></button>"}).join("")+"</nav>":'<div class="kc-tabs" role="tablist" aria-label="'+E_(T_("kc.name"))+'">'+VIEWS.map(function(x){return'<button type="button" role="tab" id="kcTab-'+x+'" class="kc-tab" data-kc="view" data-v="'+x+'" aria-selected="'+(x===v)+'" tabindex="'+(x===v?0:-1)+'"><span aria-hidden="true">'+VIEW_ICON[x]+"</span> "+E_(VIEW_NAME[x])+"</button>"}).join("")+"</div>")+"</div>";
+   +(v==="hub"?'<nav class="kc-hub" aria-label="'+E_(T_("kc.name"))+'">'+VIEWS.map(function(x){return'<button type="button" class="kc-hub-tile" data-kc="view" data-v="'+x+'"><span class="kc-hub-ico" aria-hidden="true">'+viewIcon(x)+'</span><span class="kc-hub-name">'+E_(VIEW_NAME[x])+'</span><span class="kc-hub-desc">'+E_(T_("kc.vd."+x))+"</span></button>"}).join("")+"</nav>":'<div class="kc-tabs" role="tablist" aria-label="'+E_(T_("kc.name"))+'">'+VIEWS.map(function(x){return'<button type="button" role="tab" id="kcTab-'+x+'" class="kc-tab" data-kc="view" data-v="'+x+'" aria-selected="'+(x===v)+'" tabindex="'+(x===v?0:-1)+'"><span aria-hidden="true">'+viewIcon(x)+"</span> "+E_(VIEW_NAME[x])+"</button>"}).join("")+"</div>")+"</div>";
 }
-function viewHead(v){return'<div class="kc-view-head"><span class="kc-view-ico" aria-hidden="true">'+VIEW_ICON[v]+'</span><div><h3 class="kc-h">'+E_(VIEW_NAME[v])+'</h3><p class="muted small">'+E_(T_("kc.vd."+v))+"</p></div></div>"}
+function viewHead(v){return'<div class="kc-view-head"><span class="kc-view-ico" aria-hidden="true">'+viewIcon(v)+'</span><div><h3 class="kc-h">'+E_(VIEW_NAME[v])+'</h3><p class="muted small">'+E_(T_("kc.vd."+v))+"</p></div></div>"}
 function panel(v){try{return viewHead(v)+panelBody(v)}catch(e){console.warn("Knowledge Center",e);return'<div class="empty">'+E_(String(e&&e.message||e))+"</div>"}}
 function panelBody(v){try{return v==="teams"?pTeams():v==="matchups"?pMatchups():v==="challenge"?pChallenge():v==="patches"?pPatches():pEnc()}catch(e){console.warn("Knowledge Center",e);return'<div class="empty">'+E_(String(e&&e.message||e))+"</div>"}}
 
@@ -495,6 +495,10 @@ var CAT_ICON={
   frames:'<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M10 2h4"/>',
   all:'<path d="M4 6h16M4 12h16M4 18h10"/>'
 };
+CAT_ICON.versus='<circle cx="6" cy="7" r="3"/><circle cx="18" cy="7" r="3"/><path d="M1.5 20a4.5 4.5 0 0 1 9 0M13.5 20a4.5 4.5 0 0 1 9 0M13 10l-2.5 3.5h3L11 17"/>';
+CAT_ICON.radar='<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><path d="M12 12l6.5-6.5"/><circle cx="12" cy="12" r="1"/>';
+var VIEW_CAT={encyclopedia:"basics",teams:"team",matchups:"versus",challenge:"notation",patches:"radar"};
+function viewIcon(v){return catIcon(VIEW_CAT[v])}
 function catIcon(c){return'<svg class="kc-ico" viewBox="0 0 24 24" aria-hidden="true">'+(CAT_ICON[c]||CAT_ICON.all)+"</svg>"}
 
 function encPool(){
@@ -825,7 +829,7 @@ function masteryHtml(gm,chn){
   var teams=S.teams.filter(function(t){return t.game===gm&&members(t).indexOf(chn)>=0});
   var pch=[];D.PATCHES.forEach(function(p){if(p.game!==gm)return;p.changes.forEach(function(c){if(c.chars.indexOf(chn)>=0)pch.push([p,c])})});
   var sec=function(title,inner,btn){return'<section class="kc-ma-sec"><div class="row between"><h4>'+E_(title)+"</h4>"+(btn||"")+"</div>"+inner+"</section>"};
-  var goBtn=function(v,attrs){return'<button type="button" class="tiny" data-kcm="go" data-v="'+v+'"'+(attrs||"")+">"+VIEW_ICON[v]+" "+E_(TF("kc.ma.go",VIEW_NAME[v]))+"</button>"};
+  var goBtn=function(v,attrs){return'<button type="button" class="tiny" data-kcm="go" data-v="'+v+'"'+(attrs||"")+">"+viewIcon(v)+" "+E_(TF("kc.ma.go",VIEW_NAME[v]))+"</button>"};
   var rows=combos.length?combos.map(function(c){var t0=trainOf(c.id),fl=patchFlags(c);return'<div class="kc-ma-combo"><button type="button" class="kc-res" data-kcm="combo" data-id="'+E_(c.id)+'"><b>'+E_(c.name)+'</b> <span class="muted small">'+E_(T_("kc.ch.att"))+" "+(t0.attempts||0)+" · "+E_(T_("kc.ch.okM"))+" "+(t0.successes||0)+" · "+E_(T_("kc.ch.okV"))+" 0"+(fl.length?" · ⚠ "+E_(TF("kc.pt.flag",fl[0].ver||fmtDay(fl[0].date))):"")+'</span></button><select data-kcm-sel="mstate" data-id="'+E_(c.id)+'" aria-label="'+E_(T_("kc.status")+" — "+c.name)+'">'+opt("",T_("kc.ms.none"),S.mastery[c.id]||"")+MSTATES.map(function(m){return opt(m,T_("kc.ms."+m),S.mastery[c.id]||"")}).join("")+'</select><button type="button" class="tiny" data-kcm="practice" data-id="'+E_(c.id)+'">🎮</button></div>'}).join(""):'<p class="muted small">'+E_(T_("kc.ma.noCombos"))+"</p>";
   return'<div class="kc-ma-head">'+portrait(gm,chn,"sm")+"<div><b>"+E_(cName(chn))+'</b><div class="muted small">'+E_(gName(gm))+"</div></div></div>"
    +'<p class="kc-ma-ind"><b>'+E_(TF("kc.ma.indicator",mastered,combos.length))+'</b></p><p class="muted small">'+E_(T_("kc.ma.calc"))+"</p>"
