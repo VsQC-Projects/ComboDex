@@ -2,6 +2,71 @@ window.CDX_I18N={
 fr:{
 "cookie.body":"Les combos (écrits et vidéo) restent <b>sur ComboDex pour tout le monde</b>, comme un wiki. Favoris et entraînement restent sur cet appareil. Un cookie retient seulement que tu as vu ce message.",
 "ft.help":"L’avantage « on block » indique qui peut agir en premier après un coup bloqué. Un coup à +2 laisse l’attaquant agir 2 frames avant l’adversaire. Un coup à −8 peut être puni si l’adversaire a une attaque assez rapide et à portée. D’autres propriétés (pushback, portée) jouent aussi."
+,"ra.lead":"Pause, image par image, pose chaque touche au moment où elle sort. La séquence se construit toute seule, puis Enregistrer l’édition la met dans le dossier Replay Analyzer du perso. YouTube ne change pas : c’est un calque."
+,"ra.hits.lead":"Au moment où le coup sort, clique la touche. Elle s’affiche sur la vidéo et s’ajoute à la séquence."
+,"home.replay":"Replay Analyzer — éditer la vidéo."
+,"ra.keys":"ESPACE : lecture — ← → : image — R : replay — H : HUD — M : marquer"
+,"ra.tool.play":"Lecture / pause sur la vidéo"
+,"ra.tool.pen":"Dessine sur le calque — YouTube ne change pas."
+,"ra.tool.text":"Écris une légende sur le calque."
+,"ra.tool.rect":"Rectangle sur le calque, au timestamp choisi."
+,"ra.tool.circle":"Cercle sur le calque, au timestamp choisi."
+,"ra.tool.arrow":"Flèche sur le calque, au timestamp choisi."
+,"Durée du dessin":"Durée du dessin"
+,"reste du clip":"reste du clip"
+,"Rectangle":"Rectangle"
+,"Cercle":"Cercle"
+,"Flèche":"Flèche"
+,"Retirer cette touche":"Retirer cette touche"
+,"Retirer cette touche ?":"Retirer cette touche ?"
+,"de la palette":"de la palette"
+,"Les crochets [H] veulent dire que le coup est chargé.":"Les crochets [H] veulent dire que le coup est chargé."
+,"Jeu et personnage reconnus : {0} · {1}.":"Jeu et personnage reconnus : {0} · {1}."
+,"Vidéo importée":"Vidéo importée"
+,"pal.hide.hint":"Atelier seulement. La touche disparaît sur cet appareil, comme les favoris."
+,"pal.held":"Touche en main : {0}. Clique où la poser (Échap pour annuler)."
+,"atelier.body":"ComboDex ne voit pas de compte. Sept clics sur COMBODEX, puis la clef d’atelier. Seul l’administrateur peut supprimer un combo ou un contenu."
+,"atelier.ok":"Atelier ouvert pour cette session."
+,"atelier.font":"Police du titre — clique pour essayer. Ça reste dans l’atelier."
+,"atelier.bad":"Clef incorrecte."
+,"atelier.out":"Atelier fermé."
+,"atelier.wipe":"Le combo disparaît de ComboDex pour tout le monde. Entre la clef d’atelier pour confirmer."
+,"atelier.wiped":"Combo retiré de ComboDex."
+,"atelier.wipefail":"Retiré ici, pas encore du wiki."
+,"Clef d'atelier":"Clef d'atelier"
+,"Fermer l’atelier":"Fermer l’atelier"
+,"Ouvrir":"Ouvrir"
+,"ra.guest.ready":"Vidéo prête. Pose les touches, dessine, puis Enregistrer l’édition : ça va dans le dossier Replay Analyzer du perso."
+,"Échos":"Échos"
+,"ra.echo.tip":"Les dessins et marques réapparaissent au bon moment de la vidéo, bien visibles."
+,"ra.timing.empty":"Rien pour l’instant. Une flèche, une note, une marque : ça s’écrit ici avec le temps."
+,"ra.timing.lead":"Flèche, cercle, crayon, texte : chacun s’écrit ici avec son temps. Clique pour y aller."
+,"Enregistrer l’édition":"Enregistrer l’édition"
+,"Mettre à jour l’édition":"Mettre à jour l’édition"
+,"ra.save.need":"Pose au moins une touche (5L, etc.), puis enregistre l’édition."
+,"ra.save.done":"Édition enregistrée dans Replay Analyzer pour {0}."
+,"ra.save.updated":"Édition mise à jour dans Replay Analyzer pour {0}."
+,"Marque":"Marque"
+,"Dessin":"Dessin"
+,"Combo écrit":"Combo écrit"
+,"Aucun combo dans ce dossier.":"Aucun combo dans ce dossier."
+,"ra.related":"Même vidéo, même perso, commandes en commun — calculé en arrière-plan."
+,"Aucun combo lié.":"Aucun combo lié."
+,"Choisir un combo":"Choisir un combo"
+,"home.lead":"Six modules. Passe la souris pour la légende, clique pour entrer."
+,"home.people":"Personnages — fiches combo, favoris, entraînement."
+,"home.frames":"Frame Theater — données de frames, hitbox, on-block."
+,"home.compare":"Comparer — deux combos entre eux, pour voir les faiblesses ou les forces de chacun."
+,"home.create":"Créer — écrire une séquence au clavier, ou en cliquant sur les commandes."
+,"home.import":"Importer — lien URL / vidéo (YouTube, X, Dustloop, SuperCombo...)."
+,"home.font.pick":"Polices arcade — clique pour essayer"
+,"home.font.now":"Actuelle"
+,"home.font.pixel":"Pixel borne"
+,"home.font.cabinet":"Cabinet 80s"
+,"home.font.marquee":"Enseigne"
+,"home.font.stencil":"Stencil"
+,"Combos · Frame data · Entraînement":"Combos · frames · entraînement"
+,"Accueil":"Accueil"
 ,"Light Punch":"Direct léger","Medium Punch":"Direct moyen","Heavy Punch":"Direct fort","Light Kick":"Coup de pied léger","Medium Kick":"Coup de pied moyen","Heavy Kick":"Coup de pied fort","Punch":"Coup de poing","Kick":"Coup de pied","Slash":"Slash","Heavy Slash":"Heavy Slash","Dust":"Dust","Special":"Special","Special 1":"Special 1","Special 2":"Special 2"},
 en:{
 "Aller au contenu":"Skip to content",
@@ -12,6 +77,100 @@ en:{
 "Personnages":"Characters",
 "Frame Theater":"Frame Theater",
 "Comparer":"Compare",
+"Replay Analyzer":"Replay Analyzer",
+"home.lead":"Six modules. Hover for the legend, click to enter.",
+"home.people":"Characters — combo sheets, favorites, training.",
+"home.frames":"Frame Theater — frame data, hitboxes, on-block.",
+"home.compare":"Compare — two combos side by side, to see each one’s weaknesses or strengths.",
+"home.replay":"Replay Analyzer — edit the video.",
+"home.create":"Create — write a sequence on the keyboard, or by clicking the commands.",
+"home.import":"Import — URL / video link (YouTube, X, Dustloop, SuperCombo...).",
+"home.font.pick":"Arcade typefaces — click to try",
+"home.font.now":"Current",
+"home.font.pixel":"Cabinet pixel",
+"home.font.cabinet":"80s cabinet",
+"home.font.marquee":"Marquee",
+"home.font.stencil":"Stencil",
+"combo 1":"combo 1",
+"combo 2":"combo 2",
+"Crayon":"Pen",
+"Écrire":"Write",
+"Calque":"Overlay",
+"Effacer le calque":"Clear overlay",
+"Retourner":"Flip",
+"Contrôles de lecture":"Playback controls",
+"Clique pour écrire…":"Click to write…",
+"ra.keys":"SPACE: play — ← → : frame — R: replay — H: HUD — M: mark",
+"ra.tool.play":"Play / pause on the video",
+"ra.tool.pen":"Draw on the overlay — YouTube stays untouched.",
+"ra.tool.text":"Write a label on the overlay.",
+"ra.tool.rect":"Rectangle on the overlay, at the chosen timestamp.",
+"ra.tool.circle":"Circle on the overlay, at the chosen timestamp.",
+"ra.tool.arrow":"Arrow on the overlay, at the chosen timestamp.",
+"Durée du dessin":"Drawing duration",
+"reste du clip":"rest of clip",
+"Rectangle":"Rectangle",
+"Cercle":"Circle",
+"Flèche":"Arrow",
+"Retirer cette touche":"Remove this input",
+"Retirer cette touche ?":"Remove this input?",
+"de la palette":"from the palette",
+"Les crochets [H] veulent dire que le coup est chargé.":"Brackets [H] mean that attack is charged.",
+"Jeu et personnage reconnus : {0} · {1}.":"Game and character detected: {0} · {1}.",
+"Vidéo importée":"Video imported",
+"pal.hide.hint":"Workshop only. The key disappears on this device, like favorites.",
+"pal.held":"Holding {0}. Click where to drop it (Esc to cancel).",
+"atelier.body":"ComboDex has no accounts. Seven clicks on COMBODEX, then the workshop key. Only the administrator can delete a combo or site content.",
+"atelier.ok":"Workshop open for this session.",
+"atelier.font":"Title typeface — click to try. Stays in the workshop.",
+"atelier.bad":"Wrong key.",
+"atelier.out":"Workshop closed.",
+"atelier.wipe":"The combo leaves ComboDex for everyone. Enter the workshop key to confirm.",
+"atelier.wiped":"Combo removed from ComboDex.",
+"atelier.wipefail":"Removed here, not yet from the wiki.",
+"Clef d'atelier":"Workshop key",
+"Fermer l’atelier":"Close workshop",
+"Ouvrir":"Open",
+"ra.guest.ready":"Video ready. Stamp the inputs, draw, then Save edit: it goes into that character’s Replay Analyzer folder.",
+"Échos":"Echoes",
+"ra.echo.tip":"Drawings and marks come back at the right time, solid enough to see over the video.",
+"ra.timing.empty":"Nothing yet. An arrow, a note, a mark: it shows up here with the time.",
+"ra.timing.lead":"Arrow, circle, pen, text: each one is listed here with its time. Click to jump there.",
+"Enregistrer l’édition":"Save edit",
+"Mettre à jour l’édition":"Update edit",
+"ra.save.need":"Stamp at least one input (5L, etc.), then save the edit.",
+"ra.save.done":"Edit saved in Replay Analyzer for {0}.",
+"ra.save.updated":"Edit updated in Replay Analyzer for {0}.",
+"Marque":"Mark",
+"Dessin":"Drawing",
+"Combo écrit":"Written combos",
+"Combo vidéo":"Video combos",
+"Aucun combo dans ce dossier.":"No combo in this folder.",
+"Accueil":"Home",
+"ra.lead":"Pause, step frame by frame, stamp each button when it comes out. The sequence builds itself, then you save it on the character sheet. YouTube stays untouched: it’s an overlay.",
+"ra.hits.lead":"When the move comes out, click the button. It shows on the video and joins the sequence.",
+"Touches du combo":"Combo inputs",
+"Touches posées":"Stamped inputs",
+"Poser ici":"Stamp here",
+"Graver le combo":"Save the combo",
+"Mettre à jour le combo":"Update the combo",
+"Aucune touche posée":"No input stamped yet",
+"Pose au moins une touche sur la vidéo.":"Stamp at least one input on the video.",
+"Combo mis à jour depuis le replay.":"Combo updated from the replay.",
+"Combo gravé pour {0}.":"Combo saved for {0}.",
+"Choisis un jeu et un personnage.":"Pick a game and a character.",
+"Points de timing":"Timing marks",
+"Marquer ici":"Mark here",
+"Note du point":"Mark note",
+"Combos liés":"Linked combos",
+"ra.related":"Same video, same character, shared commands — computed in the background.",
+"Vitesse":"Speed",
+"Aucune vidéo YouTube pour ce combo.":"No YouTube video on this combo.",
+"Colle un lien YouTube pour l’analyser.":"Paste a YouTube link to analyze it.",
+"Aucun combo pour ce personnage.":"No combo for this character.",
+"Supprimer le point":"Delete mark",
+"Aucun combo lié.":"No linked combos.",
+"Choisir un combo":"Choose a combo",
 "Créer":"Create",
 "Importer":"Import",
 "Effacer":"Clear",
@@ -158,6 +317,100 @@ es:{
 "Personnages":"Personajes",
 "Frame Theater":"Frame Theater",
 "Comparer":"Comparar",
+"Replay Analyzer":"Replay Analyzer",
+"home.lead":"Seis módulos. Pasa el cursor para la leyenda, clic para entrar.",
+"home.people":"Personajes — fichas de combo, favoritos, entrenamiento.",
+"home.frames":"Frame Theater — datos de frames, hitbox, on-block.",
+"home.compare":"Comparar — dos combos entre sí, para ver las debilidades o las fuerzas de cada uno.",
+"home.replay":"Replay Analyzer — editar el vídeo.",
+"home.create":"Crear — escribir una secuencia con el teclado, o haciendo clic en los comandos.",
+"home.import":"Importar — enlace URL / vídeo (YouTube, X, Dustloop, SuperCombo...).",
+"home.font.pick":"Tipografías arcade — clic para probar",
+"home.font.now":"Actual",
+"home.font.pixel":"Píxel borne",
+"home.font.cabinet":"Cabinet 80s",
+"home.font.marquee":"Letrero",
+"home.font.stencil":"Stencil",
+"combo 1":"combo 1",
+"combo 2":"combo 2",
+"Crayon":"Lápiz",
+"Écrire":"Escribir",
+"Calque":"Capa",
+"Effacer le calque":"Borrar la capa",
+"Retourner":"Voltear",
+"Contrôles de lecture":"Controles de reproducción",
+"Clique pour écrire…":"Clic para escribir…",
+"ra.keys":"ESPACIO: play — ← → : frame — R: replay — H: HUD — M: marcar",
+"ra.tool.play":"Play / pausa sobre el vídeo",
+"ra.tool.pen":"Dibuja en la capa — YouTube no cambia.",
+"ra.tool.text":"Escribe una etiqueta en la capa.",
+"ra.tool.rect":"Rectángulo en la capa, en el timestamp elegido.",
+"ra.tool.circle":"Círculo en la capa, en el timestamp elegido.",
+"ra.tool.arrow":"Flecha en la capa, en el timestamp elegido.",
+"Durée du dessin":"Duración del dibujo",
+"reste du clip":"resto del clip",
+"Rectangle":"Rectángulo",
+"Cercle":"Círculo",
+"Flèche":"Flecha",
+"Retirer cette touche":"Quitar este comando",
+"Retirer cette touche ?":"¿Quitar este comando?",
+"de la palette":"de la paleta",
+"Les crochets [H] veulent dire que le coup est chargé.":"Los corchetes [H] quieren decir que el golpe va cargado.",
+"Jeu et personnage reconnus : {0} · {1}.":"Juego y personaje reconocidos: {0} · {1}.",
+"Vidéo importée":"Vídeo importado",
+"pal.hide.hint":"Solo el taller. La tecla desaparece en este aparato, como los favoritos.",
+"pal.held":"Tienes {0} en mano. Clic donde dejarlo (Esc para cancelar).",
+"atelier.body":"ComboDex no ve cuentas. Siete clics en COMBODEX y la clave de taller. Solo el administrador puede borrar un combo o un contenido.",
+"atelier.ok":"Taller abierto en esta sesión.",
+"atelier.font":"Tipografía del título — clic para probar. Se queda en el taller.",
+"atelier.bad":"Clave incorrecta.",
+"atelier.out":"Taller cerrado.",
+"atelier.wipe":"El combo desaparece de ComboDex para todos. Introduce la clave de taller para confirmar.",
+"atelier.wiped":"Combo retirado de ComboDex.",
+"atelier.wipefail":"Retirado aquí, aún no del wiki.",
+"Clef d'atelier":"Clave de taller",
+"Fermer l’atelier":"Cerrar el taller",
+"Ouvrir":"Abrir",
+"ra.guest.ready":"Vídeo listo. Marca los comandos, dibuja, luego Guardar edición: va a la carpeta Replay Analyzer del personaje.",
+"Échos":"Ecos",
+"ra.echo.tip":"Los dibujos y marcas vuelven en el momento justo, lo bastante opacos para verse sobre el vídeo.",
+"ra.timing.empty":"Nada aún. Una flecha, una nota, una marca: aparece aquí con el tiempo.",
+"ra.timing.lead":"Flecha, círculo, lápiz, texto: cada uno se lista aquí con su tiempo. Clic para ir.",
+"Enregistrer l’édition":"Guardar edición",
+"Mettre à jour l’édition":"Actualizar edición",
+"ra.save.need":"Marca al menos un comando (5L, etc.), luego guarda la edición.",
+"ra.save.done":"Edición guardada en Replay Analyzer para {0}.",
+"ra.save.updated":"Edición actualizada en Replay Analyzer para {0}.",
+"Marque":"Marca",
+"Dessin":"Dibujo",
+"Combo écrit":"Combos escritos",
+"Combo vidéo":"Combos de vídeo",
+"Aucun combo dans ce dossier.":"Ningún combo en esta carpeta.",
+"Accueil":"Inicio",
+"ra.lead":"Pausa, fotograma a fotograma, marca cada botón cuando sale. La secuencia se construye sola, luego la grabas en la ficha del personaje. YouTube no cambia: es una capa.",
+"ra.hits.lead":"Cuando sale el golpe, pulsa el botón. Se muestra en el vídeo y entra en la secuencia.",
+"Touches du combo":"Comandos del combo",
+"Touches posées":"Comandos marcados",
+"Poser ici":"Marcar aquí",
+"Graver le combo":"Grabar el combo",
+"Mettre à jour le combo":"Actualizar el combo",
+"Aucune touche posée":"Ningún comando marcado",
+"Pose au moins une touche sur la vidéo.":"Marca al menos un comando en el vídeo.",
+"Combo mis à jour depuis le replay.":"Combo actualizado desde el replay.",
+"Combo gravé pour {0}.":"Combo grabado para {0}.",
+"Choisis un jeu et un personnage.":"Elige un juego y un personaje.",
+"Points de timing":"Puntos de timing",
+"Marquer ici":"Marcar aquí",
+"Note du point":"Nota del punto",
+"Combos liés":"Combos ligados",
+"ra.related":"Mismo vídeo, mismo personaje, comandos en común — calculado en segundo plano.",
+"Vitesse":"Velocidad",
+"Aucune vidéo YouTube pour ce combo.":"Este combo no tiene vídeo de YouTube.",
+"Colle un lien YouTube pour l’analyser.":"Pega un enlace de YouTube para analizarlo.",
+"Aucun combo pour ce personnage.":"No hay combo para este personaje.",
+"Supprimer le point":"Borrar marca",
+"Aucun combo lié.":"Ningún combo ligado.",
+"Choisir un combo":"Elegir un combo",
 "Créer":"Crear",
 "Importer":"Importar",
 "Effacer":"Borrar",
@@ -304,6 +557,7 @@ window.cdxApplyI18n=function(){
   document.querySelectorAll("[data-i18n-placeholder]").forEach(function(el){el.setAttribute("placeholder",window.cdxT(el.getAttribute("data-i18n-placeholder")));});
   document.querySelectorAll("[data-i18n-aria]").forEach(function(el){el.setAttribute("aria-label",window.cdxT(el.getAttribute("data-i18n-aria")));});
   document.querySelectorAll("[data-i18n-title]").forEach(function(el){el.setAttribute("title",window.cdxT(el.getAttribute("data-i18n-title")));});
+  document.querySelectorAll("[data-i18n-tip]").forEach(function(el){el.setAttribute("data-tip",window.cdxT(el.getAttribute("data-i18n-tip")));});
   document.querySelectorAll("#langSwitch [data-lang]").forEach(function(b){b.setAttribute("aria-pressed",b.getAttribute("data-lang")===window.cdxLang?"true":"false");});
   const desc=document.querySelector('meta[name="description"]');
   if(desc){desc.setAttribute("content",window.cdxLang==="en"?"Combo Dex — fighting-game combo library and Frame Theater (Dustloop, SuperCombo, 2XKO).":window.cdxLang==="es"?"Combo Dex — biblioteca de combos de fighting games y Frame Theater (Dustloop, SuperCombo, 2XKO).":"Combo Dex — bibliothèque de combos fighting games et Frame Theater (Dustloop, SuperCombo, 2XKO).");}

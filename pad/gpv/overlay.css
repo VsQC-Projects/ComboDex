@@ -1,5 +1,5 @@
 /* Official Gamepad Viewer overlay skins (assets from gamepadviewer.com) */
-#padBody.pad-draw{
+.pad-body.pad-draw{
   width:min(280px,100%);
   max-width:100%;
   margin:8px auto 0;
@@ -7,8 +7,8 @@
   overflow:hidden;
   background:transparent;
 }
-#padBody.pad-draw.off{opacity:.55}
-#padBody .controller{
+.pad-body.pad-draw.off{opacity:.55}
+.pad-body .controller{
   display:block !important;
   position:absolute !important;
   top:0; left:0;
