@@ -222,7 +222,7 @@ let cdxRoute="";
 function oe(){Ve(Object.assign(H,{tab:o.tab,game:o.game,char:o.char,sort:o.sort,onlyWithCombos:o.onlyWithCombos,kcView:o.kcView}));try{const hash=cdxHash(),route=o.tab+(o.tab==="knowledge"?"/"+o.kcView:"");if(location.hash!==hash){if(cdxRoute&&cdxRoute!==route)history.pushState(null,"",hash);else history.replaceState(null,"",hash)}cdxRoute=route}catch{}}const R={},V=(e,t)=>R[e]=t;function j(e){var t;if(e!=="replay")try{raPlayer&&raPlayer.pauseVideo&&raPlayer.pauseVideo()}catch{}try{a("tokFly")&&a("tokFly").classList.add("hidden")}catch{}o.tab=e,document.body.classList.toggle("on-home",e==="home"),document.querySelectorAll(".page").forEach(n=>n.classList.toggle("hidden",n.id!==e)),document.querySelectorAll(".nav .tab").forEach(n=>{const s=n.dataset.tab===e;n.classList.toggle("active",s),n.setAttribute("aria-current",s?"page":"false")}),(t=R[e])==null||t.call(R),oe();try{syncLogos()}catch{}if(e==="replay"||e==="create")setTimeout(()=>{try{padStatus();padScale()}catch{}},60)}function Qe(e,t){const n=[...t];return e.map(s=>{const r=n.indexOf(s);return r>=0&&n.splice(r,1),{t:s,diff:r<0}})}function et(){k(a("compareGame"),De(),o.game),we(o.game,o.char),a("compareChar").dataset.mode="char",Y()}const we=(e,t)=>k(a("compareChar"),T(e).map(n=>[n.name,charLabel(n.name)]),t);function cmpScope(){const s=a("compareScope");return s&&["char","game","all"].includes(s.value)?s.value:"char"}
 function cmpCharOpts(sc,gm){const m=new Map();for(const c of d.combos||[]){if(!c||!c.game||!c.character||(sc==="game"&&c.game!==gm))continue;const v=sc==="all"?c.game+"|"+c.character:c.character;if(!m.has(v))m.set(v,[v,charLabel(c.character)+(sc==="all"?" · "+(b[c.game]?b[c.game].name:c.game):"")])}return[...m.values()].sort((x,z)=>x[1].localeCompare(z[1]))}
 function cmpPick(sc,gm,v){if(!v)return[];if(sc!=="all")return q(gm,v);const i=v.indexOf("|");return q(v.slice(0,i),v.slice(i+1))}
-function Y(){const sc=cmpScope(),gm=a("compareGame").value,c1=a("compareChar"),c2=a("compareChar2"),two=sc!=="char";a("compareGame").disabled=sc==="all";c2.closest(".field").classList.toggle("hidden",!two);a("cmpChars").classList.toggle("one",!two);a("compareCharLbl").textContent=cdxT(two?"cmp.char1":"Personnage");let A,B;if(!two){if(c1.dataset.mode!=="char"){we(gm,o.char);c1.dataset.mode="char"}A=B=q(gm,c1.value)}else{const opts=cmpCharOpts(sc,gm),mode=sc+":"+gm,p1=c1.dataset.mode===mode?c1.value:(sc==="all"?o.game+"|"+o.char:o.char),p2=c2.dataset.mode===mode?c2.value:"";k(c1,opts,p1);k(c2,opts,p2);c1.dataset.mode=c2.dataset.mode=mode;if(!opts.some(x=>x[0]===p2)){const o2=opts.find(x=>x[0]!==c1.value)||opts[0];if(o2)c2.value=o2[0]}A=cmpPick(sc,gm,c1.value);B=cmpPick(sc,gm,c2.value)}const lab=r=>two?r.name+" — "+charLabel(r.character)+(sc==="all"?" · "+(b[r.game]?b[r.game].name:r.game):""):r.name,t=a("compareA").value,n=a("compareB").value;k(a("compareA"),[["",cdxT("Choisir le combo A")],...A.map(r=>[r.id,lab(r)])],t);k(a("compareB"),[["",cdxT("Choisir le combo B")],...B.map(r=>[r.id,lab(r)])],n);!a("compareA").value&&A[0]&&(a("compareA").value=A[0].id);!a("compareB").value&&(two?B[0]:B[1])&&(a("compareB").value=(two?B[0]:B[1]).id);_(two?(A.length&&B.length?2:0):A.length)}function _(e=1/0){
+function Y(){const sc=cmpScope(),gm=a("compareGame").value,c1=a("compareChar"),c2=a("compareChar2"),two=sc!=="char";a("compareGame").disabled=sc==="all";c2.closest(".field").classList.toggle("hidden",!two);a("cmpChars").classList.toggle("one",!two);a("compareCharLbl").textContent=cdxT(two?"cmp.char1":"Personnage");let A,B;if(!two){if(c1.dataset.mode!=="char"){we(gm,o.char);c1.dataset.mode="char"}A=B=q(gm,c1.value)}else{const opts=cmpCharOpts(sc,gm),mode=sc+":"+gm,p1=c1.dataset.mode===mode?c1.value:(sc==="all"?o.game+"|"+o.char:o.char),p2=c2.dataset.mode===mode?c2.value:"";k(c1,opts,p1);k(c2,opts,p2);c1.dataset.mode=c2.dataset.mode=mode;if(!opts.some(x=>x[0]===p2)){const o2=opts.find(x=>x[0]!==c1.value)||opts[0];if(o2)c2.value=o2[0]}A=cmpPick(sc,gm,c1.value);B=cmpPick(sc,gm,c2.value)}const lab=r=>two?r.name+" — "+charLabel(r.character)+(sc==="all"?" · "+(b[r.game]?b[r.game].name:r.game):""):r.name,t=a("compareA").value,n=a("compareB").value;k(a("compareA"),[["",cdxT("Choisir le combo A")],...A.map(r=>[r.id,lab(r)])],t);k(a("compareB"),[["",cdxT("Choisir le combo B")],...B.map(r=>[r.id,lab(r)])],n);!a("compareA").value&&A[0]&&(a("compareA").value=A[0].id);if(!a("compareB").value){const nb=B.find(r=>r.id!==a("compareA").value);if(nb)a("compareB").value=nb.id}_(two?(A.length&&B.length?2:0):A.length)}function _(e=1/0){
   const t=L(a("compareA").value),n=L(a("compareB").value),s=a("compareSummary");
   const bot=a("compareBot");if(bot)bot.disabled=!(t&&n);
   if(e<2){s.innerHTML=cmpScope()==="char"?`<div class="empty">${cdxT(e?"Ce personnage n’a qu’un seul combo":"Ce personnage n’a pas encore de combo")}${cdxT(" : il en faut deux pour comparer.")}</div>`:`<div class="empty">${l(cdxT("cmp.need"))}</div>`,a("compareOut").innerHTML="";return}
@@ -820,6 +820,9 @@ function palClickTok(e,kind){
     else palDropPal(tok);
     return;
   }
+  if(palLP&&palLP.fired){palLP=null;e.preventDefault();return}
+  const write=()=>{if(kind==="replay")raStamp(tok);else it(tok)};
+  if(!isAtelier()){write();return}
   const now=Date.now(),game=palGame();
   if(palTap.tok!==tok||palTap.where!==kind||now-palTap.t>460){
     palFlush();
@@ -828,14 +831,19 @@ function palClickTok(e,kind){
   clearTimeout(palTap.timer);
   if(palTap.n>=3){
     palTap.n=0;
-    if(isAtelier())askHideKey(game,tok,()=>{try{Z()}catch{}try{raPadDraw()}catch{}});
-    else palPick(tok,"pal",-1);
+    askHideKey(game,tok,()=>{try{Z()}catch{}try{raPadDraw()}catch{}});
     return;
   }
-  if(palTap.n===2){palTap.timer=setTimeout(()=>{if(palTap.n===2&&palTap.tok===tok)palPick(tok,"pal",-1)},isAtelier()?260:0);return}
-  palTap.fire=()=>{palTap.timer=0;if(kind==="replay")raStamp(tok);else it(tok)};
+  if(palTap.n===2){palTap.timer=setTimeout(()=>{if(palTap.n===2&&palTap.tok===tok){write();write()}},260);return}
+  palTap.fire=()=>{palTap.timer=0;write()};
   palTap.timer=setTimeout(()=>{if(palTap.n!==1||palTap.tok!==tok)return;palTap.fire()},260);
 }
+let palLP=null;
+document.addEventListener("pointerdown",e=>{const btn=e.target.closest("#palette [data-key],[data-ra-tok]");if(!btn||palHeld)return;const tok=btn.dataset.key||btn.dataset.raTok;if(palLP)clearTimeout(palLP.t);const lp={x:e.clientX,y:e.clientY,fired:!1};lp.t=setTimeout(()=>{lp.fired=!0;palPick(tok,"pal",-1)},2000);palLP=lp});
+document.addEventListener("pointermove",e=>{if(palLP&&!palLP.fired&&Math.hypot(e.clientX-palLP.x,e.clientY-palLP.y)>12){clearTimeout(palLP.t);palLP=null}});
+document.addEventListener("pointerup",()=>{if(palLP&&!palLP.fired){clearTimeout(palLP.t);palLP=null}});
+document.addEventListener("pointercancel",()=>{if(palLP){clearTimeout(palLP.t);palLP=null}});
+document.addEventListener("contextmenu",e=>{if(palLP&&e.target.closest("#palette [data-key],[data-ra-tok]"))e.preventDefault()});
 document.addEventListener("mousemove",e=>{if(palHeld)palGhostShow(palHeld.tok,e.clientX,e.clientY)});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&palHeld){e.preventDefault();palCancelHold()}});
 function palBucket(t,e){if(e==="t8"){if(/^(?:n|[ubf]|d(?:\/[fb])?|u\/[fb])$/.test(t))return"Directions";if(/^(?:[1-4]|[1-4]\+[1-4])$/.test(t)||/^(?:n|[ubf]|d(?:\/[fb])?|u\/[fb])\+[1-4]/.test(t))return"Debout";return"Mécaniques"}if(e==="ssbu"){if(/(?:air)$/i.test(t)||t==="jump")return"Saut";if(/^(?:A|B|tilt|utilt|ftilt|dtilt|smash|fsmash|usmash|dsmash|grab|shield|dodge)$/i.test(t))return"Debout";return"Mécaniques"}if(/^j\./i.test(t))return"Saut";if(/^2(?:\[|[A-Za-z.])/.test(t))return"Accroupi";if(/^[1-9]{2,}/.test(t)||/^\[[1-9]\]/.test(t)||/^[146]\[[A-Za-z]/.test(t))return"Spéciaux";if(TOK_BTN.test(t)||(PAD_BTNS[e]||[]).includes(t))return"Debout";if(/^(?:[cf]\.|cl\.)?[1-9]?[A-Z]{1,3}$/.test(t)||/^5[\[A-Z0-9\]]+$/i.test(t)||/^6[A-Z]$/.test(t))return"Debout";return"Mécaniques"}function Z(){const e=o.draft.game;try{padRelabel()}catch{}a("paletteGame").textContent="— "+b[e].name;
@@ -2347,6 +2355,10 @@ function raBind(){
     });
   });
   a("raPlay").onclick=()=>{if(!raPlayer)return;try{raPlaying()?raPlayer.pauseVideo():raPlayer.playVideo()}catch{}raSyncTime();if(raPlaying()&&!raTick)raLoop()};a("raPlayMini").onclick=()=>a("raPlay").click();
+  const full=a("raFull"),theater=a("raStage")&&a("raStage").closest(".ra-theater-panel");
+  if(full&&theater){full.onclick=()=>{try{document.fullscreenElement?document.exitFullscreen():(theater.requestFullscreen||theater.webkitRequestFullscreen).call(theater)}catch{}};document.addEventListener("fullscreenchange",()=>{full.textContent=document.fullscreenElement?"✕":"⛶";setTimeout(()=>{try{raInkFit()}catch{}},120)})}
+  const pb=document.querySelector(".ra-playbox"),pbh=pb&&pb.querySelector(".ra-playbox-h");
+  if(pbh){let dx=0,dy=0;pbh.addEventListener("pointerdown",e=>{e.preventDefault();pbh.setPointerCapture(e.pointerId);const sx=e.clientX-dx,sy=e.clientY-dy,mv=ev=>{dx=ev.clientX-sx;dy=ev.clientY-sy;pb.style.transform=`translate(${dx}px,${dy}px)`},up=()=>{pbh.removeEventListener("pointermove",mv);pbh.removeEventListener("pointerup",up)};pbh.addEventListener("pointermove",mv);pbh.addEventListener("pointerup",up)})}
   a("raBack").onclick=()=>raSeekRel(-1);
   a("raFwd").onclick=()=>raSeekRel(1);
   a("raBackF").onclick=()=>raSeekRel(-.1);
@@ -2389,7 +2401,7 @@ function raBind(){
     const tool=e.target.closest("[data-ra-tool]");
     if(tool){
       raTextHide(!1);
-      raTool=tool.dataset.raTool;
+      raTool=tool.dataset.raTool===raTool?"play":tool.dataset.raTool;
       raToolSync();
       if(raTool==="play"){raToggle();if(raPlaying()&&!raTick)raLoop()}
       return;

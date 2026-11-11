@@ -85,8 +85,13 @@ main{flex:1 1 auto;padding-bottom:0}
 .ra-playbox .buttons{gap:5px}
 .ra-playbox .buttons button{padding:6px 8px;font-size:12px}
 .ra-rate-lab{font-size:11px;font-weight:650;color:var(--muted);margin:8px 0 4px}
-.ra-ruler{position:static;display:grid;grid-template-columns:auto auto 1fr auto;gap:10px;align-items:center;min-width:0;flex:1}
-.ra-play-mini{width:34px;height:30px;padding:0;border-radius:8px;font-size:13px;line-height:1;background:#2a2440;border-color:#6b4fa3}
+.ra-ruler{position:static;display:grid;grid-template-columns:auto auto 1fr auto auto;gap:10px;align-items:center;min-width:0;flex:1}
+.ra-play-mini{width:34px;height:30px;padding:0;border-radius:8px;font-size:13px;line-height:1;background:#f6e7a3;border-color:#d4a42e;color:#2c2614;font-weight:900}
+.ra-play-mini:hover{background:#ffe98a;border-color:#f6c945}
+.ra-full{width:32px;height:30px;padding:0;border-radius:8px;font-size:15px;line-height:1}
+.ra-playbox-h{cursor:move;touch-action:none;user-select:none}
+.ra-theater-panel:fullscreen{overflow:auto;background:#0d0d14;padding:12px;border-radius:0}
+.ra-theater-panel:fullscreen .ra-stage{max-height:none}
 .ra-lab-mark>.tiny{padding:5px 9px;font-size:12px}
 .ra-clock{font-variant-numeric:tabular-nums;font-size:12px;font-weight:700;color:#f6e7a3}
 .ra-seek-wrap{position:relative;height:18px}

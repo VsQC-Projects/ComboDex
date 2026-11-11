@@ -7,7 +7,7 @@ fr:{
 ,"home.replay":"Replay Analyzer — vidéo éditeur."
 ,"Vidéo éditeur":"Vidéo éditeur"
 ,"ra.keys":"ESPACE : lecture — ← → : image — R : replay — H : HUD — M : marquer"
-,"ra.tool.play":"Lecture / pause sur la vidéo"
+,"ra.tool.play":"Lecture / pause sur la vidéo","ra.full":"Plein écran"
 ,"ra.tool.pen":"Dessine sur le calque — YouTube ne change pas."
 ,"ra.tool.text":"Écris une légende sur le calque."
 ,"ra.tool.rect":"Rectangle sur le calque, au timestamp choisi."
@@ -226,7 +226,7 @@ en:{
 "Contrôles de lecture":"Playback controls",
 "Clique pour écrire…":"Click to write…",
 "ra.keys":"SPACE: play — ← → : frame — R: replay — H: HUD — M: mark",
-"ra.tool.play":"Play / pause on the video",
+"ra.tool.play":"Play / pause on the video","ra.full":"Full screen",
 "ra.tool.pen":"Draw on the overlay — YouTube stays untouched.",
 "ra.tool.text":"Write a label on the overlay.",
 "ra.tool.rect":"Rectangle on the overlay, at the chosen timestamp.",
@@ -558,7 +558,7 @@ es:{
 "Contrôles de lecture":"Controles de reproducción",
 "Clique pour écrire…":"Clic para escribir…",
 "ra.keys":"ESPACIO: play — ← → : frame — R: replay — H: HUD — M: marcar",
-"ra.tool.play":"Play / pausa sobre el vídeo",
+"ra.tool.play":"Play / pausa sobre el vídeo","ra.full":"Pantalla completa",
 "ra.tool.pen":"Dibuja en la capa — YouTube no cambia.",
 "ra.tool.text":"Escribe una etiqueta en la capa.",
 "ra.tool.rect":"Rectángulo en la capa, en el timestamp elegido.",
