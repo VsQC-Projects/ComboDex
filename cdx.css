@@ -506,7 +506,9 @@ body.atelier-dragging{user-select:none}
 .kc-pick-cat{margin:0 0 0 auto;display:inline-flex;align-items:center;gap:8px;font-size:clamp(17px,3.6vw,21px);font-weight:800;color:#dbeef4;line-height:1.2}
 .kc-pick-cat .kc-ico{color:#5cc4dc;width:28px;height:28px;filter:drop-shadow(0 0 6px #5cc4dc55)}
 .kc-pick-cat .count{font-size:12px;font-weight:700;color:#bfeaf3;background:#1f3a44;border-radius:999px;padding:1px 8px}
-.kc-pick-row{align-items:center}
+.kc-pick-row{align-items:flex-start;flex-wrap:nowrap}
+.kc-pick-row .kc-pick-term{flex:1 1 0;overflow-wrap:break-word}
+.kc-pick-row .kc-pick-cat,.kc-pick-row .kc-actions{flex:none}
 .kc-pick-row .kc-actions{margin:0}
 .kc-pick{position:relative;margin-left:auto}
 .kc-pt-games{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
