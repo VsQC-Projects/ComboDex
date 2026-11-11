@@ -2148,7 +2148,7 @@ async function raMount(){
     raWatch();
     return;
   }
-  if(!xApproved(x)){
+  if(!xApproved(x)&&!isAtelier()){
     host.innerHTML=`<div class="x-wait muted">${l(cdxT("x.wait"))}<p class="small"><a href="${l(xHref(x))}" target="_blank" rel="noopener noreferrer">${l(cdxT("x.open"))}</a></p></div>`;
     raInkFit();
     return;
