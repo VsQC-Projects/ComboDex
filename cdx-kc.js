@@ -56,6 +56,46 @@ var STR={
 "kc.cat.resources":["Ressources","Resources","Recursos"],
 "kc.cat.system":["Mécaniques propres","Game-specific mechanics","Mecánicas propias"],
 "kc.cat.frames":["Frames","Frames","Frames"],
+"kc.cat.basics":["Fondamentaux","Fundamentals","Fundamentos"],
+"kc.cat.offense":["Attaque","Offense","Ataque"],
+"kc.catex.basics":["Neutral, footsies, spacing, zoning","Neutral, footsies, spacing, zoning","Neutral, footsies, spacing, zoning"],
+"kc.catex.notation":["5L, 236L, numpad, j., [H]","5L, 236L, numpad, j., [H]","5L, 236L, numpad, j., [H]"],
+"kc.catex.movement":["Dash, air dash, IAD, super jump","Dash, air dash, IAD, super jump","Dash, air dash, IAD, super jump"],
+"kc.catex.combo":["Links, cancels, launchers, scaling","Links, cancels, launchers, scaling","Links, cancels, launchers, scaling"],
+"kc.catex.offense":["Mixup, pression, oki, frame trap","Mixups, pressure, oki, frame traps","Mixup, presión, oki, frame trap"],
+"kc.catex.team":["Assists, tags, DHC, snapback","Assists, tags, DHC, snapback","Assists, tags, DHC, snapback"],
+"kc.catex.defense":["Garde, pushblock, parry, tech","Block, pushblock, parry, tech","Guardia, pushblock, parry, tech"],
+"kc.catex.resources":["Jauges, barres, vie récupérable","Meters, bars, recoverable health","Medidores, barras, vida recuperable"],
+"kc.catex.system":["Mécaniques propres à un jeu","Mechanics unique to one game","Mecánicas propias de un juego"],
+"kc.catex.frames":["Startup, active, recovery, hitstun","Startup, active, recovery, hitstun","Startup, active, recovery, hitstun"],
+"kc.enc.az":["Tout, de A à Z","Everything, A to Z","Todo, de la A a la Z"],
+"kc.enc.azex":["Toutes les fiches et tout le glossaire","Every entry and the whole glossary","Todas las fichas y todo el glosario"],
+"kc.enc.back":["← Catégories","← Categories","← Categorías"],
+"kc.enc.results":["Résultats","Results","Resultados"],
+"kc.enc.ours":["Fiches ComboDex","ComboDex entries","Fichas de ComboDex"],
+"kc.enc.infil":["Glossaire d’Infil — texte original en anglais","Infil’s glossary — original English text","Glosario de Infil — texto original en inglés"],
+"kc.enc.infilDef":["Définition d’Infil (anglais)","Infil’s definition (English)","Definición de Infil (inglés)"],
+"kc.enc.infilRead":["Lire la fiche chez Infil","Read the entry on Infil’s site","Leer la ficha en el sitio de Infil"],
+"kc.enc.jp":["En japonais","In Japanese","En japonés"],
+"kc.enc.loading":["Chargement du glossaire…","Loading the glossary…","Cargando el glosario…"],
+"kc.enc.keys":["Touches","Inputs","Botones"],
+"kc.enc.pad":["Manette","Controller","Mando"],
+"kc.pad.num":["Notation","Notation","Notación"],
+"kc.pad.ps":["PlayStation","PlayStation","PlayStation"],
+"kc.pad.xb":["Xbox","Xbox","Xbox"],
+"kc.pad.sw":["Switch","Switch","Switch"],
+"kc.inp.none":["aucune touche : c’est une notion","no input: this is a concept","sin botones: es un concepto"],
+"kc.inp.undoc":["touches non documentées","inputs not documented","botones no documentados"],
+"kc.inp.or":["ou","or","o"],
+"kc.inp.then":["puis","then","luego"],
+"kc.inp.hold":["maintenir","hold","mantener"],
+"kc.inp.noPlat":["pas sur cette console","not on this console","no está en esta consola"],
+"kc.inp.ctx.cancel":["pendant un coup, pour l’annuler","during a move, to cancel it","durante un golpe, para cancelarlo"],
+"kc.inp.ctx.air":["en l’air","in the air","en el aire"],
+"kc.inp.ctx.airok":["au sol ou en l’air","on the ground or in the air","en el suelo o en el aire"],
+"kc.inp.ctx.bs":["pendant la garde","while blocking","mientras bloqueas"],
+"kc.inp.ctx.super":["pendant une super","during a super","durante un súper"],
+"kc.inp.txt.hyper":["commande de super du perso suivant","next character’s super input","comando de súper del siguiente personaje"],
 "kc.enc.q":["Chercher une notion ou une notation (ex. j., [H], DHC)","Search a notion or notation (e.g. j., [H], DHC)","Buscar una noción o notación (ej. j., [H], DHC)"],
 "kc.enc.favOnly":["Favoris","Favorites","Favoritos"],
 "kc.enc.studiedOnly":["Étudiées","Studied","Estudiadas"],
@@ -300,12 +340,13 @@ function S_(x,max){return typeof x==="string"?x.slice(0,max):""}
 function I_(x,min,max,def){x=Math.round(Number(x));return isFinite(x)?Math.min(max,Math.max(min,x)):def}
 function iso(x){return typeof x==="string"&&!isNaN(Date.parse(x))?x:now()}
 function okId(x){return typeof x==="string"&&/^[\w.#|:-]{1,120}$/.test(x)}
+function encOk(x){return typeof x==="string"&&(!!ENC[x]||/^inf:[a-z0-9-]{1,100}$/.test(x))}
 function objMap(o,fn){var r={};if(o&&typeof o==="object"&&!Array.isArray(o))Object.keys(o).forEach(function(k){if(okId(k)||k.length<200){var v=fn(o[k],k);if(v!==undefined)r[k]=v}});return r}
 function clean(j){
   var z=blank();if(!j||typeof j!=="object")return z;
-  z.fav=Array.isArray(j.fav)?j.fav.filter(function(x){return ENC[x]}):[];
-  z.studied=objMap(j.studied,function(v,k){return ENC[k]?iso(v):undefined});
-  z.encNotes=objMap(j.encNotes,function(v,k){return ENC[k]&&typeof v==="string"&&v?v.slice(0,4000):undefined});
+  z.fav=Array.isArray(j.fav)?j.fav.filter(encOk):[];
+  z.studied=objMap(j.studied,function(v,k){return encOk(k)?iso(v):undefined});
+  z.encNotes=objMap(j.encNotes,function(v,k){return encOk(k)&&typeof v==="string"&&v?v.slice(0,4000):undefined});
   z.teams=(Array.isArray(j.teams)?j.teams:[]).slice(0,200).map(function(t){
     if(!t||!D.RULES[t.game])return null;var R=D.RULES[t.game];
     var mem=(Array.isArray(t.members)?t.members:[]).slice(0,R.size).map(function(m){m=m||{};return{char:S_(m.char,80),assist:R.assists&&R.assists.indexOf(m.assist)>=0?m.assist:""}});
@@ -348,7 +389,7 @@ function view(){return VIEWS.indexOf(o.kcView)>=0?o.kcView:"encyclopedia"}
 /* ——— Rendu principal ——— */
 function root(){return a("knowledge")}
 function keepFocus(fn){var ae=document.activeElement,id=ae&&ae.id,s=null,e2=null;try{s=ae.selectionStart;e2=ae.selectionEnd}catch(x){}fn();if(id){var n=document.getElementById(id);if(n&&n!==document.activeElement){n.focus();try{if(s!=null&&n.setSelectionRange)n.setSelectionRange(s,e2)}catch(x){}}}}
-function render(){var r=root();if(!r)return;if(!r.dataset.kcBound){bind(r);r.dataset.kcBound="1"}if(corrupt){corrupt=false;try{g(T_("kc.corrupt"),true)}catch(e){}}keepFocus(function(){r.innerHTML=head()+'<div class="kc-panel" id="kcPanel" role="tabpanel" aria-labelledby="kcTab-'+view()+'">'+panel(view())+"</div>"});try{hydratePortraits()}catch(e){}}
+function render(){var r=root();if(!r)return;if(!r.dataset.kcBound){bind(r);r.dataset.kcBound="1"}if(corrupt){corrupt=false;try{g(T_("kc.corrupt"),true)}catch(e){}}var keep={};["kcEncList","kcEncDetail"].forEach(function(k){var n=a(k);if(n)keep[k]=n.scrollTop});keepFocus(function(){r.innerHTML=head()+'<div class="kc-panel" id="kcPanel" role="tabpanel" aria-labelledby="kcTab-'+view()+'">'+panel(view())+"</div>"});Object.keys(keep).forEach(function(k){var n=a(k);if(n)n.scrollTop=keep[k]});try{hydratePortraits()}catch(e){}}
 function head(){
   var v=view(),q=U("gq","");
   return'<div class="panel section kc-head"><div class="row between kc-title-row"><h2 class="kc-title"><span class="kc-target" aria-hidden="true"></span>'+E_(T_("kc.name"))+' <span class="beta-tag">'+E_(T_("kc.beta"))+'</span></h2></div>'
@@ -364,7 +405,7 @@ function panel(v){try{return v==="teams"?pTeams():v==="matchups"?pMatchups():v==
 function encBlob(x){if(!x._blob){var parts=[x.term,x.alias.join(" "),x.ex,x.cat];["fr","en","es"].forEach(function(lg){parts.push((x.txt[lg]||[]).join(" "))});Object.keys(x.per).forEach(function(gm){parts.push(gName(gm));parts.push(tr(x.per[gm]))});x.games.forEach(function(gm){parts.push(gName(gm))});x._blob=norm(parts.join(" "))}return x._blob}
 function globalResults(q){
   var groups=[];
-  var enc=D.ENTRIES.filter(function(x){return hit(encBlob(x),q)}).slice(0,12);
+  var enc=D.ENTRIES.filter(function(x){return hit(encBlob(x),q)}).concat((INF||[]).filter(function(x){return hit(infBlob(x),q)})).slice(0,12);
   groups.push(["encyclopedia",enc.map(function(x){return'<button type="button" class="kc-res" data-kc="open-enc" data-id="'+E_(x.id)+'"><b>'+E_(x.term)+'</b> <span class="muted small">'+E_(T_("kc.cat."+x.cat))+"</span></button>"})]);
   var teams=S.teams.filter(function(t){return hit(norm([t.name,gName(t.game),t.notes,t.members.map(function(m){return m.char+" "+cName(m.char)}).join(" ")].join(" ")),q)}).slice(0,12);
   groups.push(["teams",teams.map(function(t){return'<button type="button" class="kc-res" data-kc="open-team" data-id="'+E_(t.id)+'"><b>'+E_(t.name)+'</b> <span class="muted small">'+E_(gName(t.game))+" · "+E_(t.members.filter(function(m){return m.char}).map(function(m){return cName(m.char)}).join(", "))+"</span></button>"})]);
@@ -383,19 +424,126 @@ function globalResults(q){
 function rxOf(x){if(!x.rx)return null;if(!x._rx)try{x._rx=new RegExp(x.rx)}catch(e){x._rx=null}return x._rx}
 function combosFor(x,games){var rx=rxOf(x);if(!rx)return[];return combosAll().filter(function(c){return(games||x.games).indexOf(c.game)>=0&&rx.test(comboText(c))})}
 function notionsFor(c){return D.ENTRIES.filter(function(x){var rx=rxOf(x);return rx&&x.games.indexOf(c.game)>=0&&rx.test(comboText(c))})}
+/* Glossaire d'Infil : chargé à la première ouverture de l'Encyclopedia. */
+var INF=null,INF_BY={},INF_T={},infLoading=false;
+var INF_GAMES={SF:["sf6"],GG:["ggst"],MVC:["mvc2","umvc3"],DBFZ:["dbfz"],"2XKO":["2xko"],BB:["bbcf"],TK:["t8"],MK:["mkxl"],FF:["cotw"]};
+var INF_LABEL={SSB:"Smash",TK:"Tekken",MK:"MK",BB:"BlazBlue",MB:"Melty Blood",VF:"Virtua Fighter",KI:"Killer Instinct",SC:"Soulcalibur",UNI:"Under Night",KOF:"KOF",FF:"Fatal Fury",SS:"Samurai Shodown",INJ:"Injustice"};
+function slug(s){return norm(s).replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,90)||"x"}
+function termKey(s){return norm(String(s).split(" — ")[0].replace(/\([^)]*\)/g,""))}
+function entry(id){return ENC[id]||INF_BY[id]||null}
+function loadInfil(){
+  if(INF||infLoading)return;infLoading=true;
+  var me=document.querySelector('script[src*="cdx-kc.js"]'),v=me&&(me.src.match(/[?&]v=([^&]+)/)||[])[1];
+  var sc=document.createElement("script");sc.src="cdx-kc-infil.js"+(v?"?v="+v:"");sc.async=true;
+  sc.onload=function(){buildInf();if(o.tab==="knowledge")rerender(true)};sc.onerror=function(){infLoading=false};
+  document.head.appendChild(sc);
+}
+function buildInf(){
+  var cur={};D.ENTRIES.forEach(function(x){x.term.split(" — ")[0].split(" / ").forEach(function(t){var k=termKey(t);if(k&&!cur[k])cur[k]=x})});
+  INF=[];(window.CDX_INFIL||[]).forEach(function(r){
+    var id="inf:"+slug(r[0]);while(INF_BY[id])id+="-x";
+    var games=[],labels=[];(r[4]||[]).forEach(function(c){if(INF_GAMES[c])INF_GAMES[c].forEach(function(gm){if(games.indexOf(gm)<0)games.push(gm)});else if(INF_LABEL[c])labels.push(INF_LABEL[c])});
+    var it={id:id,term:r[0],def:r[1],alias:r[2]||[],jp:r[3]||"",games:games,labels:labels,cat:D.CATS.indexOf(r[5])>=0?r[5]:"basics",inf:true};
+    INF_BY[id]=it;
+    var m=cur[termKey(r[0])];
+    if(m&&!m.infRow){m.infRow=it;INF_T[termKey(r[0])]=m.id}else{INF.push(it);INF_T[termKey(r[0])]=id}
+    it.alias.forEach(function(a2){var k=termKey(a2);if(!INF_T[k])INF_T[k]=INF_T[termKey(r[0])]});
+  });
+}
+function infBlob(x){if(!x._blob)x._blob=norm([x.term,x.alias.join(" "),x.def,x.labels.join(" "),x.games.map(gName).join(" ")].join(" "));return x._blob}
+
+/* Logos de jeu : une seule feuille de style, chaque logo est une classe. */
+function logoCss(){if(document.getElementById("kcLogoCss"))return;var L=window.CDX_LOGOS||{},css="";Object.keys(L).forEach(function(k){css+=".kc-gl-"+k.replace(/\W/g,"")+"{background-image:url("+L[k]+")}"});var st=document.createElement("style");st.id="kcLogoCss";st.textContent=css;document.head.appendChild(st)}
+function gl(gm){var nm=b[gm]?(b[gm].short||b[gm].name):gm;return(window.CDX_LOGOS||{})[gm]?'<i class="kc-gl kc-gl-'+gm.replace(/\W/g,"")+'" role="img" aria-label="'+E_(nm)+'" title="'+E_(b[gm]?b[gm].name:nm)+'"></i>':'<i class="kc-gt">'+E_(nm)+"</i>"}
+function gParen(x){var parts=x.games.map(gl).concat((x.labels||[]).map(function(t){return'<i class="kc-gt">'+E_(t)+"</i>"}));return parts.length?'<span class="kc-gp">('+parts.join("")+")</span>":""}
+
+/* Touches : notation → manette choisie. */
+var ARW={"1":"↙","2":"↓","3":"↘","4":"←","5":"●","6":"→","7":"↖","8":"↑","9":"↗"},PI={ps:0,xb:1,sw:2};
+function autoPad(){try{var gs=navigator.getGamepads?navigator.getGamepads():[];for(var i=0;i<gs.length;i++){var g0=gs[i];if(!g0)continue;var id=g0.id.toLowerCase();if(/xbox|xinput|045e/.test(id))return"xb";if(/dualsense|dualshock|playstation|054c/.test(id))return"ps";if(/pro controller|nintendo|057e/.test(id))return"sw"}}catch(e){}return""}
+function padMode(){var m=U("pad","");return PI[m]!=null||m==="num"?m:(autoPad()||"num")}
+function inpBtn(gm,btn,mode){var P=D.PADS[gm],v=mode!=="num"&&P&&P.b[btn];return v&&v[PI[mode]]||btn}
+function inpItem(gm,item,mode){return item.split("/").map(function(p){var h=/^\[(.+)\]$/.exec(p);if(h)return T_("kc.inp.hold")+" "+inpBtn(gm,h[1],mode);if(/^[1-9]+$/.test(p))return mode==="num"?p:p.split("").map(function(c){return ARW[c]}).join("");return inpBtn(gm,p,mode)}).join(" / ")}
+function inpCombo(gm,tok,mode){
+  var parts=tok.split("+"),txt=parts.map(function(p){return inpItem(gm,p,mode)}).join(" + ");
+  var P=D.PADS[gm];if(mode==="num"||!P)return txt;
+  var dirs=parts.filter(function(p){return/^[1-9]+$/.test(p)}),btns=parts.filter(function(p){return!/^[1-9]+$/.test(p)});
+  var sc=btns.length>1&&P.sc[btns.slice().sort().join("+")];
+  return sc?txt+" "+T_("kc.inp.or")+" "+(dirs.length?inpItem(gm,dirs.join(""),mode)+" + ":"")+sc[PI[mode]]:txt;
+}
+function inpText(gm,s,mode){
+  if(s==null)return T_("kc.inp.undoc");if(s==="-")return T_("kc.inp.none");
+  var P=D.PADS[gm];if(mode!=="num"&&P&&P.plat.indexOf(mode)<0)return T_("kc.inp.noPlat")+" · "+inpText(gm,s,"num");
+  return s.split(" | ").map(function(alt){var out=[],ctx=[];alt.split(" ").forEach(function(tk){if(!tk)return;if(tk===">")out.push(T_("kc.inp.then"));else if(tk.charAt(0)==="@")ctx.push(T_("kc.inp.ctx."+tk.slice(1)));else if(tk.charAt(0)==="*")out.push(T_("kc.inp.txt."+tk.slice(1)));else out.push(inpCombo(gm,tk,mode))});return out.join(" ")+(ctx.length?" ("+ctx.join(", ")+")":"")}).join("  "+T_("kc.inp.or")+"  ");
+}
+function inpLine(x,gm){if(!x.inp||!(gm in x.inp)&&x.games.indexOf(gm)<0)return"";var s=x.inp[gm];return s==="-"?"":'<span class="kc-inp">'+E_(inpText(gm,s,padMode()))+"</span>"}
+function listInp(x){if(x.inf||!x.inp)return"";var gm=U("encGame","");if(gm)return inpLine(x,gm);return x.games.length===1?inpLine(x,x.games[0]):""}
+
+var CAT_ICON={
+  basics:'<path d="M4 5a2 2 0 0 1 2-2h5v17H6a2 2 0 0 0-2 2zM20 5a2 2 0 0 0-2-2h-5v17h5a2 2 0 0 1 2 2z"/>',
+  notation:'<rect x="2" y="6" width="20" height="12" rx="6"/><path d="M7 10v4M5 12h4M15 11h.01M18 13h.01"/>',
+  movement:'<path d="M12 2v20M2 12h20M9 5l3-3 3 3M9 19l3 3 3-3M5 9l-3 3 3 3M19 9l3 3-3 3"/>',
+  combo:'<circle cx="6" cy="18" r="2.5"/><circle cx="6" cy="5" r="2.5"/><circle cx="18" cy="7" r="2.5"/><path d="M6 7.5v8M18 9.5c0 5-12 2-12 6"/>',
+  offense:'<path d="M14.5 17.5 3 6V3h3l11.5 11.5M13 19l6-6M16 16l4 4M19 21l2-2M9.5 6.5 14 2h3v3l-4.5 4.5M5 14l-2 2 2 2 2-2"/>',
+  team:'<circle cx="9" cy="8" r="3.5"/><path d="M2 21a7 7 0 0 1 14 0M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6 6 0 0 1 4 7"/>',
+  defense:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+  resources:'<rect x="2" y="7" width="18" height="10" rx="2"/><path d="M22 11v2M6 10v4M10 10v4"/>',
+  system:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/>',
+  frames:'<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M10 2h4"/>',
+  all:'<path d="M4 6h16M4 12h16M4 18h10"/>'
+};
+function catIcon(c){return'<svg class="kc-ico" viewBox="0 0 24 24" aria-hidden="true">'+(CAT_ICON[c]||CAT_ICON.all)+"</svg>"}
+
+function encPool(){
+  var gm=U("encGame",""),fav=U("encFav",false),st=U("encStudied",false);
+  var ok=function(x){return(!gm||x.games.indexOf(gm)>=0)&&(!fav||S.fav.indexOf(x.id)>=0)&&(!st||S.studied[x.id])};
+  return{ours:D.ENTRIES.filter(ok),inf:(INF||[]).filter(ok)};
+}
 function encFiltered(){
-  var gm=U("encGame",""),cat=U("encCat",""),q=U("encQ",""),fav=U("encFav",false),st=U("encStudied",false);
-  return D.ENTRIES.filter(function(x){return(!gm||x.games.indexOf(gm)>=0)&&(!cat||x.cat===cat)&&(!fav||S.fav.indexOf(x.id)>=0)&&(!st||S.studied[x.id])&&hit(encBlob(x),q)});
+  var cat=U("encCat",""),q=U("encQ","").trim(),p=encPool();
+  var inCat=function(x){return!cat||cat==="all"||x.cat===cat};
+  return{ours:p.ours.filter(function(x){return inCat(x)&&hit(encBlob(x),q)}),inf:p.inf.filter(function(x){return inCat(x)&&hit(infBlob(x),q)}).sort(function(a1,b1){return a1.term.localeCompare(b1.term)})};
+}
+function encBar(){
+  var gm=U("encGame",""),pm=padMode();
+  return'<div class="kc-enc-bar"><div class="kc-enc-search"><svg class="kc-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="kcEncQ" type="search" autocomplete="off" value="'+E_(U("encQ",""))+'" placeholder="'+E_(T_("kc.enc.q"))+'" aria-label="'+E_(T_("kc.enc.q"))+'"></div>'
+   +'<div class="kc-enc-tools"><select id="kcEncGame" aria-label="'+E_(T_("kc.game"))+'">'+opt("",T_("kc.allGames"),gm)+D.GAMES.map(function(x){return opt(x,gName(x),gm)}).join("")+"</select>"
+   +'<select id="kcEncPad" aria-label="'+E_(T_("kc.enc.pad"))+'">'+["num","ps","xb","sw"].map(function(k){return opt(k,T_("kc.enc.pad")+" : "+T_("kc.pad."+k),pm)}).join("")+"</select>"
+   +'<label class="kc-check"><input type="checkbox" id="kcEncFav"'+(U("encFav",false)?" checked":"")+"> "+E_(T_("kc.enc.favOnly"))+"</label>"
+   +'<label class="kc-check"><input type="checkbox" id="kcEncStudied"'+(U("encStudied",false)?" checked":"")+"> "+E_(T_("kc.enc.studiedOnly"))+"</label></div></div>";
+}
+function encItem(x,open){
+  var sel=open&&open.id===x.id;
+  return'<button type="button" class="kc-item'+(sel?" sel":"")+'" data-kc="open-enc" data-id="'+E_(x.id)+'" aria-current="'+!!sel+'"><span class="kc-item-main"><b>'+E_(x.term)+"</b> "+gParen(x)+(S.fav.indexOf(x.id)>=0?' <span aria-hidden="true">★</span>':"")+(S.studied[x.id]?' <span class="good" aria-hidden="true">✓</span>':"")+listInp(x)+"</span></button>";
 }
 function pEnc(){
-  var list=encFiltered(),open=ENC[U("encOpen","")]||null,gm=U("encGame",""),cat=U("encCat","");
-  var filters='<div class="kc-filters"><input id="kcEncQ" type="search" autocomplete="off" value="'+E_(U("encQ",""))+'" placeholder="'+E_(T_("kc.enc.q"))+'" aria-label="'+E_(T_("kc.enc.q"))+'">'
-   +'<label class="kc-inline"><span class="sr-only">'+E_(T_("kc.game"))+'</span><select id="kcEncGame" aria-label="'+E_(T_("kc.game"))+'">'+opt("",T_("kc.allGames"),gm)+D.GAMES.map(function(x){return opt(x,gName(x),gm)}).join("")+"</select></label>"
-   +'<label class="kc-check"><input type="checkbox" id="kcEncFav"'+(U("encFav",false)?" checked":"")+"> "+E_(T_("kc.enc.favOnly"))+"</label>"
-   +'<label class="kc-check"><input type="checkbox" id="kcEncStudied"'+(U("encStudied",false)?" checked":"")+"> "+E_(T_("kc.enc.studiedOnly"))+"</label></div>"
-   +'<div class="kc-chips" role="group" aria-label="'+E_(T_("kc.cat"))+'">'+[""].concat(D.CATS).map(function(c){return'<button type="button" class="kc-chip" data-kc="enc-cat" data-c="'+c+'" aria-pressed="'+(c===cat)+'">'+E_(c?T_("kc.cat."+c):T_("kc.all"))+"</button>"}).join("")+"</div>";
-  var items=list.length?list.map(function(x){return'<button type="button" class="kc-item'+(open&&open.id===x.id?" sel":"")+'" data-kc="open-enc" data-id="'+E_(x.id)+'" aria-current="'+(open&&open.id===x.id)+'"><span class="kc-item-main"><b>'+E_(x.term)+"</b>"+(S.fav.indexOf(x.id)>=0?' <span aria-hidden="true">★</span>':"")+(S.studied[x.id]?' <span class="good" aria-hidden="true">✓</span>':"")+'<span class="muted small kc-item-sub">'+E_(T_("kc.cat."+x.cat))+" · "+E_(x.games.length===5?T_("kc.allGames"):x.games.map(function(gg){return b[gg]?b[gg].short||b[gg].name:gg}).join(", "))+"</span></span></button>"}).join(""):'<div class="empty">'+E_(T_("kc.enc.empty"))+"</div>";
-  return filters+'<div class="kc-split"><div class="kc-list" aria-label="'+E_(TF("kc.enc.count",list.length))+'"><div class="muted small kc-count">'+E_(TF("kc.enc.count",list.length))+"</div>"+items+'</div><div class="kc-detail">'+(open?encCard(open):'<div class="empty">'+E_(T_("kc.enc.pick"))+"</div>")+"</div></div>";
+  logoCss();loadInfil();
+  var cat=U("encCat",""),q=U("encQ","").trim(),open=entry(U("encOpen",""));
+  if(open&&!cat&&!q){cat=open.cat;setU("encCat",cat)}
+  if(!cat&&!q&&!U("encFav",false)&&!U("encStudied",false)){
+    var p=encPool(),n=function(c){return p.ours.concat(p.inf).filter(function(x){return c==="all"||x.cat===c}).length};
+    return encBar()+'<div class="kc-enc-home">'+D.CATS.concat(["all"]).map(function(c){var nm=c==="all"?T_("kc.enc.az"):T_("kc.cat."+c),ex=c==="all"?T_("kc.enc.azex"):T_("kc.catex."+c);return'<button type="button" class="kc-enc-tile'+(c==="all"?" kc-enc-all":"")+'" data-kc="enc-cat" data-c="'+c+'">'+catIcon(c)+'<b>'+E_(nm)+'</b><span class="muted small">'+E_(ex)+'</span><span class="kc-enc-n">'+n(c)+"</span></button>"}).join("")+"</div>"
+     +(INF?"":'<p class="muted small kc-enc-load">'+E_(T_("kc.enc.loading"))+"</p>");
+  }
+  var f=encFiltered(),all=f.ours.concat(f.inf);
+  if(!open||all.indexOf(open)<0&&!(open.inf&&!INF))open=all[0]||null;
+  var title=q?T_("kc.enc.results"):cat==="all"||!cat?T_("kc.enc.az"):T_("kc.cat."+cat);
+  var items=(f.ours.length?'<div class="kc-list-h">'+E_(T_("kc.enc.ours"))+"</div>"+f.ours.map(function(x){return encItem(x,open)}).join(""):"")
+   +(f.inf.length?'<div class="kc-list-h">'+E_(T_("kc.enc.infil"))+"</div>"+f.inf.map(function(x){return encItem(x,open)}).join(""):"")
+   +(INF?"":'<div class="muted small kc-enc-load">'+E_(T_("kc.enc.loading"))+"</div>");
+  return encBar()+'<div class="kc-enc-crumb"><button type="button" class="tiny" data-kc="enc-home">'+E_(T_("kc.enc.back"))+'</button><h3 class="kc-h">'+(cat&&!q?catIcon(cat):"")+E_(title)+' <span class="count">'+all.length+"</span></h3></div>"
+   +'<div class="kc-split kc-enc-split"><div class="kc-list" id="kcEncList" aria-label="'+E_(TF("kc.enc.count",all.length))+'">'+(all.length||!INF?items:'<div class="empty">'+E_(T_("kc.enc.empty"))+"</div>")+'</div><div class="kc-detail" id="kcEncDetail">'+(open?(open.inf?infCard(open):encCard(open)):'<div class="empty">'+E_(T_("kc.enc.pick"))+"</div>")+"</div></div>";
+}
+function infDef(s){return E_(s).replace(/⟦([^|⟧]*)\|([^⟧]*)⟧/g,function(m,t,lab){var id=INF_T[termKey(t)];return id?'<button type="button" class="kc-link" data-kc="open-enc" data-id="'+E_(id)+'">'+lab+"</button>":lab}).replace(/\n/g,"<br>")}
+function infUrl(x){return"https://glossary.infil.net/?t="+encodeURIComponent(x.term)}
+function encActions(x){var fav=S.fav.indexOf(x.id)>=0,st=!!S.studied[x.id];return'<div class="row kc-actions"><button type="button" class="tiny" data-kc="enc-fav" data-id="'+E_(x.id)+'" aria-pressed="'+fav+'">'+E_(T_(fav?"kc.enc.faved":"kc.enc.fav"))+'</button><button type="button" class="tiny" data-kc="enc-study" data-id="'+E_(x.id)+'" aria-pressed="'+st+'">'+E_(T_(st?"kc.enc.studied":"kc.enc.study"))+"</button></div>"}
+function encNote(x){return'<label class="kc-note"><span>'+E_(T_("kc.enc.note"))+" "+badge("personal")+'</span><textarea id="kcEncNote" rows="3">'+E_(S.encNotes[x.id]||"")+"</textarea></label>"}
+function infCard(x){
+  return'<article class="kc-card" aria-labelledby="kcEncTitle"><h3 id="kcEncTitle">'+E_(x.term)+" "+gParen(x)+"</h3>"
+   +(x.alias.length?'<p class="muted small">'+E_(x.alias.join(" · "))+"</p>":"")+encActions(x)
+   +"<h4>"+E_(T_("kc.enc.infilDef"))+'</h4><p class="kc-inf" lang="en">'+infDef(x.def)+"</p>"
+   +(x.jp?"<h4>"+E_(T_("kc.enc.jp"))+'</h4><p class="small muted">'+E_(x.jp)+"</p>":"")
+   +"<h4>"+E_(T_("kc.sources"))+'</h4><p class="small"><a href="'+E_(infUrl(x))+'" target="_blank" rel="noopener noreferrer">'+E_(T_("kc.enc.infilRead"))+" — Infil, The Fighting Game Glossary</a></p>"
+   +encNote(x)+"</article>";
 }
 function encCard(x){
   var t=x.txt[lang()]||x.txt.en||x.txt.fr,fav=S.fav.indexOf(x.id)>=0,st=!!S.studied[x.id];
@@ -410,10 +558,12 @@ function encCard(x){
   var ft=ftGames.length?'<h4>Frame Theater</h4><div class="row">'+ftGames.map(function(gm){return'<button type="button" class="tiny" data-kc="open-ft" data-game="'+gm+'">'+E_(T_("kc.enc.ft"))+" — "+E_(b[gm].short||b[gm].name)+"</button>"}).join("")+"</div>":"";
   var rel=x.rel.filter(function(r){return ENC[r]}).map(function(r){return'<button type="button" class="kc-chip" data-kc="open-enc" data-id="'+r+'">'+E_(ENC[r].term)+"</button>"}).join("");
   var pch=[];D.PATCHES.forEach(function(p){p.changes.forEach(function(c){if(c.rel.indexOf(x.id)>=0)pch.push([p,c])})});
-  return'<article class="kc-card" aria-labelledby="kcEncTitle"><div class="row between"><h3 id="kcEncTitle">'+E_(x.term)+"</h3>"+badge(x.st==="ok"?"documented":"partial")+"</div>"
+  var pm=padMode(),keys=x.games.map(function(gm){var s=x.inp?x.inp[gm]:null;return'<div class="kc-key-row">'+gl(gm)+'<span class="kc-key-g">'+E_(gName(gm))+'</span><span class="kc-inp">'+E_(inpText(gm,s,pm))+"</span></div>"}).join("");
+  var padSrc=[];x.games.forEach(function(gm){var P=D.PADS[gm];if(P&&x.inp&&x.inp[gm]&&x.inp[gm]!=="-")P.src.forEach(function(k){if(padSrc.indexOf(k)<0)padSrc.push(k)})});
+  return'<article class="kc-card" aria-labelledby="kcEncTitle"><div class="row between"><h3 id="kcEncTitle">'+E_(x.term)+" "+gParen(x)+"</h3>"+badge(x.st==="ok"?"documented":"partial")+"</div>"
    +(x.alias.length?'<p class="muted small">'+E_(x.alias.join(" · "))+"</p>":"")
-   +'<div class="row kc-actions"><button type="button" class="tiny" data-kc="enc-fav" data-id="'+x.id+'" aria-pressed="'+fav+'">'+E_(T_(fav?"kc.enc.faved":"kc.enc.fav"))+'</button><button type="button" class="tiny" data-kc="enc-study" data-id="'+x.id+'" aria-pressed="'+st+'">'+E_(T_(st?"kc.enc.studied":"kc.enc.study"))+"</button></div>"
-   +'<p class="small"><b>'+E_(T_("kc.enc.games"))+"</b> : "+E_(x.games.map(gName).join(", "))+"</p>"
+   +encActions(x)
+   +'<div class="kc-keys"><h4>'+E_(T_("kc.enc.keys"))+' <span class="muted small">· '+E_(T_("kc.pad."+pm))+"</span></h4>"+keys+"</div>"
    +"<h4>"+E_(T_("kc.enc.def"))+"</h4><p>"+E_(t[0])+"</p><h4>"+E_(T_("kc.enc.how"))+"</h4><p>"+E_(t[1])+"</p>"
    +(t[2]?"<h4>"+E_(T_("kc.enc.cond"))+"</h4><p>"+E_(t[2])+"</p>":"")
    +per+cmp
@@ -421,8 +571,9 @@ function encCard(x){
    +exHtml+ft
    +(rel?"<h4>"+E_(T_("kc.enc.rel"))+'</h4><div class="kc-chips">'+rel+"</div>":"")
    +(pch.length?"<h4>"+E_(T_("kc.enc.patches"))+'</h4><div class="kc-res-list">'+pch.map(function(pc){return'<button type="button" class="kc-res" data-kc="open-patch" data-id="'+E_(pc[0].id)+'"><b>'+E_(gName(pc[0].game))+" "+E_(pc[0].ver)+'</b> <span class="muted small">'+E_(tr(pc[1].txt))+"</span></button>"}).join("")+"</div>":"")
-   +"<h4>"+E_(T_("kc.sources"))+'</h4><p class="small">'+srcLinks(x.src)+"</p>"
-   +'<label class="kc-note"><span>'+E_(T_("kc.enc.note"))+" "+badge("personal")+'</span><textarea id="kcEncNote" rows="3">'+E_(S.encNotes[x.id]||"")+"</textarea></label>"
+   +(x.infRow?'<details class="kc-inf-more"><summary>'+E_(T_("kc.enc.infilDef"))+'</summary><p class="kc-inf" lang="en">'+infDef(x.infRow.def)+'</p><p class="small"><a href="'+E_(infUrl(x.infRow))+'" target="_blank" rel="noopener noreferrer">'+E_(T_("kc.enc.infilRead"))+"</a></p></details>":"")
+   +"<h4>"+E_(T_("kc.sources"))+'</h4><p class="small">'+srcLinks(x.src.concat(padSrc.filter(function(k){return x.src.indexOf(k)<0})))+"</p>"
+   +encNote(x)
    +'<p class="muted small">'+E_(T_("kc.id"))+" : <code>"+E_(x.id)+"</code> · "+E_(T_("kc.updated"))+" "+E_(fmtDay(x.updated))+"</p></article>";
 }
 
@@ -709,8 +860,9 @@ function bind(r){
     var el=ev.target.closest("[data-kc]");if(!el||!r.contains(el))return;var k=el.dataset.kc,id=el.dataset.id;
     switch(k){
       case"view":go(el.dataset.v);return;
-      case"open-enc":setU("encOpen",id);if(view()!=="encyclopedia"){go("encyclopedia");return}save();rerender(true);var dt=a("kcEncTitle");if(dt&&matchMedia("(max-width: 860px)").matches)dt.scrollIntoView({block:"start"});return;
-      case"enc-cat":setU("encCat",el.dataset.c);save();rerender(true);return;
+      case"open-enc":var oe2=entry(id);setU("encOpen",id);if(oe2&&U("encCat","")&&U("encCat","")!=="all"&&U("encCat","")!==oe2.cat&&!U("encQ","").trim())setU("encCat",oe2.cat);if(view()!=="encyclopedia"){go("encyclopedia");return}save();rerender(true);var dt=a("kcEncDetail");if(dt)dt.scrollTop=0;return;
+      case"enc-cat":setU("encCat",el.dataset.c);setU("encOpen","");setU("encQ","");save();rerender(true);return;
+      case"enc-home":setU("encCat","");setU("encOpen","");setU("encQ","");setU("encFav",false);setU("encStudied",false);save();rerender(true);return;
       case"enc-fav":var i=S.fav.indexOf(id);if(i>=0)S.fav.splice(i,1);else S.fav.push(id);save();rerender(true);return;
       case"enc-study":if(S.studied[id])delete S.studied[id];else S.studied[id]=now();save();rerender(true);return;
       case"open-combo":openCombo(id);return;
@@ -753,7 +905,7 @@ function bind(r){
     if(el.dataset.kcSel==="team-link"&&t){var ci=t.combos.indexOf(el.dataset.id);if(el.checked&&ci<0)t.combos.push(el.dataset.id);if(!el.checked&&ci>=0)t.combos.splice(ci,1);touch(t);rerender(true);return}
     if(el.dataset.kcSel==="cf"){setU("c"+el.dataset.k.charAt(0).toUpperCase()+el.dataset.k.slice(1),el.value);if(el.dataset.k==="game")setU("cChar","");save();rerender(true);return}
     if(el.dataset.kcSel==="mstate"){if(el.value)S.mastery[el.dataset.id]=el.value;else delete S.mastery[el.dataset.id];save();return}
-    var map={kcEncGame:"encGame",kcEncCmpA:"encCmpA",kcEncCmpB:"encCmpB",kcNewTeamGame:"newTeamGame",kcTeamCmpA:"teamCmpA",kcTeamCmpB:"teamCmpB",kcTeamVs:"teamVs",kcPartnerGame:"partnerGame",kcPartnerChar:"partnerChar",kcMGame:"mGame",kcMA:"mA",kcMB:"mB",kcHGame:"hGame",kcHChar:"hChar",kcPGame:"pGame",kcPChar:"pChar",kcPCat:"pCat",kcPFrom:"pFrom",kcPTo:"pTo"};
+    var map={kcEncGame:"encGame",kcEncPad:"pad",kcEncCmpA:"encCmpA",kcEncCmpB:"encCmpB",kcNewTeamGame:"newTeamGame",kcTeamCmpA:"teamCmpA",kcTeamCmpB:"teamCmpB",kcTeamVs:"teamVs",kcPartnerGame:"partnerGame",kcPartnerChar:"partnerChar",kcMGame:"mGame",kcMA:"mA",kcMB:"mB",kcHGame:"hGame",kcHChar:"hChar",kcPGame:"pGame",kcPChar:"pChar",kcPCat:"pCat",kcPFrom:"pFrom",kcPTo:"pTo"};
     if(map[id]){setU(map[id],el.value);if(id==="kcPartnerGame")setU("partnerChar","");if(id==="kcMGame"){setU("mA","");setU("mB","");setU("mTeam","")}if(id==="kcMA"||id==="kcMB")setU("mEdit","");if(id==="kcPGame"){setU("pChar","");setU("pFrom","");setU("pTo","");setU("pOpen","")}if(id==="kcHGame")setU("hChar","");save();rerender(true);return}
     if(id==="kcEncFav"||id==="kcEncStudied"){setU(id==="kcEncFav"?"encFav":"encStudied",el.checked);save();rerender(true);return}
     if(id==="kcTeamName"&&t){t.name=(el.value.trim()||t.name).slice(0,60);touch(t);rerender(true);return}
@@ -767,7 +919,7 @@ function bind(r){
     if(id==="kcEncQ"){setU("encQ",el.value.slice(0,120));saveSoon();rerender();return}
     if(id==="kcMQ"){setU("mQ",el.value.slice(0,120));saveSoon();rerender();return}
     if(id==="kcPQ"){setU("pQ",el.value.slice(0,120));saveSoon();rerender();return}
-    if(id==="kcEncNote"){var oid=U("encOpen","");if(ENC[oid]){if(el.value)S.encNotes[oid]=el.value.slice(0,4000);else delete S.encNotes[oid];saveSoon()}return}
+    if(id==="kcEncNote"){var oid=U("encOpen","");if(entry(oid)){if(el.value)S.encNotes[oid]=el.value.slice(0,4000);else delete S.encNotes[oid];saveSoon()}return}
     if(id==="kcTeamNotes"){var t=team(U("teamSel",""));if(t){t.notes=el.value.slice(0,4000);t.updatedAt=now();saveSoon()}return}
     if(id==="kcCNotes"&&S.active){var cc=S.chal[S.active.id]||(S.chal[S.active.id]={goal:S.active.goal,streak:0,okV:0,notes:""});cc.notes=el.value.slice(0,4000);saveSoon();return}
   });

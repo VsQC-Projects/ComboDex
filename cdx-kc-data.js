@@ -115,10 +115,10 @@ e("buttons","notation",ALL,"Boutons par jeu",["L M H S","LP","A1","A2","S1","S2"
   en:["Each game names its buttons differently; ComboDex notation follows the wikis.","See per-game differences below.",""],
   es:["Cada juego nombra sus botones de forma distinta; la notación de ComboDex sigue los wikis.","Ver las diferencias por juego abajo.",""]
 },{per:{
-  mvc2:X("SuperCombo note les normaux LP, LK, MP, MK, HP, HK ; A1 et A2 appellent les assists.","SuperCombo writes normals as LP, LK, MP, MK, HP, HK; A1 and A2 call assists.","SuperCombo escribe LP, LK, MP, MK, HP, HK; A1 y A2 llaman a los assists."),
+  mvc2:X("Quatre boutons d’attaque LP, LK, HP, HK et deux boutons d’assist A1, A2. Les coups moyens (MP, MK) sortent en appuyant deux fois sur le bouton léger pendant une chaîne.","Four attack buttons LP, LK, HP, HK and two assist buttons A1, A2. Medium attacks (MP, MK) come out by pressing the light button again during a chain.","Cuatro botones de ataque LP, LK, HP, HK y dos de assist A1, A2. Los golpes medios (MP, MK) salen pulsando otra vez el botón ligero durante una cadena."),
   umvc3:X("Quatre boutons d’attaque L, M, H, S et deux boutons d’assist A1, A2. L+M+H+S active le X-Factor.","Four attack buttons L, M, H, S and two assist buttons A1, A2. L+M+H+S activates X-Factor.","Cuatro botones de ataque L, M, H, S y dos de assist A1, A2. L+M+H+S activa el X-Factor."),
   dbfz:X("L, M, H, S et A1, A2. Exemples : Super Dash H+S, Vanish M+H, Dragon Rush L+M, Sparking Blast L+M+H+S.","L, M, H, S and A1, A2. Examples: Super Dash H+S, Vanish M+H, Dragon Rush L+M, Sparking Blast L+M+H+S.","L, M, H, S y A1, A2. Ejemplos: Super Dash H+S, Vanish M+H, Dragon Rush L+M, Sparking Blast L+M+H+S."),
-  tokon:X("L, M, H, S et U (coups uniques, ex. « Flyby Kick (U) » dans la note officielle) ; A + direction appelle un Assemble Assist (6A Shooter, 2A Vertical, 4A Assault, j.A aérien, 5A Assemble Rush en combo).","L, M, H, S and U (unique attacks, e.g. “Flyby Kick (U)” in the official note); A + direction calls an Assemble Assist (6A Shooter, 2A Vertical, 4A Assault, j.A aerial, 5A Assemble Rush in combos).","L, M, H, S y U (ataques únicos, ej. «Flyby Kick (U)» en la nota oficial); A + dirección llama un Assemble Assist (6A Shooter, 2A Vertical, 4A Assault, j.A aéreo, 5A Assemble Rush en combo)."),
+  tokon:X("Six boutons : L, M, H, U (coups uniques), A (Assemble) et T (Tag, ajouté par le patch de novembre 2026). S’y ajoutent les raccourcis QS (Quick Skill = direction + QS) et QD (Quick Dash). A + direction appelle un Assemble Assist (6A Shooter, 2A Vertical, 4A Assault, j.A aérien, 5A Assemble Rush en combo).","Six buttons: L, M, H, U (unique attacks), A (Assemble) and T (Tag, added by the November 2026 patch). Plus the QS (Quick Skill = direction + QS) and QD (Quick Dash) shortcuts. A + direction calls an Assemble Assist (6A Shooter, 2A Vertical, 4A Assault, j.A aerial, 5A Assemble Rush in combos).","Seis botones: L, M, H, U (ataques únicos), A (Assemble) y T (Tag, añadido por el parche de noviembre de 2026). Además, los atajos QS (Quick Skill = dirección + QS) y QD (Quick Dash). A + dirección llama un Assemble Assist (6A Shooter, 2A Vertical, 4A Assault, j.A aéreo, 5A Assemble Rush en combo)."),
   "2xko":X("L, M, H, S1, S2 et T (tag). Maintenir un bouton lourd donne la version chargée : 5[H].","L, M, H, S1, S2 and T (tag). Holding a heavy button gives the charged version: 5[H].","L, M, H, S1, S2 y T (tag). Mantener un botón pesado da la versión cargada: 5[H].")
 },rel:["numpad","hold"],src:["scMvc2","scUmvc3c","dlDbfz","dlMtfs","xkoMech"],st:"partial"});
 
@@ -539,5 +539,70 @@ var GAME_PATCH_NOTE={
 /* Base de situations de matchup documentées : vide tant qu’aucune source fiable n’est importée. */
 var MATCHUPS=[];
 
-window.CDX_KC_DATA={SRC:SRC,CATS:CATS,ENTRIES:E,RULES:RULES,PATCHES:PATCHES,GAME_PATCH_NOTE:GAME_PATCH_NOTE,MATCHUPS:MATCHUPS,GAMES:ALL};
+/* ——— Touches par manette (disposition par défaut) ———
+   b : bouton de notation → [PlayStation, Xbox, Switch] ; null = plateforme absente.
+   sc : raccourci d’un seul bouton pour une combinaison (clé = boutons triés). */
+SRC.dlDbfzCtl={t:"Dustloop — DBFZ / Controls",u:"https://www.dustloop.com/w/DBFZ/Controls"};
+SRC.xkoCtl={t:"2XKO Wiki — Controls",u:"https://wiki.play2xko.com/en-us/Controls"};
+SRC.scMvc2Ctl={t:"SuperCombo — Marvel vs Capcom 2 / Controls",u:"https://wiki.supercombo.gg/w/Marvel_vs_Capcom_2/Controls"};
+SRC.spottisTokon={t:"Spottis — Marvel Tōkon: Fighting Souls Controls",u:"https://www.spottis.com/games/marvel-t-kon-fighting-souls-controls/"};
+SRC.infil={t:"Infil — The Fighting Game Glossary",u:"https://glossary.infil.net/"};
+var PADS={
+  dbfz:{plat:["ps","xb","sw"],b:{L:["□","X","Y"],M:["△","Y","X"],H:["○","B","A"],S:["×","A","B"],A1:["L1","LB","L"],A2:["L2","LT","ZL"]},sc:{"H+S":["R2","RT","ZR"],"L+M":["R1","RB","R"]},src:["dlDbfzCtl"]},
+  umvc3:{plat:["ps","xb"],b:{L:["□","X"],M:["△","Y"],H:["○","B"],S:["×","A"],A1:["L1","LB"],A2:["R1","RB"]},sc:{},src:["scUmvc3c"]},
+  mvc2:{plat:["ps","xb","sw"],b:{LP:["□","X","Y"],HP:["△","Y","X"],LK:["×","A","B"],HK:["○","B","A"],A1:["L1","LB","L"],A2:["L2","LT","ZL"]},sc:{},src:["scMvc2Ctl"]},
+  "2xko":{plat:["ps","xb"],b:{L:["□","X"],M:["△","Y"],H:["○","B"],T:["×","A"],S1:["L1","LB"],S2:["R1","RB"]},sc:{},src:["xkoCtl"]},
+  tokon:{plat:["ps","xb"],b:{L:["□","X"],M:["△","Y"],H:["○","B"],A:["×","A"],U:["R1","RB"],QS:["R2","RT"],QD:["L1","LB"],T:["L2","LT"]},sc:{"L+M":["L1","LB"]},src:["steamTokon","spottisTokon","dlMtfs"]}
+};
+/* Touches d’une fiche, par jeu. Syntaxe : « | » = ou ; espace = puis ; « > » = enchaîner ; « + » = ensemble ;
+   « / » = au choix ; [X] = maintenir X ; @ctx = situation (voir kc.inp.ctx.*) ; *clé = texte (kc.inp.txt.*) ; « - » = aucune touche. */
+var NOTION="-";
+var INP={
+  numpad:{all:NOTION},"chain-symbols":{all:NOTION},delay:{all:NOTION},release:{all:NOTION},"repeat-hits":{all:NOTION},"whiff-land":{all:NOTION},"counter-hit":{all:NOTION},motions:{all:NOTION},
+  "jump-attack":{dbfz:"7/8/9 > L/M/H",umvc3:"7/8/9 > L/M/H/S","2xko":"7/8/9 > L/M/H",tokon:"7/8/9 > L/M/H",mvc2:"7/8/9 > LP/LK/HP/HK"},
+  "superjump-attack":{dbfz:"1/2/3 > 7/8/9 > L/M/H",umvc3:"1/2/3 > 7/8/9 > L/M/H/S","2xko":"2 > 8 > L/M/H",tokon:"1/2/3 > 7/8/9 > L/M/H",mvc2:"1/2/3 > 7/8/9 > LP/LK/HP/HK"},
+  hold:{"2xko":"[H]",dbfz:NOTION,umvc3:NOTION,tokon:NOTION,mvc2:NOTION},
+  jc:{all:"7/8/9 @cancel"},
+  dc:{umvc3:"66 @cancel | L+M @cancel",dbfz:"66 @cancel",tokon:"66 @cancel | QD @cancel","2xko":"66 @cancel | L+M @cancel",mvc2:"66 @cancel | LP+HP @cancel"},
+  iad:{umvc3:"9 > 66 | 9 > L+M",dbfz:"9 > 66",tokon:"9 > 66 | 9 > QD","2xko":"9 > 66 | 9 > L+M"},
+  tk:{dbfz:"2369+L/M/H",umvc3:"2369+L/M/H",tokon:"2369+L/M/H","2xko":"2369+L/M/H",mvc2:"2369+LP/HP"},
+  buttons:{dbfz:"L M H S A1 A2",umvc3:"L M H S A1 A2",mvc2:"LP LK HP HK A1 A2","2xko":"L M H T S1 S2",tokon:"L M H U A T QS QD"},
+  superjump:{dbfz:"1/2/3 > 7/8/9",umvc3:"1/2/3 > 7/8/9",tokon:"1/2/3 > 7/8/9",mvc2:"1/2/3 > 7/8/9","2xko":"2 > 8"},
+  prejump:{all:NOTION},
+  airdash:{tokon:"@air 66 | @air QD | @air L+M","2xko":"@air 66 | @air L+M",dbfz:"@air 66",umvc3:"@air 66 | @air L+M"},
+  "super-dash":{dbfz:"H+S @airok"},
+  launcher:{umvc3:"S",mvc2:"2+HP",tokon:"2+H"},
+  "air-combo":{umvc3:"S > 8",mvc2:"2+HP > 8"},
+  "magic-series":{umvc3:"L > M > H > S",mvc2:"LP > LK > HP > HK"},
+  gatling:{tokon:"L > L > L | L > M > H"},
+  "special-cancel":{umvc3:NOTION},otg:{all:NOTION},bounce:{all:NOTION},hsd:{all:NOTION},"damage-scaling":{all:NOTION},"flying-screen":{all:NOTION},"team-size":{all:NOTION},
+  assist:{umvc3:"A1/A2",mvc2:"A1/A2",dbfz:"A1/A2",tokon:"5/6/2/4+A","2xko":"T | 4+T"},
+  dhc:{umvc3:"*hyper @super",mvc2:"*hyper @super"},
+  thc:{mvc2:"A1+A2"},
+  snapback:{umvc3:"236+A1/A2",mvc2:"236+A1/A2"},
+  "crossover-counter":{umvc3:"6+A1/A2 @bs"},
+  "x-factor":{umvc3:"L+M+H+S"},
+  "z-assist":{dbfz:"A1/A2 | [A1]/[A2] | 6+A1/A2"},
+  "ultimate-z-change":{dbfz:"A1/A2 @super"},
+  "assemble-assist":{tokon:"5/6/2/4+A | 5+A @cancel | T"},
+  fuse:{"2xko":NOTION},
+  "tag-launcher":{"2xko":"2+T | T"},
+  "super-assemble":{tokon:"[A] @super"},
+  pushblock:{umvc3:"L+M @bs",mvc2:"LP+HP @bs"},
+  "guard-cancel":{dbfz:"6+A1/A2 @bs"},
+  "z-reflect":{dbfz:"4+S"},
+  parry:{"2xko":"L+H | 2+L+H"},
+  chip:{all:NOTION},"recoverable-health":{all:NOTION},meter:{all:NOTION},"assemble-gauge":{all:NOTION},
+  "break-meter":{"2xko":"T+S1/S2"},
+  sparking:{dbfz:"L+M+H+S"},
+  vanish:{dbfz:"M+H"},
+  "limit-breaking":{all:NOTION},"tokon-break":{all:NOTION},
+  "tokon-assemble":{tokon:"QS+A | 236+L+A"},
+  "critical-strike":{"2xko":"[H]"},
+  startup:{all:NOTION},active:{all:NOTION},recovery:{all:NOTION},"frame-advantage":{all:NOTION},hitstun:{all:NOTION},blockstun:{all:NOTION},hitbox:{all:NOTION}
+};
+E.forEach(function(x){var m=INP[x.id]||{};x.inp={};x.games.forEach(function(gm){var v=m[gm]!=null?m[gm]:m.all;if(v!=null)x.inp[gm]=v})});
+CATS.splice(0,0,"basics");CATS.splice(CATS.indexOf("combo")+1,0,"offense");
+
+window.CDX_KC_DATA={SRC:SRC,CATS:CATS,ENTRIES:E,RULES:RULES,PATCHES:PATCHES,GAME_PATCH_NOTE:GAME_PATCH_NOTE,MATCHUPS:MATCHUPS,GAMES:ALL,PADS:PADS};
 })();

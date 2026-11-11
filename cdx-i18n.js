@@ -4,7 +4,7 @@ fr:{
 "ft.help":"L’avantage « on block » indique qui peut agir en premier après un coup bloqué. Un coup à +2 laisse l’attaquant agir 2 frames avant l’adversaire. Un coup à −8 peut être puni si l’adversaire a une attaque assez rapide et à portée. D’autres propriétés (pushback, portée) jouent aussi."
 ,"ra.lead":"Pause, image par image, pose chaque touche au moment où elle sort. La séquence se construit toute seule, puis Enregistrer l’édition la met dans le dossier Replay Analyzer du perso. YouTube ne change pas : c’est un calque."
 ,"ra.hits.lead":"Au moment où le coup sort, clique la touche. Elle s’affiche sur la vidéo et s’ajoute à la séquence."
-,"home.replay":"Vidéo éditeur."
+,"home.replay":"Replay Analyzer — vidéo éditeur."
 ,"Vidéo éditeur":"Vidéo éditeur"
 ,"ra.keys":"ESPACE : lecture — ← → : image — R : replay — H : HUD — M : marquer"
 ,"ra.tool.play":"Lecture / pause sur la vidéo"
@@ -204,7 +204,7 @@ en:{
 "bot.pick":"I won’t pick for you. On the card, {0} looks heavier. In lab, the shorter one often wins. Test both.",
 "bot.meter":"A: {0}. B: {1}.",
 "bot.fallback":"I’m a basic bot. I compare commands, damage, the ender. Ask: who hits harder, the ender, what changes.",
-"home.replay":"Video editor.",
+"home.replay":"Replay Analyzer — video editor.",
 "home.create":"Create — write a sequence on the keyboard, by clicking the commands, or with your controller (beta).",
 "compare.lead":"Two combos, from the same character or others. To see if 5H can replace 2H, or if a Limit Strike ender beats a level 3.",
 "Limit Strike":"Limit Strike",
@@ -536,7 +536,7 @@ es:{
 "bot.pick":"No elijo por ti. En la ficha, {0} parece más pesado. En lab, el más corto gana a menudo. Prueba los dos.",
 "bot.meter":"A: {0}. B: {1}.",
 "bot.fallback":"Soy un bot básico. Comparo comandos, daño, el final. Pregunta: quién pega más, el final, qué cambia.",
-"home.replay":"Editor de vídeo.",
+"home.replay":"Replay Analyzer — editor de vídeo.",
 "home.create":"Crear — escribir una secuencia con el teclado, haciendo clic en los comandos, o con tu mando (beta).",
 "compare.lead":"Dos combos, del mismo personaje u otros. Para ver si 5H puede sustituir a 2H, o si un Limit Strike vale más que un super de nivel 3.",
 "Limit Strike":"Limit Strike",
