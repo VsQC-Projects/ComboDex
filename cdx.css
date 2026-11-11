@@ -503,8 +503,10 @@ body.atelier-dragging{user-select:none}
 .kc-enc-page{width:100%;min-width:0;padding-bottom:28px}
 .kc-pick-row{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 14px;margin:0 0 12px;padding-bottom:10px;border-bottom:1px solid #3a5560}
 .kc-pick-term{margin:0;min-width:0;font-size:clamp(18px,4.6vw,24px);font-weight:800;line-height:1.2}
-.kc-pick-cat{margin:0 0 0 auto;display:inline-flex;align-items:center;gap:6px;font-size:14px;color:#dbeef4}
-.kc-pick-cat .kc-ico{color:#5cc4dc}
+.kc-pick-cat{margin:0 0 0 auto;display:inline-flex;align-items:center;gap:8px;font-size:clamp(17px,3.6vw,21px);font-weight:800;color:#dbeef4;line-height:1.2}
+.kc-pick-cat .kc-ico{color:#5cc4dc;width:28px;height:28px;filter:drop-shadow(0 0 6px #5cc4dc55)}
+.kc-pick-cat .count{font-size:12px;font-weight:700;color:#bfeaf3;background:#1f3a44;border-radius:999px;padding:1px 8px}
+.kc-pick-row{align-items:center}
 .kc-pick-row .kc-actions{margin:0}
 .kc-pick{position:relative;margin-left:auto}
 .kc-term-alt{display:block;font-size:.72em;font-weight:600;color:var(--muted)}

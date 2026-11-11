@@ -78,8 +78,8 @@ var STR={
 "kc.enc.back":["← Catégories","← Categories","← Categorías"],
 "kc.enc.results":["Résultats","Results","Resultados"],
 "kc.enc.ours":["Fiches ComboDex","ComboDex entries","Fichas de ComboDex"],
-"kc.enc.infil":["Glossaire d’Infil — texte original en anglais","Infil’s glossary — original English text","Glosario de Infil — texto original en inglés"],
-"kc.enc.infilDef":["Définition d’Infil (anglais)","Infil’s definition (English)","Definición de Infil (inglés)"],
+"kc.enc.infil":["Glossaire d’Infil","Infil’s glossary","Glosario de Infil"],
+"kc.enc.infilDef":["Glossaire d’Infil","Infil’s glossary","Glosario de Infil"],
 "kc.enc.infilRead":["Lire la fiche chez Infil","Read the entry on Infil’s site","Leer la ficha en el sitio de Infil"],
 "kc.enc.jp":["En japonais","In Japanese","En japonés"],
 "kc.enc.loading":["Chargement du glossaire…","Loading the glossary…","Cargando el glosario…"],
@@ -552,8 +552,7 @@ function encNote(x){return'<label class="kc-note"><span>'+E_(T_("kc.enc.note"))+
 function infCard(x){
   return'<article class="kc-card" aria-labelledby="kcEncTitle"><h3 id="kcEncTitle" class="sr-only">'+E_(x.term)+"</h3>"
    +(x.alias.length?'<p class="muted small">'+E_(x.alias.join(" · "))+"</p>":"")
-   +"<h4>"+E_(T_("kc.enc.infilDef"))+'</h4><p class="kc-inf" lang="en">'+infDef(x.def)+"</p>"
-   +(x.jp?"<h4>"+E_(T_("kc.enc.jp"))+'</h4><p class="small muted">'+E_(x.jp)+"</p>":"")
+   +'<p class="kc-inf" lang="en">'+infDef(x.def)+"</p>"
    +'<details class="kc-src-more"><summary>'+E_(T_("kc.sources"))+'</summary><p class="small"><a href="'+E_(infUrl(x))+'" target="_blank" rel="noopener noreferrer">'+E_(T_("kc.enc.infilRead"))+" — Infil, The Fighting Game Glossary</a></p></details></article>";
 }
 function encCard(x){
