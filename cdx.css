@@ -519,8 +519,14 @@ body.atelier-dragging{user-select:none}
 .kc-keys h4{grid-column:1/-1}
 .kc-key-row{grid-template-columns:36px 120px minmax(0,1fr);gap:6px;padding:3px 0;border-top:0}
 .kc-key-row .kc-inp{overflow-wrap:normal;word-break:normal}
-.kc-per{grid-template-columns:minmax(0,max-content) minmax(0,1fr);gap:4px 10px}
-.kc-per dt{max-width:180px}
+.kc-per{display:block}
+.kc-per dt{max-width:none;margin-top:8px;font-size:12px;color:#9fd8e6}
+.kc-per dt:first-child{margin-top:0}
+.kc-per dd{margin:1px 0 0}
+.kc-src-more{margin-top:10px}
+.kc-src-more summary,.kc-inf-more summary{cursor:pointer;font-weight:700;font-size:13px;color:#dbeef4}
+.kc-enc-split .kc-card,.kc-enc-split .kc-card *{overflow-wrap:break-word;word-break:normal}
+.kc-enc-split .kc-card a{overflow-wrap:anywhere}
 .kc-enc-all{grid-column:1/-1;flex-direction:row;align-items:center;gap:12px}
 .kc-enc-all .kc-ico{margin:0}
 .kc-enc-all .muted{flex:1}
@@ -603,8 +609,16 @@ body.atelier-dragging{user-select:none}
   .kc-enc-tile b{font-size:13px}
   .kc-enc-tile .muted{font-size:11px;line-height:1.3}
   .kc-enc-n{top:9px;right:8px;font-size:10px;padding:1px 6px}
-  .kc-split.kc-enc-split{grid-template-columns:minmax(0,42%) minmax(0,1fr);gap:6px}
-  .kc-enc-split>.kc-list,.kc-enc-split>.kc-detail{height:calc(100vh - 210px);min-height:360px}
+  .kc-split.kc-enc-split{grid-template-columns:minmax(0,1fr);gap:8px}
+  .kc-enc-split>.kc-list{position:static;flex-direction:row;align-items:stretch;gap:6px;height:auto!important;max-height:none!important;min-height:0!important;overflow-x:auto;overflow-y:hidden;padding:2px 0 6px;scroll-snap-type:x proximity}
+  .kc-enc-split>.kc-list>.kc-item{flex:0 0 auto;max-width:62vw;scroll-snap-align:start}
+  .kc-enc-split>.kc-list>.kc-item .kc-item-main b{white-space:nowrap}
+  .kc-enc-split>.kc-list>.kc-list-h{position:static;flex:0 0 auto;align-self:center;width:72px;white-space:normal;line-height:1.2;padding:2px;font-size:8.5px;background:none}
+  .kc-enc-split>.kc-detail{height:auto!important;min-height:0!important;overflow:visible!important}
+  .kc-enc-tools .kc-check{display:none}
+  .kc-enc-split .kc-item .kc-gp,.kc-enc-split .kc-item .kc-inp{display:none}
+  .kc-key-row{grid-template-columns:30px minmax(0,1fr)!important}
+  .kc-key-row .kc-inp{grid-column:1/-1}
   .kc-enc-split .kc-item{padding:6px 7px;border-radius:8px}
   .kc-enc-split .kc-item-main b{font-size:12px;line-height:1.25}
   .kc-enc-split .kc-gl{width:32px;height:14px;margin:0 1px}

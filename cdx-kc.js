@@ -394,7 +394,7 @@ function view(){return VIEWS.indexOf(o.kcView)>=0?o.kcView:"hub"}
 /* ——— Rendu principal ——— */
 function root(){return a("knowledge")}
 function keepFocus(fn){var ae=document.activeElement,id=ae&&ae.id,s=null,e2=null;try{s=ae.selectionStart;e2=ae.selectionEnd}catch(x){}fn();if(id){var n=document.getElementById(id);if(n&&n!==document.activeElement){n.focus();try{if(s!=null&&n.setSelectionRange)n.setSelectionRange(s,e2)}catch(x){}}}}
-function render(){var r=root();if(!r)return;if(!r.dataset.kcBound){bind(r);r.dataset.kcBound="1"}if(corrupt){corrupt=false;try{g(T_("kc.corrupt"),true)}catch(e){}}var keep={};["kcEncList","kcEncDetail"].forEach(function(k){var n=a(k);if(n)keep[k]=n.scrollTop});keepFocus(function(){r.innerHTML=head()+(view()==="hub"?"":'<div class="kc-panel" id="kcPanel" role="tabpanel" aria-labelledby="kcTab-'+view()+'">'+panel(view())+"</div>")});Object.keys(keep).forEach(function(k){var n=a(k);if(n)n.scrollTop=keep[k]});try{hydratePortraits()}catch(e){}}
+function render(){var r=root();if(!r)return;if(!r.dataset.kcBound){bind(r);r.dataset.kcBound="1"}if(corrupt){corrupt=false;try{g(T_("kc.corrupt"),true)}catch(e){}}var keep={};["kcEncList","kcEncDetail"].forEach(function(k){var n=a(k);if(n)keep[k]=[n.scrollTop,n.scrollLeft]});keepFocus(function(){r.innerHTML=head()+(view()==="hub"?"":'<div class="kc-panel" id="kcPanel" role="tabpanel" aria-labelledby="kcTab-'+view()+'">'+panel(view())+"</div>")});Object.keys(keep).forEach(function(k){var n=a(k);if(n){n.scrollTop=keep[k][0];n.scrollLeft=keep[k][1]}});try{hydratePortraits()}catch(e){}}
 function head(){
   var v=view();
   return'<div class="panel section kc-head"><div class="row between kc-title-row"><h2 class="kc-title"><span class="kc-target" aria-hidden="true"></span>'+E_(T_("kc.name"))+' <span class="beta-tag">'+E_(T_("kc.beta"))+'</span></h2></div>'
@@ -550,7 +550,7 @@ function infCard(x){
    +(x.alias.length?'<p class="muted small">'+E_(x.alias.join(" · "))+"</p>":"")+encActions(x)
    +"<h4>"+E_(T_("kc.enc.infilDef"))+'</h4><p class="kc-inf" lang="en">'+infDef(x.def)+"</p>"
    +(x.jp?"<h4>"+E_(T_("kc.enc.jp"))+'</h4><p class="small muted">'+E_(x.jp)+"</p>":"")
-   +"<h4>"+E_(T_("kc.sources"))+'</h4><p class="small"><a href="'+E_(infUrl(x))+'" target="_blank" rel="noopener noreferrer">'+E_(T_("kc.enc.infilRead"))+" — Infil, The Fighting Game Glossary</a></p></article>";
+   +'<details class="kc-src-more"><summary>'+E_(T_("kc.sources"))+'</summary><p class="small"><a href="'+E_(infUrl(x))+'" target="_blank" rel="noopener noreferrer">'+E_(T_("kc.enc.infilRead"))+" — Infil, The Fighting Game Glossary</a></p></details></article>";
 }
 function encCard(x){
   var t=x.txt[lang()]||x.txt.en||x.txt.fr,fav=S.fav.indexOf(x.id)>=0,st=!!S.studied[x.id];
@@ -580,7 +580,7 @@ function encCard(x){
    +(rel?"<h4>"+E_(T_("kc.enc.rel"))+'</h4><div class="kc-chips">'+rel+"</div>":"")
    +(pch.length?"<h4>"+E_(T_("kc.enc.patches"))+'</h4><div class="kc-res-list">'+pch.map(function(pc){return'<button type="button" class="kc-res" data-kc="open-patch" data-id="'+E_(pc[0].id)+'"><b>'+E_(gName(pc[0].game))+" "+E_(pc[0].ver)+'</b> <span class="muted small">'+E_(tr(pc[1].txt))+"</span></button>"}).join("")+"</div>":"")
    +(x.infRow?'<details class="kc-inf-more"><summary>'+E_(T_("kc.enc.infilDef"))+'</summary><p class="kc-inf" lang="en">'+infDef(x.infRow.def)+'</p><p class="small"><a href="'+E_(infUrl(x.infRow))+'" target="_blank" rel="noopener noreferrer">'+E_(T_("kc.enc.infilRead"))+"</a></p></details>":"")
-   +"<h4>"+E_(T_("kc.sources"))+'</h4><p class="small">'+srcLinks(x.src.concat(padSrc.filter(function(k){return x.src.indexOf(k)<0})))+"</p>"
+   +'<details class="kc-src-more"><summary>'+E_(T_("kc.sources"))+'</summary><p class="small">'+srcLinks(x.src.concat(padSrc.filter(function(k){return x.src.indexOf(k)<0})))+"</p></details>"
    +'<p class="muted small">'+E_(T_("kc.id"))+" : <code>"+E_(x.id)+"</code> · "+E_(T_("kc.updated"))+" "+E_(fmtDay(x.updated))+"</p></article>";
 }
 
@@ -797,8 +797,8 @@ function pPatches(){
 function patchCard(p,filt,open){
   var ch=filt?p.changes.filter(filt):p.changes;
   var official=p.src.some(function(k){return/^(steam|bn|riot)/.test(k)});
-  return'<article class="kc-patch'+(open?" kc-open":"")+'" id="kcPatch-'+E_(p.id.replace(/[^\w-]/g,"_"))+'"><div class="row between"><h3><time datetime="'+E_(p.date)+'">'+E_(fmtDay(p.date))+"</time> · "+E_(p.ver?("v"+p.ver):p.title)+"</h3>"+badge(official?"official":"secondary")+"</div>"
-   +'<p class="muted small">'+E_(p.title)+(p.note?" — "+E_(tr(p.note)):"")+"</p>"
+  return'<article class="kc-patch'+(open?" kc-open":"")+'" id="kcPatch-'+E_(p.id.replace(/[^\w-]/g,"_"))+'"><div class="row between"><h3>'+E_(gName(p.game))+' · <time datetime="'+E_(p.date)+'">'+E_(fmtDay(p.date))+"</time> · "+E_(p.ver?("Version "+p.ver):p.title)+"</h3>"+badge(official?"official":"secondary")+"</div>"
+   +(p.note||!p.ver?'<p class="muted small">'+(p.ver?"":E_(p.title))+(p.note?(p.ver?"":" — ")+E_(tr(p.note)):"")+"</p>":"")
    +(p.summary?'<p class="small"><b>'+E_(T_("kc.pt.summary"))+"</b> : <span lang=\"en\">"+E_(p.summary)+"</span></p>":"")
    +(ch.length?'<ul class="kc-changes">'+ch.map(function(c){var aff=affected(p,c);return'<li><span class="kc-badge">'+E_(T_("kc.pt.cat."+c.cat))+"</span> "+E_(tr(c.txt))
      +(c.chars.length?'<div class="kc-chips">'+c.chars.map(function(n){return'<button type="button" class="kc-chip" data-kc="open-char" data-game="'+p.game+'" data-c="'+E_(n)+'">'+E_(cName(n))+"</button>"}).join("")+"</div>":"")
