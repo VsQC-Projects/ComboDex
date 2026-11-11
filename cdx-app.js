@@ -417,8 +417,8 @@ function padFillSkins(){
   const sels=padQ(".pad-skin");
   for(const sel of sels){
     if(!sel.options.length){
-      PAD_SKINS.forEach(([v,n])=>{const o=document.createElement("option");o.value=v;o.textContent=n;sel.appendChild(o)});
-      sel.value="dualsense";
+  PAD_SKINS.forEach(([v,n])=>{const o=document.createElement("option");o.value=v;o.textContent=n;sel.appendChild(o)});
+  sel.value="dualsense";
     }
     if(!sel.dataset.bound){
       sel.dataset.bound="1";
@@ -438,12 +438,12 @@ function padSkinNow(gp){
 }
 function padScale(){
   padQ(".pad-body").forEach(root=>{
-    const ctl=root.querySelector(".controller"); if(!ctl)return;
-    const w=Number(ctl.dataset.w)||750, h=Number(ctl.dataset.h)||630;
-    const cw=root.clientWidth||280;
-    const s=Math.min(1, cw/w);
-    root.style.height=(h*s)+"px";
-    ctl.style.transform="scale("+s+")";
+  const ctl=root.querySelector(".controller"); if(!ctl)return;
+  const w=Number(ctl.dataset.w)||750, h=Number(ctl.dataset.h)||630;
+  const cw=root.clientWidth||280;
+  const s=Math.min(1, cw/w);
+  root.style.height=(h*s)+"px";
+  ctl.style.transform="scale("+s+")";
   });
 }
 function padMount(gp,force){
@@ -452,11 +452,11 @@ function padMount(gp,force){
   const kind=padSkinNow(gp);
   if(!padUserPick)padQ(".pad-skin").forEach(sel=>{sel.value=kind});
   for(const root of bodies){
-    if(force||root.dataset.kind!==kind||!root.querySelector(".controller")){
-      root.dataset.kind=kind;
+  if(force||root.dataset.kind!==kind||!root.querySelector(".controller")){
+    root.dataset.kind=kind;
       root.className="pad-draw pad-body"+(gp?"":" off");
-      root.innerHTML=padDrawInner(kind);
-    }else root.classList.toggle("off",!gp);
+    root.innerHTML=padDrawInner(kind);
+  }else root.classList.toggle("off",!gp);
   }
   requestAnimationFrame(()=>{padScale();requestAnimationFrame(padScale)});
 }
@@ -467,26 +467,26 @@ function padPaint(gp,tok){
   const liveTxt=tok?cdxT("Dernière touche")+" · "+tok:"";
   padQ(".pad-live").forEach(el=>{el.textContent=liveTxt});
   for(const root of bodies){
-    root.classList.toggle("off",!gp);
-    root.querySelectorAll(".pressed").forEach(el=>el.classList.remove("pressed"));
-    const press=id=>root.querySelectorAll('[data-pad="'+id+'"]').forEach(el=>el.classList.add("pressed"));
-    const nub=(id,x,y,clicked)=>{
-      const el=root.querySelector('[data-pad="'+id+'"]'); if(!el)return;
-      el.style.transform="translate("+((x||0)*22)+"px,"+((y||0)*22)+"px)";
-      if(clicked||Math.hypot(x||0,y||0)>0.18)el.classList.add("pressed");
-    };
+  root.classList.toggle("off",!gp);
+  root.querySelectorAll(".pressed").forEach(el=>el.classList.remove("pressed"));
+  const press=id=>root.querySelectorAll('[data-pad="'+id+'"]').forEach(el=>el.classList.add("pressed"));
+  const nub=(id,x,y,clicked)=>{
+    const el=root.querySelector('[data-pad="'+id+'"]'); if(!el)return;
+    el.style.transform="translate("+((x||0)*22)+"px,"+((y||0)*22)+"px)";
+    if(clicked||Math.hypot(x||0,y||0)>0.18)el.classList.add("pressed");
+  };
     if(!gp){nub("ls",0,0,false);nub("rs",0,0,false);continue}
-    const down=i=>gp.buttons[i]&&gp.buttons[i].pressed;
-    if(down(0))press("b0"); if(down(1))press("b1"); if(down(2))press("b2"); if(down(3))press("b3");
-    if(down(4))press("l1"); if(down(5))press("r1");
-    if(down(6))press("l2"); if(down(7))press("r2");
-    if(down(8))press("sel"); if(down(9))press("st");
-    if(down(12))press("du"); if(down(13))press("dd"); if(down(14))press("dl"); if(down(15))press("dr");
-    if(down(16))press("ps"); if(down(17))press("tp");
-    const x=(gp.axes&&gp.axes[0])||0,y=(gp.axes&&gp.axes[1])||0;
-    if(y<-0.45)press("du"); if(y>0.45)press("dd"); if(x<-0.45)press("dl"); if(x>0.45)press("dr");
-    nub("ls",x,y,down(10));
-    nub("rs",(gp.axes&&gp.axes[2])||0,(gp.axes&&gp.axes[3])||0,down(11));
+  const down=i=>gp.buttons[i]&&gp.buttons[i].pressed;
+  if(down(0))press("b0"); if(down(1))press("b1"); if(down(2))press("b2"); if(down(3))press("b3");
+  if(down(4))press("l1"); if(down(5))press("r1");
+  if(down(6))press("l2"); if(down(7))press("r2");
+  if(down(8))press("sel"); if(down(9))press("st");
+  if(down(12))press("du"); if(down(13))press("dd"); if(down(14))press("dl"); if(down(15))press("dr");
+  if(down(16))press("ps"); if(down(17))press("tp");
+  const x=(gp.axes&&gp.axes[0])||0,y=(gp.axes&&gp.axes[1])||0;
+  if(y<-0.45)press("du"); if(y>0.45)press("dd"); if(x<-0.45)press("dl"); if(x>0.45)press("dr");
+  nub("ls",x,y,down(10));
+  nub("rs",(gp.axes&&gp.axes[2])||0,(gp.axes&&gp.axes[3])||0,down(11));
   }
 }
 window.addEventListener("resize",padScale);
@@ -780,14 +780,29 @@ function palCancelHold(){
   document.querySelectorAll(".pal-tok.is-held").forEach(n=>n.classList.remove("is-held"));
   palGhostHide();
 }
+function palGroupOf(t,e){return((H.palGroup||{})[e]||{})[t]||palBucket(t,e)}
+function palGroups(e){const g={Directions:[],Debout:[],Accroupi:[],Saut:[],"Spéciaux":[],"Mécaniques":[]};for(const t of Ae(e))(g[palGroupOf(t,e)]||g["Mécaniques"]).push(t);return g}
+function palSetGroup(game,tok,grp){H.palGroup=H.palGroup||{};const m=H.palGroup[game]=H.palGroup[game]||{};if(grp===palBucket(tok,game))delete m[tok];else m[tok]=grp}
 function palDropPal(beforeTok){
   if(!palHeld)return;
   const game=palHeld.game,tok=palHeld.tok,keys=Ae(game).slice();
   const from=keys.findIndex(k=>k===tok);
   const target=beforeTok&&beforeTok!==tok?keys.findIndex(k=>k===beforeTok):-1;
   if(from<0||target<0){palCancelHold();return}
+  palSetGroup(game,tok,palGroupOf(beforeTok,game));
   keys.splice(from,1);
-  keys.splice(Math.max(0,Math.min(keys.length,target)),0,tok);
+  keys.splice(Math.max(0,Math.min(keys.length,keys.indexOf(beforeTok))),0,tok);
+  savePalOrder(game,keys);
+  palCancelHold();
+  try{Z()}catch{}
+  try{raPadDraw()}catch{}
+}
+function palDropGroup(grp){
+  if(!palHeld)return;
+  const game=palHeld.game,tok=palHeld.tok,keys=Ae(game).filter(k=>k!==tok);
+  palSetGroup(game,tok,grp);
+  let at=-1;keys.forEach((k,i)=>{if(palGroupOf(k,game)===grp)at=i});
+  keys.splice(at<0?keys.length:at+1,0,tok);
   savePalOrder(game,keys);
   palCancelHold();
   try{Z()}catch{}
@@ -811,7 +826,7 @@ function palDropSeq(at){
 function palFlush(){if(palTap.n===1&&palTap.timer&&palTap.fire){clearTimeout(palTap.timer);palTap.fire()}}
 function palClickTok(e,kind){
   const btn=e.target.closest(kind==="replay"?"[data-ra-tok]":"[data-key]");
-  if(!btn){if(palHeld)palCancelHold();return}
+  if(!btn){const grp=palHeld&&palHeld.from==="pal"&&e.target.closest("[data-pal-group]");if(grp){e.preventDefault();palDropGroup(grp.dataset.palGroup);return}if(palHeld)palCancelHold();return}
   const tok=kind==="replay"?btn.dataset.raTok:btn.dataset.key;
   if(!tok)return;
   if(palHeld){
@@ -848,7 +863,7 @@ document.addEventListener("mousemove",e=>{if(palHeld)palGhostShow(palHeld.tok,e.
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&palHeld){e.preventDefault();palCancelHold()}});
 function palBucket(t,e){if(e==="t8"){if(/^(?:n|[ubf]|d(?:\/[fb])?|u\/[fb])$/.test(t))return"Directions";if(/^(?:[1-4]|[1-4]\+[1-4])$/.test(t)||/^(?:n|[ubf]|d(?:\/[fb])?|u\/[fb])\+[1-4]/.test(t))return"Debout";return"Mécaniques"}if(e==="ssbu"){if(/(?:air)$/i.test(t)||t==="jump")return"Saut";if(/^(?:A|B|tilt|utilt|ftilt|dtilt|smash|fsmash|usmash|dsmash|grab|shield|dodge)$/i.test(t))return"Debout";return"Mécaniques"}if(/^j\./i.test(t))return"Saut";if(/^2(?:\[|[A-Za-z.])/.test(t))return"Accroupi";if(/^[1-9]{2,}/.test(t)||/^\[[1-9]\]/.test(t)||/^[146]\[[A-Za-z]/.test(t))return"Spéciaux";if(TOK_BTN.test(t)||(PAD_BTNS[e]||[]).includes(t))return"Debout";if(/^(?:[cf]\.|cl\.)?[1-9]?[A-Z]{1,3}$/.test(t)||/^5[\[A-Z0-9\]]+$/i.test(t)||/^6[A-Z]$/.test(t))return"Debout";return"Mécaniques"}function Z(){const e=o.draft.game;try{padRelabel()}catch{}a("paletteGame").textContent="— "+b[e].name;
   a("padDock").innerHTML=`${dirPadHtml(e)}<div class="pad-attacks"><span class="pal-label">${cdxT("Touches")} ${l(b[e].short||b[e].name)}</span><div class="buttons">${(PAD_BTNS[e]||[]).map(s=>`<button data-key="${l(s)}" class="${tokCls(s,e).trim()}" data-tip="${l(tokTip(s,e))}">${l(s)}</button>`).join("")}</div></div>`;
-  const g={Directions:[],Debout:[],Accroupi:[],Saut:[],"Spéciaux":[],"Mécaniques":[]};for(const t of Ae(e))g[palBucket(t,e)].push(t);a("palette").innerHTML=Object.entries(g).filter(([,t])=>t.length).map(([t,n])=>`<div class="pal-group"><span class="pal-label">${cdxT(t)}</span><div class="buttons">${n.map(s=>palTokBtn(s,e,`data-key="${l(s)}"`)).join("")}</div></div>`).join("")+(e==="ggst"?`<div class="legend small muted"><span><i class="kP"></i>P · Punch</span><span><i class="kK"></i>K · Kick</span><span><i class="kGS"></i>S · Slash</span><span><i class="kH"></i>H · Heavy Slash</span><span><i class="kD"></i>D · Dust</span><span><i class="mod"></i>${cdxT("dl = retardé")}</span></div>`:e==="t8"?`<div class="legend small muted"><span>↖ u/b</span><span>↑ u</span><span>↗ u/f</span><span>← b</span><span>→ f</span><span>↙ d/b</span><span>↓ d</span><span>↘ d/f</span><span>${cdxT("d/f+2 = direction + coup")}</span></div>`:e==="ssbu"?"":e==="sf6"?`<div class="legend small muted"><span><i class="kL"></i>LP</span><span><i class="kM"></i>MP</span><span><i class="kH"></i>HP</span><span><i class="kL"></i>LK</span><span><i class="kM"></i>MK</span><span><i class="kH"></i>HK</span><span><i class="mod"></i>DR · DI · OD</span></div>`:e==="al"?`<div class="legend small muted"><span><i class="kL"></i>A</span><span><i class="kM"></i>B</span><span><i class="kH"></i>C</span><span><i class="kS"></i>F · Flow</span><span><i class="mod"></i>${cdxT("dl = retardé")}</span></div>`:e==="cotw"?`<div class="legend small muted"><span><i class="kL"></i>A</span><span><i class="kM"></i>B</span><span><i class="kH"></i>C</span><span><i class="kS"></i>D</span><span>REV</span><span><i class="mod"></i>${cdxT("dl = retardé")}</span></div>`:`<div class="legend small muted"><span><i class="kL"></i>${cdxT("Léger")}</span><span><i class="kM"></i>${cdxT("Moyen")}</span><span><i class="kH"></i>${cdxT("Fort")}</span><span><i class="kS"></i>${cdxT("Spécial")}</span><span><i class="mod"></i>${cdxT("dl = retardé")}</span></div>`)}function P(){const e=o.draft.tokens;a("sequenceEditor").innerHTML=e.length?`<div class="seq seq-wiki">${e.map((s,r)=>`<span class="seq-item" data-remove="${r}" title="${cdxT("Retirer")}">${tokMark(s,o.draft.game)}</span>`).join('<span class="seq-sep" aria-hidden="true">&gt;</span>')}</div>`:`<span class="muted small">${cdxT("Séquence vide : clique sur une commande de la palette.")}</span>`;a("undoToken").disabled=a("clearTokens").disabled=!e.length;const n=a("insertHint");n.classList.add("hidden");n.innerHTML="";syncSeqNotch()}
+  const g=palGroups(e);a("palette").innerHTML=Object.entries(g).filter(([,t])=>t.length).map(([t,n])=>`<div class="pal-group" data-pal-group="${t}"><span class="pal-label">${cdxT(t)}</span><div class="buttons">${n.map(s=>palTokBtn(s,e,`data-key="${l(s)}"`)).join("")}</div></div>`).join("")+(e==="ggst"?`<div class="legend small muted"><span><i class="kP"></i>P · Punch</span><span><i class="kK"></i>K · Kick</span><span><i class="kGS"></i>S · Slash</span><span><i class="kH"></i>H · Heavy Slash</span><span><i class="kD"></i>D · Dust</span><span><i class="mod"></i>${cdxT("dl = retardé")}</span></div>`:e==="t8"?`<div class="legend small muted"><span>↖ u/b</span><span>↑ u</span><span>↗ u/f</span><span>← b</span><span>→ f</span><span>↙ d/b</span><span>↓ d</span><span>↘ d/f</span><span>${cdxT("d/f+2 = direction + coup")}</span></div>`:e==="ssbu"?"":e==="sf6"?`<div class="legend small muted"><span><i class="kL"></i>LP</span><span><i class="kM"></i>MP</span><span><i class="kH"></i>HP</span><span><i class="kL"></i>LK</span><span><i class="kM"></i>MK</span><span><i class="kH"></i>HK</span><span><i class="mod"></i>DR · DI · OD</span></div>`:e==="al"?`<div class="legend small muted"><span><i class="kL"></i>A</span><span><i class="kM"></i>B</span><span><i class="kH"></i>C</span><span><i class="kS"></i>F · Flow</span><span><i class="mod"></i>${cdxT("dl = retardé")}</span></div>`:e==="cotw"?`<div class="legend small muted"><span><i class="kL"></i>A</span><span><i class="kM"></i>B</span><span><i class="kH"></i>C</span><span><i class="kS"></i>D</span><span>REV</span><span><i class="mod"></i>${cdxT("dl = retardé")}</span></div>`:`<div class="legend small muted"><span><i class="kL"></i>${cdxT("Léger")}</span><span><i class="kM"></i>${cdxT("Moyen")}</span><span><i class="kH"></i>${cdxT("Fort")}</span><span><i class="kS"></i>${cdxT("Spécial")}</span><span><i class="mod"></i>${cdxT("dl = retardé")}</span></div>`)}function P(){const e=o.draft.tokens;a("sequenceEditor").innerHTML=e.length?`<div class="seq seq-wiki">${e.map((s,r)=>`<span class="seq-item" data-remove="${r}" title="${cdxT("Retirer")}">${tokMark(s,o.draft.game)}</span>`).join('<span class="seq-sep" aria-hidden="true">&gt;</span>')}</div>`:`<span class="muted small">${cdxT("Séquence vide : clique sur une commande de la palette.")}</span>`;a("undoToken").disabled=a("clearTokens").disabled=!e.length;const n=a("insertHint");n.classList.add("hidden");n.innerHTML="";syncSeqNotch()}
 function syncSeqNotch(){const el=a("seqNotch");if(!el||!o.draft||document.activeElement===el)return;el.value=joinTokens(o.draft.tokens||[])}
 function applySeqNotch(){
   const el=a("seqNotch");if(!el||!o.draft)return;
@@ -2129,9 +2144,8 @@ function raLivePaint(){
 function raPadDraw(){
   const box=a("raPad");if(!box)return;
   if(!o.game||!b[o.game]){box.innerHTML="";return}
-  const e=o.game,g={Directions:[],Debout:[],Accroupi:[],Saut:[],"Spéciaux":[],"Mécaniques":[]};
-  for(const t of Ae(e))g[palBucket(t,e)].push(t);
-  box.innerHTML=Object.entries(g).filter(([,n])=>n.length).map(([lab,n])=>`<div class="pal-group"><span class="pal-label">${cdxT(lab)}</span><div class="buttons">${n.map(s=>palTokBtn(s,e,`data-ra-tok="${l(s)}"`)).join("")}</div></div>`).join("");
+  const e=o.game,g=palGroups(e);
+  box.innerHTML=Object.entries(g).filter(([,n])=>n.length).map(([lab,n])=>`<div class="pal-group" data-pal-group="${lab}"><span class="pal-label">${cdxT(lab)}</span><div class="buttons">${n.map(s=>palTokBtn(s,e,`data-ra-tok="${l(s)}"`)).join("")}</div></div>`).join("");
 }
 function raFillInputs(){
   const ins=raInputs(),g=o.game,combo=o.watchId?L(o.watchId):null;
