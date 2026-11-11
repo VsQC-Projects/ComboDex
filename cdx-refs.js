@@ -138,6 +138,16 @@ function place() {
   const r = rng(hash(tab + W));
   const order = items.map(it => [r(), it]).sort((x, y) => x[0] - y[0]).map(x => x[1]);
   const gap = small ? 16 : 30;
+  // Personnages : favoriser les marges latérales et le haut, sans modifier les autres modules.
+  const candidate = size => {
+    if (tab !== "people" || small) return [r() * (W - size), r() * (Hh - size)];
+    const edge = Math.max(0, W - size);
+    const band = Math.min(edge / 2, Math.max(90, W * .18));
+    const side = r() < .5 ? r() * band : edge - r() * band;
+    const x = r() < .84 ? side : r() * edge;
+    const y = r() < .60 ? Math.pow(r(), 1.7) * Math.max(0, Hh - size) : r() * Math.max(0, Hh - size);
+    return [x, y];
+  };
   const put = (it, src, x, y, size) => {
     mark(x - gap, y - gap, x + size + gap, y + size + gap);
     const img = new Image();
@@ -157,7 +167,7 @@ function place() {
       for (let p = 1; p <= n; p++) {
         let best = null, bestD = -1;
         for (let k = 0; k < 220; k++) {
-          const x = r() * (W - size), y = r() * (Hh - size);
+          const [x, y] = candidate(size);
           if (!free(x, y, x + size, y + size)) continue;
           const d = got.length ? Math.min(...got.map(([a, c]) => Math.hypot(a - x, c - y))) : 0;
           if (d > bestD) { best = [x, y]; bestD = d; }
@@ -171,7 +181,7 @@ function place() {
     const size = Math.round((small ? 30 : 40) + r() * (small ? 14 : 24));
     let spot = null;
     for (let k = 0; k < 160 && !spot; k++) {
-      const x = r() * (W - size), y = r() * (Hh - size);
+      const [x, y] = candidate(size);
       if (free(x, y, x + size, y + size)) spot = [x, y];
     }
     if (spot) put(it, `objets/${it.g}/${it.id}.webp`, spot[0], spot[1], size);
