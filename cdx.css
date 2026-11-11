@@ -478,6 +478,23 @@ body:has(#bulkActions:not(.hidden)) #personCombos{padding-bottom:190px}
   #personCombos article.combo .select-combo{font-size:0;gap:0}
   #personCombos article.combo .select-combo input{margin:0;width:18px;height:18px}
   #personCombos article.combo>.row.between:first-child .pill{font-size:11px;padding:2px 7px}
+  .cmd-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:8px;align-items:start}
+  .cmd-left,.cmd-right{min-width:0}
+  .cmd-left .pad-dock{gap:8px;margin:2px 0 8px}
+  .cmd-left .numpad{grid-template-columns:repeat(3,38px);gap:4px;padding:5px;width:max-content}
+  .cmd-left .numpad button{width:38px;height:38px;padding:0;min-height:0}
+  .cmd-left .pad-attacks{min-width:0;flex:1 1 100%}
+  .cmd-left .pad-attacks .pal-label{margin-bottom:3px}
+  .cmd-left .buttons{gap:4px}
+  .cmd-left .buttons button{padding:5px 6px;font-size:11px;min-width:30px;min-height:30px;border-radius:7px}
+  .cmd-left .pal-label{font-size:10px;margin:6px 0 3px}
+  .cmd-right{position:sticky;top:56px;max-height:calc(100vh - 66px);overflow:auto;padding:8px!important}
+  .cmd-right>.row,.cmd-right .row.between{flex-wrap:wrap;gap:4px}
+  .cmd-right .buttons button{padding:5px 7px;font-size:11px}
+  .cmd-right #sequenceEditor{font-size:12px;min-height:60px}
+  .cmd-right #padPanel summary{display:block;font-size:12px}
+  .cmd-right #padPanel .pad-status{display:block;text-align:left;font-size:10px;line-height:1.3;margin:3px 0 6px}
+  .cmd-right .pad-skin{font-size:12px;padding:6px}
   #charList.charlist{grid-template-columns:repeat(auto-fill,minmax(48px,1fr));gap:5px}
   #charList .tile{padding:0 0 3px;border-radius:8px}
   #charList .tile-name{font-size:9.5px;padding:3px 2px 0}
