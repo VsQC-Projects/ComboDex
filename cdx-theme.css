@@ -520,7 +520,7 @@ html[data-theme="wood"] button:hover,html[data-theme="wood"] .tab:hover{border-c
 .da-switch{position:fixed;right:12px;bottom:12px;z-index:30;display:flex;gap:4px;padding:5px;border-radius:11px;background:#000000b3;backdrop-filter:blur(4px)}
 .da-switch button{padding:6px 10px;font:700 12px system-ui,sans-serif;border-radius:8px;border:1px solid #ffffff38;background:transparent;color:#fff}
 .da-switch button[aria-pressed="true"]{background:#fff;color:#111;border-color:#fff}
-html[data-theme="dojo"] .da-switch{background:#1d1d22;border-radius:0}
+html[data-theme="dojo"] .da-switch{background:#1d1d22}
 html[data-theme="dojo"] .da-switch button[aria-pressed="true"]{background:#d9412b;border-color:#d9412b;color:#fff}
 html[data-theme="wood"] .da-switch{background:#2a1d12d9}
 body{position:relative}
