@@ -538,11 +538,11 @@ function pEnc(){
   var items=(f.ours.length?'<div class="kc-list-h">'+E_(T_("kc.enc.ours"))+"</div>"+f.ours.map(function(x){return encItem(x,open)}).join(""):"")
    +(f.inf.length?'<div class="kc-list-h">'+E_(T_("kc.enc.infil"))+"</div>"+f.inf.map(function(x){return encItem(x,open)}).join(""):"")
    +(INF?"":'<div class="muted small kc-enc-load">'+E_(T_("kc.enc.loading"))+"</div>");
-  var pick='<div class="kc-pick-row"><details class="kc-pick"><summary><span class="kc-pick-term">'+(open?E_(open.term):E_(T_("kc.enc.pick")))+'</span><span class="kc-pick-n">'+E_(T_("kc.enc.ours"))+" · "+all.length+"</span></summary>"
-   +'<div class="kc-list" id="kcEncList" aria-label="'+E_(TF("kc.enc.count",all.length))+'">'+(all.length||!INF?items:'<div class="empty">'+E_(T_("kc.enc.empty"))+"</div>")+"</div></details>"
-   +(open?encActions(open):"")+"</div>";
-  return encBar()+'<div class="kc-enc-crumb"><button type="button" class="tiny" data-kc="enc-home">'+E_(T_("kc.enc.back"))+'</button><h3 class="kc-h">'+(cat&&!q?catIcon(cat):"")+E_(title)+' <span class="count">'+all.length+"</span></h3></div>"
-   +'<div class="kc-detail kc-enc-page" id="kcEncDetail">'+pick+(open?(open.inf?infCard(open):encCard(open)):'<div class="empty">'+E_(T_("kc.enc.pick"))+"</div>")+"</div>";
+  var pick='<details class="kc-pick"><summary>'+E_(T_("kc.enc.ours"))+' <span class="kc-pick-n">'+all.length+"</span></summary>"
+   +'<div class="kc-list" id="kcEncList" aria-label="'+E_(TF("kc.enc.count",all.length))+'">'+(all.length||!INF?items:'<div class="empty">'+E_(T_("kc.enc.empty"))+"</div>")+"</div></details>";
+  var head='<div class="kc-pick-row"><h3 class="kc-pick-term">'+(open?E_(open.term):E_(T_("kc.enc.pick")))+'</h3><span class="kc-h kc-pick-cat">'+(cat&&!q?catIcon(cat):"")+E_(title)+' <span class="count">'+all.length+"</span></span>"+(open?encActions(open):"")+"</div>";
+  return encBar()+'<div class="kc-enc-crumb"><button type="button" class="tiny" data-kc="enc-home">'+E_(T_("kc.enc.back"))+"</button>"+pick+"</div>"
+   +'<div class="kc-detail kc-enc-page" id="kcEncDetail">'+head+(open?(open.inf?infCard(open):encCard(open)):'<div class="empty">'+E_(T_("kc.enc.pick"))+"</div>")+"</div>";
 }
 function infDef(s){return E_(s).replace(/⟦([^|⟧]*)\|([^⟧]*)⟧/g,function(m,t,lab){var id=INF_T[termKey(t)];return id?'<button type="button" class="kc-link" data-kc="open-enc" data-id="'+E_(id)+'">'+lab+"</button>":lab}).replace(/\n/g,"<br>")}
 function infUrl(x){return"https://glossary.infil.net/?t="+encodeURIComponent(x.term)}
