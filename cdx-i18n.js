@@ -48,6 +48,18 @@ fr:{
 ,"atelier.tree.keys":"Commandes"
 ,"atelier.tree.replay":"Replay Analyzer"
 ,"atelier.tree.site":"Site"
+,"atelier.notif":"Notifications"
+,"atelier.tree.reports":"Signalements"
+,"atelier.tree.lab":"Demandes lab"
+,"atelier.notif.none":"Rien de neuf : aucun signalement, aucune vidéo X ni demande lab en attente."
+,"atelier.notif.some":"Atelier ouvert. {0} notification(s) t’attendent en haut du tableau de bord."
+,"atelier.rep.nonote":"Signalé sans explication."
+,"atelier.rep.done":"Traité"
+,"atelier.rep.none":"Aucun combo signalé."
+,"atelier.go":"Voir le combo"
+,"atelier.lab.ok":"Approuver"
+,"atelier.lab.no":"Refuser"
+,"atelier.lab.none":"Aucune demande de test en lab."
 ,"atelier.dash.lead":"ComboDex reste à gauche. À droite : le chemin de l’atelier, comme un tableau de bord."
 ,"atelier.dash.import":"L’import est à gauche. Une vidéo X n’est jamais acceptée toute seule : Oui, puis Accepter ici."
 ,"atelier.dash.portraits":"Le portrait du perso ouvert est à gauche, sur la fiche."
@@ -64,6 +76,14 @@ fr:{
 ,"x.pending":"Vidéo X enregistrée. Elle s’affiche après acceptation dans l’atelier."
 ,"x.need":"Colle un lien YouTube ou X."
 ,"x.novid":"Pas de fichier vidéo sur ce post X. ComboDex n’affiche que la vidéo, pas le tweet."
+,"lab.off":"Testé et approuvé en lab"
+,"lab.ok":"Testé et approuvé en lab"
+,"lab.pending":"En attente d’approbation"
+,"lab.tip.ask":"Demander un test en lab. La demande reste en attente jusqu’à l’approbation de l’atelier."
+,"lab.tip.cancel":"Retirer la demande de test."
+,"lab.tip.approve":"Atelier : approuver ce combo."
+,"lab.tip.unset":"Atelier : retirer l’approbation."
+,"lab.locked":"Approuvé par l’atelier. Seul l’atelier peut retirer l’approbation."
 ,"Vidéo YouTube ou X (facultatif)":"Vidéo YouTube ou X (facultatif)"
 ,"atelier.out":"Atelier fermé."
 ,"atelier.wipe":"Le combo disparaît de ComboDex pour tout le monde. Entre la clef d’atelier pour confirmer."
@@ -247,6 +267,18 @@ en:{
 "atelier.tree.keys":"Commands",
 "atelier.tree.replay":"Replay Analyzer",
 "atelier.tree.site":"Site",
+"atelier.notif":"Notifications",
+"atelier.tree.reports":"Reports",
+"atelier.tree.lab":"Lab requests",
+"atelier.notif.none":"Nothing new: no reports, no X video or lab request waiting.",
+"atelier.notif.some":"Workshop open. {0} notification(s) are waiting at the top of the dashboard.",
+"atelier.rep.nonote":"Reported without a note.",
+"atelier.rep.done":"Handled",
+"atelier.rep.none":"No reported combo.",
+"atelier.go":"View combo",
+"atelier.lab.ok":"Approve",
+"atelier.lab.no":"Refuse",
+"atelier.lab.none":"No lab test request.",
 "atelier.dash.lead":"ComboDex stays on the left. On the right: the workshop path, like a dashboard.",
 "atelier.dash.import":"Import is on the left. An X video is never accepted by itself: Yes, then Accept here.",
 "atelier.dash.portraits":"The open character’s portrait is on the left, on the card.",
@@ -349,6 +381,14 @@ en:{
 "Vidéo YouTube ou X (facultatif)":"YouTube or X video (optional)",
 "x.need":"Paste a YouTube or X link.",
 "x.novid":"No video file on this X post. ComboDex only plays the video, not the tweet.",
+"lab.off":"Tested and approved in lab",
+"lab.ok":"Tested and approved in lab",
+"lab.pending":"Awaiting approval",
+"lab.tip.ask":"Request a lab test. The request stays pending until the workshop approves it.",
+"lab.tip.cancel":"Withdraw the test request.",
+"lab.tip.approve":"Workshop: approve this combo.",
+"lab.tip.unset":"Workshop: remove the approval.",
+"lab.locked":"Approved by the workshop. Only the workshop can remove the approval.",
 "Vérifié et testé en lab":"Verified and lab-tested",
 "Ajouter aux favoris":"Add to favorites",
 "Notes de lab (facultatif)":"Lab notes (optional)",
@@ -559,6 +599,18 @@ es:{
 "atelier.tree.keys":"Comandos",
 "atelier.tree.replay":"Replay Analyzer",
 "atelier.tree.site":"Sitio",
+"atelier.notif":"Notificaciones",
+"atelier.tree.reports":"Reportes",
+"atelier.tree.lab":"Peticiones lab",
+"atelier.notif.none":"Nada nuevo: ningún reporte, ningún vídeo X ni petición lab pendiente.",
+"atelier.notif.some":"Taller abierto. {0} notificación(es) te esperan arriba del panel.",
+"atelier.rep.nonote":"Reportado sin explicación.",
+"atelier.rep.done":"Resuelto",
+"atelier.rep.none":"Ningún combo reportado.",
+"atelier.go":"Ver el combo",
+"atelier.lab.ok":"Aprobar",
+"atelier.lab.no":"Rechazar",
+"atelier.lab.none":"Ninguna petición de prueba en lab.",
 "atelier.dash.lead":"ComboDex se queda a la izquierda. A la derecha: el camino del taller, como un panel.",
 "atelier.dash.import":"La importación está a la izquierda. Un vídeo de X nunca se acepta solo: Sí, luego Aceptar aquí.",
 "atelier.dash.portraits":"El retrato del personaje abierto está a la izquierda, en la ficha.",
@@ -661,6 +713,14 @@ es:{
 "Vidéo YouTube ou X (facultatif)":"Vídeo de YouTube o X (opcional)",
 "x.need":"Pega un enlace de YouTube o X.",
 "x.novid":"No hay archivo de vídeo en este post de X. ComboDex solo pone el vídeo, no el tuit.",
+"lab.off":"Probado y aprobado en lab",
+"lab.ok":"Probado y aprobado en lab",
+"lab.pending":"Pendiente de aprobación",
+"lab.tip.ask":"Pedir una prueba en lab. La petición queda pendiente hasta que el taller la apruebe.",
+"lab.tip.cancel":"Retirar la petición de prueba.",
+"lab.tip.approve":"Taller: aprobar este combo.",
+"lab.tip.unset":"Taller: retirar la aprobación.",
+"lab.locked":"Aprobado por el taller. Solo el taller puede retirar la aprobación.",
 "Vérifié et testé en lab":"Verificado y probado en lab",
 "Ajouter aux favoris":"Añadir a favoritos",
 "Notes de lab (facultatif)":"Notas de lab (opcional)",
