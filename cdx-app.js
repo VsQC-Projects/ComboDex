@@ -2140,7 +2140,7 @@ function raFillInputs(){
   const list=a("raInputList");
   if(list)list.innerHTML=ins.length?ins.map((x,i)=>`<button type="button" class="ra-mark" data-ra-hit="${x.t}"><span class="ra-t">${l(raFmt(x.t))}</span><span class="token ${tokCls(x.tok,g).trim()}">${l(x.tok)}</span><span class="tiny" data-ra-hit-del="${i}" title="${l(cdxT("Supprimer le point"))}">✕</span></button>`).join(""):`<div class="empty">${l(cdxT("Aucune touche posée"))}</div>`;
   const btn=a("raCommit");
-  const saveLab=cdxT(o.watchId&&L(o.watchId)?"Mettre à jour l’édition":"Enregistrer l’édition");
+  const saveLab=cdxT(o.watchId&&L(o.watchId)?"Mettre à jour":"Enregistrer");
   if(btn)btn.textContent=saveLab;
   const saveHud=a("raSaveEdit");if(saveHud)saveHud.textContent=cdxT("Enregistrer");
   raLivePaint();raTicks();
