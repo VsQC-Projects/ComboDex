@@ -68,6 +68,11 @@ var STR={
 "kc.catex.resources":["Jauges, barres, vie récupérable","Meters, bars, recoverable health","Medidores, barras, vida recuperable"],
 "kc.catex.system":["Mécaniques propres à un jeu","Mechanics unique to one game","Mecánicas propias de un juego"],
 "kc.catex.frames":["Startup, active, recovery, hitstun","Startup, active, recovery, hitstun","Startup, active, recovery, hitstun"],
+"kc.vd.encyclopedia":["Chaque terme : à quoi il sert, dans quels jeux, et quelles touches appuyer.","Every term: what it does, in which games, and which buttons to press.","Cada término: para qué sirve, en qué juegos y qué botones pulsar."],
+"kc.vd.teams":["Compose tes équipes, vérifie les assists et trouve des partenaires.","Build your teams, check assists and find partners.","Arma tus equipos, revisa los assists y encuentra compañeros."],
+"kc.vd.matchups":["Deux personnages, les situations clés de l’affrontement, dans les deux sens.","Two characters, the key situations of the matchup, both ways.","Dos personajes, las situaciones clave del enfrentamiento, en ambos sentidos."],
+"kc.vd.challenge":["Tire un combo au sort et enchaîne les réussites jusqu’à ton objectif.","Draw a combo and chain successes up to your goal.","Sortea un combo y encadena aciertos hasta tu objetivo."],
+"kc.vd.patches":["Ce que chaque patch a changé, par personnage et par mécanique.","What each patch changed, by character and mechanic.","Lo que cambió cada parche, por personaje y mecánica."],
 "kc.enc.az":["Tout, de A à Z","Everything, A to Z","Todo, de la A a la Z"],
 "kc.enc.azex":["Toutes les fiches et tout le glossaire","Every entry and the whole glossary","Todas las fichas y todo el glosario"],
 "kc.enc.back":["← Catégories","← Categories","← Categorías"],
@@ -383,23 +388,25 @@ function setU(k,v){S.ui[k]=v}
 function openCombo(id){var c=L(id);if(!c)return;try{G()}catch(e){}o.game=c.game;o.char=c.character;o.focusId=c.id;o.watchId=c.video?c.id:null;j("people")}
 function openChar(game,ch){try{G()}catch(e){}if(b[game])o.game=game;o.char=ch;o.watchId=null;j("people")}
 function openFrames(game,ch){try{G()}catch(e){}if(b[game])o.game=game;if(ch)o.char=ch;j("frames")}
-function go(view,patch){if(patch)Object.keys(patch).forEach(function(k){S.ui[k]=patch[k]});save();try{G()}catch(e){}o.kcView=VIEWS.indexOf(view)>=0?view:"encyclopedia";j("knowledge")}
-function view(){return VIEWS.indexOf(o.kcView)>=0?o.kcView:"encyclopedia"}
+function go(view,patch){if(patch)Object.keys(patch).forEach(function(k){S.ui[k]=patch[k]});save();try{G()}catch(e){}o.kcView=VIEWS.indexOf(view)>=0?view:"hub";j("knowledge")}
+function view(){return VIEWS.indexOf(o.kcView)>=0?o.kcView:"hub"}
 
 /* ——— Rendu principal ——— */
 function root(){return a("knowledge")}
 function keepFocus(fn){var ae=document.activeElement,id=ae&&ae.id,s=null,e2=null;try{s=ae.selectionStart;e2=ae.selectionEnd}catch(x){}fn();if(id){var n=document.getElementById(id);if(n&&n!==document.activeElement){n.focus();try{if(s!=null&&n.setSelectionRange)n.setSelectionRange(s,e2)}catch(x){}}}}
-function render(){var r=root();if(!r)return;if(!r.dataset.kcBound){bind(r);r.dataset.kcBound="1"}if(corrupt){corrupt=false;try{g(T_("kc.corrupt"),true)}catch(e){}}var keep={};["kcEncList","kcEncDetail"].forEach(function(k){var n=a(k);if(n)keep[k]=n.scrollTop});keepFocus(function(){r.innerHTML=head()+'<div class="kc-panel" id="kcPanel" role="tabpanel" aria-labelledby="kcTab-'+view()+'">'+panel(view())+"</div>"});Object.keys(keep).forEach(function(k){var n=a(k);if(n)n.scrollTop=keep[k]});try{hydratePortraits()}catch(e){}}
+function render(){var r=root();if(!r)return;if(!r.dataset.kcBound){bind(r);r.dataset.kcBound="1"}if(corrupt){corrupt=false;try{g(T_("kc.corrupt"),true)}catch(e){}}var keep={};["kcEncList","kcEncDetail"].forEach(function(k){var n=a(k);if(n)keep[k]=n.scrollTop});keepFocus(function(){r.innerHTML=head()+(view()==="hub"?"":'<div class="kc-panel" id="kcPanel" role="tabpanel" aria-labelledby="kcTab-'+view()+'">'+panel(view())+"</div>")});Object.keys(keep).forEach(function(k){var n=a(k);if(n)n.scrollTop=keep[k]});try{hydratePortraits()}catch(e){}}
 function head(){
   var v=view(),q=U("gq","");
   return'<div class="panel section kc-head"><div class="row between kc-title-row"><h2 class="kc-title"><span class="kc-target" aria-hidden="true"></span>'+E_(T_("kc.name"))+' <span class="beta-tag">'+E_(T_("kc.beta"))+'</span></h2></div>'
    +'<p class="muted small">'+E_(T_("kc.lead"))+'</p>'
    +'<div class="kc-gsearch"><input id="kcQ" type="search" autocomplete="off" value="'+E_(q)+'" placeholder="'+E_(T_("kc.search"))+'" aria-label="'+E_(T_("kc.search"))+'"></div>'
    +(q.trim()?'<div class="kc-gres" id="kcQres">'+globalResults(q)+"</div>":"")
-   +'<div class="kc-tabs" role="tablist" aria-label="'+E_(T_("kc.name"))+'">'+VIEWS.map(function(x){return'<button type="button" role="tab" id="kcTab-'+x+'" class="kc-tab" data-kc="view" data-v="'+x+'" aria-selected="'+(x===v)+'" tabindex="'+(x===v?0:-1)+'"><span aria-hidden="true">'+VIEW_ICON[x]+"</span> "+E_(VIEW_NAME[x])+"</button>"}).join("")+"</div>"
+   +(v==="hub"?'<nav class="kc-hub" aria-label="'+E_(T_("kc.name"))+'">'+VIEWS.map(function(x){return'<button type="button" class="kc-hub-tile" data-kc="view" data-v="'+x+'"><span class="kc-hub-ico" aria-hidden="true">'+VIEW_ICON[x]+'</span><span class="kc-hub-name">'+E_(VIEW_NAME[x])+'</span><span class="kc-hub-desc">'+E_(T_("kc.vd."+x))+"</span></button>"}).join("")+"</nav>":'<div class="kc-tabs" role="tablist" aria-label="'+E_(T_("kc.name"))+'">'+VIEWS.map(function(x){return'<button type="button" role="tab" id="kcTab-'+x+'" class="kc-tab" data-kc="view" data-v="'+x+'" aria-selected="'+(x===v)+'" tabindex="'+(x===v?0:-1)+'"><span aria-hidden="true">'+VIEW_ICON[x]+"</span> "+E_(VIEW_NAME[x])+"</button>"}).join("")+"</div>")
    +'<p class="kc-legend small muted">'+E_(T_("kc.legend"))+"</p></div>";
 }
-function panel(v){try{return v==="teams"?pTeams():v==="matchups"?pMatchups():v==="challenge"?pChallenge():v==="patches"?pPatches():pEnc()}catch(e){console.warn("Knowledge Center",e);return'<div class="empty">'+E_(String(e&&e.message||e))+"</div>"}}
+function viewHead(v){return'<div class="kc-view-head"><span class="kc-view-ico" aria-hidden="true">'+VIEW_ICON[v]+'</span><div><h3 class="kc-h">'+E_(VIEW_NAME[v])+'</h3><p class="muted small">'+E_(T_("kc.vd."+v))+"</p></div></div>"}
+function panel(v){try{return viewHead(v)+panelBody(v)}catch(e){console.warn("Knowledge Center",e);return'<div class="empty">'+E_(String(e&&e.message||e))+"</div>"}}
+function panelBody(v){try{return v==="teams"?pTeams():v==="matchups"?pMatchups():v==="challenge"?pChallenge():v==="patches"?pPatches():pEnc()}catch(e){console.warn("Knowledge Center",e);return'<div class="empty">'+E_(String(e&&e.message||e))+"</div>"}}
 
 /* ——— Recherche commune ——— */
 function encBlob(x){if(!x._blob){var parts=[x.term,x.alias.join(" "),x.ex,x.cat];["fr","en","es"].forEach(function(lg){parts.push((x.txt[lg]||[]).join(" "))});Object.keys(x.per).forEach(function(gm){parts.push(gName(gm));parts.push(tr(x.per[gm]))});x.games.forEach(function(gm){parts.push(gName(gm))});x._blob=norm(parts.join(" "))}return x._blob}
