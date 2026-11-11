@@ -111,8 +111,8 @@ function place() {
   if (tab === "home" || !items.length) return;
   const W = document.documentElement.scrollWidth, Hh = document.documentElement.scrollHeight;
   const boxes = [];
-  obstacles(document.querySelector(".head"), boxes);
-  boxes.push(...[".head", ".nav", ".studio-footer"].map(s => document.querySelector(s)).filter(Boolean).map(e => {
+  [".head", ".studio-footer"].forEach(s => { const e = document.querySelector(s); if (e) obstacles(e, boxes); });
+  boxes.push(...[".nav"].map(s => document.querySelector(s)).filter(Boolean).map(e => {
     const r = e.getBoundingClientRect(); return [r.left + scrollX, r.top + scrollY, r.right + scrollX, r.bottom + scrollY];
   }));
   obstacles(document.getElementById(tab), boxes);
@@ -314,6 +314,7 @@ function init() {
   document.body.appendChild(layer);
   bindBrand();
   const main = document.getElementById("main");
+  if (main) new ResizeObserver(() => schedule(300)).observe(main);
   if (main) new MutationObserver(() => {
     if (layer.dataset.tab !== activeTab()) { layer.textContent = ""; placed = []; layer.dataset.tab = activeTab(); }
     schedule(400);
