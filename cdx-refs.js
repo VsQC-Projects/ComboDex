@@ -1,3 +1,4 @@
+
 (() => {
 "use strict";
 const UI_KEY = "combo-dex-ui-v1";
@@ -64,13 +65,13 @@ function labelSwitch() {
   });
 }
 
-/* ---------- refs data: each game's refs spread over the modules, never twice on one page ---------- */
+/* ---------- refs data ---------- */
 const DATA = window.CDX_OBJETS || {};
 const gameName = g => { try { if (typeof b === "object" && b[g] && b[g].name) return b[g].name; } catch {} return g.toUpperCase(); };
 const PER_GAME = 4;
+const PEOPLE_PER_GAME = 8;
 const PLAN = {};
 MODULES.forEach(m => (PLAN[m] = []));
-/* row[7] = number of pieces: one ref made of several images scattered over the same page */
 const pieces = it => it.row[7] || 0;
 const label = it => it.row[1 + LI[lang()]] || it.row[1];
 const hint = it => it.row[4 + LI[lang()]] || label(it);
@@ -80,7 +81,7 @@ const rng = seed => () => { seed = seed + 0x6D2B79F5 | 0; let x = Math.imul(seed
 for (const m of MODULES)
   for (const [g, rows] of Object.entries(DATA)) {
     const r = rng(hash(m + "/" + g));
-    rows.map(row => [r(), row]).sort((a, c) => a[0] - c[0]).slice(0, PER_GAME)
+    rows.map(row => [r(), row]).sort((a, c) => a[0] - c[0]).slice(0, m === "people" ? PEOPLE_PER_GAME : PER_GAME)
       .forEach(([, row]) => PLAN[m].push({g, id: row[0], row}));
   }
 
@@ -138,14 +139,25 @@ function place() {
   const r = rng(hash(tab + W));
   const order = items.map(it => [r(), it]).sort((x, y) => x[0] - y[0]).map(x => x[1]);
   const gap = small ? 16 : 30;
-  // Personnages : favoriser les marges latérales et le haut, sans modifier les autres modules.
   const candidate = size => {
-    if (tab !== "people" || small) return [r() * (W - size), r() * (Hh - size)];
-    const edge = Math.max(0, W - size);
-    const band = Math.min(edge / 2, Math.max(90, W * .18));
-    const side = r() < .5 ? r() * band : edge - r() * band;
-    const x = r() < .84 ? side : r() * edge;
-    const y = r() < .60 ? Math.pow(r(), 1.7) * Math.max(0, Hh - size) : r() * Math.max(0, Hh - size);
+    if (tab !== "people") return [r() * (W - size), r() * (Hh - size)];
+    const maxX = Math.max(0, W - size), maxY = Math.max(0, Hh - size);
+    const page = document.getElementById("people");
+    const panels = page ? [...page.querySelectorAll(".card, .panel, .box, .section, .character-panel")]
+      .map(el => el.getBoundingClientRect())
+      .filter(rect => rect.width > 100 && rect.height > 40) : [];
+    if (small && panels.length && r() < .45) {
+      const rect = panels[Math.floor(r() * panels.length)];
+      const x = r() < .5 ? rect.left + scrollX - size - 6 : rect.right + scrollX + 6;
+      const y = rect.top + scrollY + r() * Math.max(0, rect.height - size);
+      return [Math.max(4, Math.min(maxX - 4, x)), Math.max(4, Math.min(maxY - 4, y))];
+    }
+    const band = Math.min(maxX / 2, Math.max(small ? 48 : 90, W * (small ? .22 : .18)));
+    const side = r() < .5 ? r() * band : maxX - r() * band;
+    const x = r() < (small ? .65 : .84) ? side : r() * maxX;
+    const zone = Math.floor(r() * 3);
+    const y = small ? (zone + r()) / 3 * maxY :
+      (r() < .60 ? Math.pow(r(), 1.7) * maxY : r() * maxY);
     return [x, y];
   };
   const put = (it, src, x, y, size) => {
@@ -232,8 +244,8 @@ function renderPanel(state) {
   const prog = need > 1 ? `<div class="hunt-prog"><b>${t("got")} : ${game.got.size}/${need}</b> · ${t("all")}</div>` : "";
   const head = state === "gave" ? t(need > 1 ? "gaveN" : "gave") : t("found");
   p.innerHTML = `<div class="hunt-top"><b>${t("title")}</b><span class="hunt-time">${t("time")} ${secs}s</span></div>
-    ${done ? `<div class="hunt-found"><img src="${src}" alt=""><div><b>${head}</b><div>${label(it)}</div><div class="muted small">${gameName(it.g)}</div></div></div>`
-      : `<div class="small muted">${t("find")}</div><div class="hunt-hint">« ${hint(it)} »</div>${prog}<div class="small muted">${t("from")} : ${gameName(it.g)} · ${t("scroll")}</div>`}
+    ${done ? `<div class="hunt-found"><img src="${src}" alt=""><div><b>${head}</b><div class="muted small">${gameName(it.g)}</div></div></div>`
+      : `<div class="small muted">${t("find")}</div><div class="hunt-hint">« ${hint(it)} »</div>${prog}<div class="muted small">${t("from")} : ${gameName(it.g)} · ${t("scroll")}</div>`}
     ${state === "miss" ? `<div class="hunt-miss">${t("miss")}</div>` : ""}
     <div class="hunt-btns"><button type="button" class="tiny" data-h="${done ? "close" : "quit"}">${done ? t("close") : t("quit")}</button><button type="button" class="tiny primary" data-h="again">${t("again")}</button></div>`;
   p.onclick = e => {
