@@ -503,9 +503,9 @@ body.atelier-dragging{user-select:none}
 .kc-enc-page{width:100%;min-width:0;padding-bottom:28px}
 .kc-pick-row{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 14px;margin:0 0 12px;padding-bottom:10px;border-bottom:1px solid #3a5560}
 .kc-pick-term{margin:0;min-width:0;font-size:clamp(18px,4.6vw,24px);font-weight:800;line-height:1.2}
-.kc-pick-cat{margin:0;display:inline-flex;align-items:center;gap:6px;font-size:14px;color:#dbeef4}
+.kc-pick-cat{margin:0 0 0 auto;display:inline-flex;align-items:center;gap:6px;font-size:14px;color:#dbeef4}
 .kc-pick-cat .kc-ico{color:#5cc4dc}
-.kc-pick-row .kc-actions{margin:0 0 0 auto}
+.kc-pick-row .kc-actions{margin:0}
 .kc-pick{position:relative}
 .kc-pick>summary{list-style:none;display:inline-flex;align-items:center;gap:8px;padding:5px 30px 5px 10px;font-size:12px;font-weight:700;color:#9fd8e6;border:1px solid #3e8fa5;border-radius:10px;background:#16262c;cursor:pointer;position:relative;user-select:none}
 .kc-pick>summary:hover,.kc-pick[open]>summary{border-color:#5cc4dc;box-shadow:0 0 10px #5cc4dc33}
