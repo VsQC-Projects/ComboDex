@@ -2134,7 +2134,7 @@ function raFillInputs(){
   const btn=a("raCommit");
   const saveLab=cdxT(o.watchId&&L(o.watchId)?"Mettre à jour l’édition":"Enregistrer l’édition");
   if(btn)btn.textContent=saveLab;
-  const saveHud=a("raSaveEdit");if(saveHud)saveHud.textContent=saveLab;
+  const saveHud=a("raSaveEdit");if(saveHud)saveHud.textContent=cdxT("Enregistrer");
   raLivePaint();raTicks();
 }
 function raStamp(tok){
@@ -2200,7 +2200,7 @@ function raSyncTime(){
   const pct=d>0?Math.min(100,Math.max(0,t/d*100)):0;
   const fill=a("raSeekFill");if(fill)fill.style.width=pct+"%";
   if(seek&&document.activeElement!==seek){seek.max=Math.max(1,Math.round(d*10));seek.value=Math.round(t*10)}
-  const btn=a("raPlay");if(btn)btn.textContent=raPlaying()?cdxT("❚❚ Pause"):cdxT("▶ Lecture");
+  const btn=a("raPlay");if(btn)btn.textContent=raPlaying()?cdxT("❚❚ Pause"):cdxT("▶ Lecture");const mini=a("raPlayMini");if(mini){mini.textContent=raPlaying()?"❚❚":"▶";mini.setAttribute("aria-label",raPlaying()?cdxT("❚❚ Pause"):cdxT("▶ Lecture"))}
   raToolSync();
   raTicks();raGhosts();raLivePaint();raInkPaint();
 }
@@ -2346,7 +2346,7 @@ function raBind(){
       if(info.game&&info.char)g(cdxT("Jeu et personnage reconnus : {0} · {1}.").replace("{0}",b[info.game].name).replace("{1}",charLabel(info.char)));
     });
   });
-  a("raPlay").onclick=()=>{if(!raPlayer)return;try{raPlaying()?raPlayer.pauseVideo():raPlayer.playVideo()}catch{}raSyncTime();if(raPlaying()&&!raTick)raLoop()};
+  a("raPlay").onclick=()=>{if(!raPlayer)return;try{raPlaying()?raPlayer.pauseVideo():raPlayer.playVideo()}catch{}raSyncTime();if(raPlaying()&&!raTick)raLoop()};a("raPlayMini").onclick=()=>a("raPlay").click();
   a("raBack").onclick=()=>raSeekRel(-1);
   a("raFwd").onclick=()=>raSeekRel(1);
   a("raBackF").onclick=()=>raSeekRel(-.1);

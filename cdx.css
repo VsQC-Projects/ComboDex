@@ -85,7 +85,9 @@ main{flex:1 1 auto;padding-bottom:0}
 .ra-playbox .buttons{gap:5px}
 .ra-playbox .buttons button{padding:6px 8px;font-size:12px}
 .ra-rate-lab{font-size:11px;font-weight:650;color:var(--muted);margin:8px 0 4px}
-.ra-ruler{position:static;display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;min-width:0;flex:1}
+.ra-ruler{position:static;display:grid;grid-template-columns:auto auto 1fr auto;gap:10px;align-items:center;min-width:0;flex:1}
+.ra-play-mini{width:34px;height:30px;padding:0;border-radius:8px;font-size:13px;line-height:1;background:#2a2440;border-color:#6b4fa3}
+.ra-lab-mark>.tiny{padding:5px 9px;font-size:12px}
 .ra-clock{font-variant-numeric:tabular-nums;font-size:12px;font-weight:700;color:#f6e7a3}
 .ra-seek-wrap{position:relative;height:18px}
 .ra-seek-track{position:absolute;left:0;right:0;top:50%;height:7px;transform:translateY(-50%);border-radius:99px;background:#2a2418;border:1px solid #5a4a20;overflow:hidden;pointer-events:none}
