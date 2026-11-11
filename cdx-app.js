@@ -550,9 +550,12 @@ function atelierForget(){atelierLive=!1;try{localStorage.removeItem(ATELIER_K)}c
 async function atelierHash(s){const buf=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(String(s||"").trim()));return[...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,"0")).join("")}
 function askAtelier(after){
   ce(cdxT("Clef d'atelier"),`<p>${l(cdxT("atelier.body"))}</p><form id="atelierForm"><input id="atelierKey" type="password" autocomplete="off" autofocus placeholder="${l(cdxT("Clef d'atelier"))}"><div class="row" style="margin-top:10px"><button type="submit" class="primary">${l(cdxT("Ouvrir"))}</button></div></form>`);
-  const form=a("atelierForm");if(form)form.onsubmit=async e=>{e.preventDefault();const h=await atelierHash((a("atelierKey")||{}).value||"");if(h!==ATELIER_H){g(cdxT("atelier.bad"),!0);return}atelierLive=!0;atelierMark();G();loadWiki().then(()=>{try{C()}catch{}try{renderAtelierDash()}catch{}});const n=reportedCombos().length+pendingXRows().length+labRequests().length+editRequests().length+reviewRows().length;g(n?cdxT("atelier.notif.some").replace("{0}",n):cdxT("atelier.ok"));after&&after()};
+  const form=a("atelierForm");if(form)form.onsubmit=async e=>{e.preventDefault();const h=await atelierHash((a("atelierKey")||{}).value||"");if(h!==ATELIER_H){g(cdxT("atelier.bad"),!0);return}atelierLive=!0;atelierMark();G();loadWiki().then(()=>{try{C()}catch{}try{renderAtelierDash()}catch{}try{if(o.tab==="replay"){raVid="";raRender()}}catch{}});const n=reportedCombos().length+pendingXRows().length+labRequests().length+editRequests().length+reviewRows().length;g(n?cdxT("atelier.notif.some").replace("{0}",n):cdxT("atelier.ok"));after&&after()};
 }
-let atelierView="home";
+let atelierView="home",atelierTop=0;
+function atelierTopApply(){const bd=document.querySelector("#atelierDash .atelier-body");if(bd&&atelierTop)bd.style.setProperty("--at-top",atelierTop+"px")}
+document.addEventListener("pointerdown",e=>{const sp=e.target.closest("#atelierSplit");if(!sp)return;const bd=sp.parentElement;e.preventDefault();sp.setPointerCapture(e.pointerId);const mv=ev=>{const r=bd.getBoundingClientRect();atelierTop=Math.round(Math.max(60,Math.min(r.height-80,ev.clientY-r.top)));atelierTopApply()},up=()=>{sp.removeEventListener("pointermove",mv);sp.removeEventListener("pointerup",up);sp.removeEventListener("pointercancel",up)};sp.addEventListener("pointermove",mv);sp.addEventListener("pointerup",up);sp.addEventListener("pointercancel",up)});
+document.addEventListener("keydown",e=>{if(!e.target.closest||!e.target.closest("#atelierSplit")||(e.key!=="ArrowDown"&&e.key!=="ArrowUp"))return;e.preventDefault();const bd=e.target.parentElement,r=bd.getBoundingClientRect(),cur=atelierTop||bd.querySelector(".atelier-tree").getBoundingClientRect().height;atelierTop=Math.round(Math.max(60,Math.min(r.height-80,cur+(e.key==="ArrowDown"?24:-24))));atelierTopApply()});
 setInterval(()=>{if(atelierLive&&!document.hidden)loadWiki().then(()=>{try{renderAtelierDash()}catch{}})},6e4);
 function atelierPanel(){atelierDash()}
 function atelierDash(view){
@@ -603,9 +606,10 @@ function renderAtelierDash(){
         <button type="button" class="leaf${atelierView==="keys"?" sel":""}" data-av="keys">${l(cdxT("atelier.tree.keys"))}</button>
         <button type="button" class="leaf${atelierView==="replay"?" sel":""}" data-av="replay">${l(cdxT("atelier.tree.replay"))}</button>
         <button type="button" class="leaf${atelierView==="site"?" sel":""}" data-av="site">${l(cdxT("atelier.tree.site"))}</button>
-      </nav>
+      </nav><div class="atelier-split" id="atelierSplit" role="separator" aria-orientation="horizontal" tabindex="0"></div>
       <div class="atelier-work" id="atelierWork">${work}</div>
     </div>`;
+  atelierTopApply();
   dash.onclick=e=>{
     const go=e.target.closest("[data-go-combo]"),done=e.target.closest("[data-rep-done]"),lab=e.target.closest("[data-lab-set]");
     if(go){const c=L(go.dataset.goCombo);if(c){o.game=c.game;o.char=c.character;o.focusId=c.id;j("people")}return}

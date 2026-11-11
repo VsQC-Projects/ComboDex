@@ -333,7 +333,10 @@ body.is-atelier #atelierDash:not(.hidden){display:flex}
 .atelier-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;border-bottom:1px solid var(--line);background:#181822}
 .atelier-head b{letter-spacing:.04em;font-size:13px}
 .atelier-crumb{padding:8px 12px 0;font-size:11px;color:var(--muted);letter-spacing:.02em;word-break:break-word}
-.atelier-body{display:grid;grid-template-rows:minmax(140px,38%) minmax(0,1fr);min-height:0;flex:1}
+.atelier-body{display:grid;grid-template-rows:var(--at-top,38%) 10px minmax(0,1fr);min-height:0;flex:1}
+.atelier-split{cursor:row-resize;touch-action:none;display:flex;align-items:center;justify-content:center;background:#181822}
+.atelier-split::before{content:"";width:44px;height:4px;border-radius:4px;background:#4a4466}
+.atelier-split:hover::before,.atelier-split:focus-visible::before{background:#a37ee0}
 .atelier-tree{overflow:auto;padding:8px 8px 12px;border-bottom:1px solid var(--line);font-size:13px}
 .atelier-tree button{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;text-align:left;background:transparent;border-color:transparent;padding:6px 8px;border-radius:8px;font-weight:600;color:#d8d4e2}
 .atelier-tree button:hover{background:#1e1e28;border-color:transparent}
