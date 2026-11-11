@@ -270,7 +270,7 @@ var STR={
 "kc.pt.zero":["Pas encore de note","No notes yet","Aún sin notas"],
 "kc.pt.none":["Aucune note de patch importée pour ce jeu. ComboDex n’affiche aucune nouveauté sans source.","No patch notes imported for this game. ComboDex shows no news without a source.","No hay notas de parche importadas para este juego. ComboDex no muestra novedades sin fuente."],
 "kc.pt.empty":["Aucune note ne correspond à ces filtres.","No note matches these filters.","Ninguna nota coincide con estos filtros."],
-"kc.pt.summary":["Résumé d’origine (anglais)","Original summary (English)","Resumen original (inglés)"],
+"kc.pt.summary":["Résumé","Summary","Resumen"],
 "kc.pt.recheck":["Combos ComboDex à revérifier","ComboDex combos to re-check","Combos de ComboDex a reverificar"],
 "kc.pt.recheckNote":["Enregistrés avant ce patch : ils nécessitent une nouvelle vérification. Ils ne sont pas déclarés invalides.","Saved before this patch: they need a new check. They are not declared invalid.","Guardados antes de este parche: necesitan una nueva verificación. No se declaran inválidos."],
 "kc.pt.rechecked":["Marquer revérifié","Mark re-checked","Marcar reverificado"],
