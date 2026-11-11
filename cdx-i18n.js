@@ -50,7 +50,7 @@ fr:{
 ,"atelier.tree.site":"Site"
 ,"atelier.notif":"Notifications"
 ,"atelier.tree.reports":"Signalements"
-,"atelier.tree.lab":"Demandes lab"
+,"atelier.tree.lab":"Demandes lab","cmp.char1":"Personnage 1","cmp.char2":"Personnage 2","atelier.tree.review":"Import à valider","review.pending":"En attente de validation","review.sent":"Envoyé. Visible pour tout le monde après validation dans l’atelier.","review.ok":"Publier","review.no":"Refuser et supprimer","review.confirmNo":"Refuser cet import ? Il sera supprimé."
 ,"atelier.notif.none":"Rien de neuf : aucun signalement, aucune vidéo X ni demande lab en attente."
 ,"atelier.notif.some":"Atelier ouvert. {0} notification(s) t’attendent en haut du tableau de bord."
 ,"atelier.rep.nonote":"Signalé sans explication."
@@ -66,8 +66,8 @@ fr:{
 ,"atelier.dash.replay":"Le Replay Analyzer est à gauche. Une vidéo X s’y lit seulement après Accepter."
 ,"atelier.bad":"Clef incorrecte."
 ,"Vidéo X (facultatif)":"Vidéo X (facultatif)"
-,"x.hint":"La vidéo X s’affiche pour tout le monde après acceptation dans l’atelier."
-,"x.wait":"Cette vidéo X attend l’atelier VSQC."
+,"x.hint":"Les imports et les vidéos s’affichent pour tout le monde après validation dans l’atelier."
+,"x.wait":"Cette vidéo X attend l’approbation de l’administrateur."
 ,"x.accept":"Accepter cette vidéo X"
 ,"x.ok":"Vidéo X acceptée : tout le monde la voit."
 ,"x.fail":"Acceptée ici, pas encore pour les autres."
@@ -269,7 +269,7 @@ en:{
 "atelier.tree.site":"Site",
 "atelier.notif":"Notifications",
 "atelier.tree.reports":"Reports",
-"atelier.tree.lab":"Lab requests",
+"atelier.tree.lab":"Lab requests","cmp.char1":"Character 1","cmp.char2":"Character 2","atelier.tree.review":"Import to review","review.pending":"Awaiting review","review.sent":"Sent. Visible to everyone after workshop review.","review.ok":"Publish","review.no":"Reject and delete","review.confirmNo":"Reject this import? It will be deleted.",
 "atelier.notif.none":"Nothing new: no reports, no X video or lab request waiting.",
 "atelier.notif.some":"Workshop open. {0} notification(s) are waiting at the top of the dashboard.",
 "atelier.rep.nonote":"Reported without a note.",
@@ -285,8 +285,8 @@ en:{
 "atelier.dash.replay":"Replay Analyzer is on the left. An X video plays there only after Accept.",
 "atelier.bad":"Wrong key.",
 "Vidéo X (facultatif)":"X video (optional)",
-"x.hint":"The X video shows for everyone after workshop approval.",
-"x.wait":"This X video is waiting for the VSQC workshop.",
+"x.hint":"Imports and videos show for everyone after workshop review.",
+"x.wait":"This X video is awaiting admin approval.",
 "x.accept":"Accept this X video",
 "x.ok":"X video accepted: everyone can see it.",
 "x.fail":"Accepted here, not yet for everyone.",
@@ -601,7 +601,7 @@ es:{
 "atelier.tree.site":"Sitio",
 "atelier.notif":"Notificaciones",
 "atelier.tree.reports":"Reportes",
-"atelier.tree.lab":"Peticiones lab",
+"atelier.tree.lab":"Peticiones lab","cmp.char1":"Personaje 1","cmp.char2":"Personaje 2","atelier.tree.review":"Importación por validar","review.pending":"Pendiente de validación","review.sent":"Enviado. Visible para todos tras la validación en el taller.","review.ok":"Publicar","review.no":"Rechazar y borrar","review.confirmNo":"¿Rechazar esta importación? Se borrará.",
 "atelier.notif.none":"Nada nuevo: ningún reporte, ningún vídeo X ni petición lab pendiente.",
 "atelier.notif.some":"Taller abierto. {0} notificación(es) te esperan arriba del panel.",
 "atelier.rep.nonote":"Reportado sin explicación.",
@@ -617,8 +617,8 @@ es:{
 "atelier.dash.replay":"Replay Analyzer está a la izquierda. Un vídeo de X se lee allí solo después de Aceptar.",
 "atelier.bad":"Clave incorrecta.",
 "Vidéo X (facultatif)":"Vídeo de X (opcional)",
-"x.hint":"El vídeo de X se muestra a todos después de la aceptación en el taller.",
-"x.wait":"Este vídeo de X espera al taller VSQC.",
+"x.hint":"Las importaciones y los vídeos se muestran a todos tras la validación en el taller.",
+"x.wait":"Este vídeo de X espera la aprobación del administrador.",
 "x.accept":"Aceptar este vídeo de X",
 "x.ok":"Vídeo de X aceptado: todo el mundo lo ve.",
 "x.fail":"Aceptado aquí, aún no para los demás.",

@@ -10,18 +10,18 @@
     <script>
 (function(){var p=location.pathname;if(!p.endsWith("/")&&!/\.html$/i.test(p))history.replaceState(null,"",p+"/"+location.search+location.hash);})();
 </script>
-    <script src="cdx-i18n.js?v=20261110c2"></script>
-    <link rel="stylesheet" href="pad/gpv/overlay.css?v=20261110c2" />
+    <script src="cdx-i18n.js?v=20261110c3"></script>
+    <link rel="stylesheet" href="pad/gpv/overlay.css?v=20261110c3" />
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%235b456d'/%3E%3Ctext x='16' y='22' font-size='16' font-family='sans-serif' font-weight='700' text-anchor='middle' fill='%23f5f3f8'%3ECD%3C/text%3E%3C/svg%3E" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Audiowide&family=Black+Ops+One&family=Bungee&family=Press+Start+2P&display=swap" />
-    <link rel="stylesheet" href="cdx.css?v=20261110c2" />
+    <link rel="stylesheet" href="cdx.css?v=20261110c3" />
     <script src="cdx-portraits.js"></script>
-    <script src="cdx-ft.js?v=20261110c2"></script>
-    <script defer src="cdx-kc-data.js?v=20261110c2"></script>
-    <script defer src="cdx-kc.js?v=20261110c2"></script>
-    <script defer src="cdx-app.js?v=20261110c2"></script>
+    <script src="cdx-ft.js?v=20261110c3"></script>
+    <script defer src="cdx-kc-data.js?v=20261110c3"></script>
+    <script defer src="cdx-kc.js?v=20261110c3"></script>
+    <script defer src="cdx-app.js?v=20261110c3"></script>
   </head>
 <body>
     <a class="skip" href="#main" data-i18n="Aller au contenu">Aller au contenu</a>
@@ -210,10 +210,15 @@
               </div>
               <button type="button" id="compareBot" class="primary" data-i18n="Comparer par le bot">Comparer par le bot</button>
             </div>
-            <div class="grid2">
+            <div class="cmp-row">
               <div class="field"><label for="compareScope" data-i18n="cmp.scope">Comparer parmi</label><select id="compareScope"><option value="char" data-i18n="cmp.scope.char">Ce perso</option><option value="game" data-i18n="cmp.scope.game">Tous les persos du jeu</option><option value="all" data-i18n="cmp.scope.all">Tous les jeux</option></select></div>
               <div class="field"><label for="compareGame" data-i18n="Jeu">Jeu</label><select id="compareGame"></select></div>
-              <div class="field"><label for="compareChar" data-i18n="Personnage">Personnage</label><select id="compareChar"></select></div>
+            </div>
+            <div class="cmp-row one" id="cmpChars">
+              <div class="field"><label for="compareChar" id="compareCharLbl">Personnage</label><select id="compareChar"></select></div>
+              <div class="field hidden"><label for="compareChar2" data-i18n="cmp.char2">Personnage 2</label><select id="compareChar2"></select></div>
+            </div>
+            <div class="cmp-row">
               <div class="field"><label for="compareA" data-i18n="Combo A">Combo A</label><select id="compareA"></select></div>
               <div class="field"><label for="compareB" data-i18n="Combo B">Combo B</label><select id="compareB"></select></div>
             </div>
@@ -524,7 +529,7 @@
                 <input class="grow" type="url" id="importYouTube" placeholder="https://www.youtube.com/watch?v=…  ·  https://x.com/compte/status/…" />
                 <button type="button" id="importYtBtn" class="save-combo" data-i18n="Importer">Importer</button>
               </div>
-              <p class="muted small" data-i18n="x.hint">La vidéo X s’affiche pour tout le monde après acceptation dans l’atelier.</p>
+              <p class="muted small" data-i18n="x.hint">Les imports et les vidéos s’affichent pour tout le monde après validation dans l’atelier.</p>
             </div>
             <details id="manualImport">
               <summary data-i18n="Coller des combos ou un fichier HTML">Coller des combos ou un fichier HTML</summary>
