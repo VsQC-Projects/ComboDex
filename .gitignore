@@ -4,6 +4,10 @@
 !cdx-portraits.js
 !cdx-ft.js
 !cdx-app.js
+!cdx-kc.js
+!cdx-kc-data.js
+!img/
+!img/akali-5m-hitbox.png
 !cdx.css
 !.gitignore
 !.nojekyll

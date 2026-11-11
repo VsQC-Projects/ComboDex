@@ -109,10 +109,10 @@ fr:{
 ,"ra.related":"Même vidéo, même perso, commandes en commun — calculé en arrière-plan."
 ,"Aucun combo lié.":"Aucun combo lié."
 ,"Choisir un combo":"Choisir un combo"
-,"home.lead":"Six modules. Passe la souris pour la légende, clique pour entrer."
+,"home.lead":"Sept modules. Passe la souris pour la légende, clique pour entrer."
 ,"home.people":"Personnages — fiches combo, favoris, entraînement."
 ,"home.frames":"Frame Theater — données de frames, hitbox, on-block."
-,"home.compare":"Comparer — deux combos du même perso, côte à côte."
+,"home.compare":"Comparer — deux combos, du même perso ou d’autres."
 ,"Comparer par le bot":"Comparer par le bot"
 ,"bot.need":"Choisis d’abord deux combos du même perso. Ensuite j’ouvre la fenêtre."
 ,"bot.tag":"Bot basique · il lit les deux fiches, pas le lab. Il ne voit pas tes doigts."
@@ -168,10 +168,10 @@ en:{
 "Frame Theater":"Frame Theater",
 "Comparer":"Compare",
 "Replay Analyzer":"Replay Analyzer",
-"home.lead":"Six modules. Hover for the legend, click to enter.",
+"home.lead":"Seven modules. Hover for the legend, click to enter.",
 "home.people":"Characters — combo sheets, favorites, training.",
 "home.frames":"Frame Theater — frame data, hitboxes, on-block.",
-"home.compare":"Compare — two combos of the same character, side by side.",
+"home.compare":"Compare — two combos, from the same character or others.",
 "Comparer par le bot":"Compare with the bot",
 "bot.need":"Pick two combos of the same character first. Then I open the window.",
 "bot.tag":"Basic bot · it reads the two cards, not the lab. It can’t see your hands.",
@@ -500,10 +500,10 @@ es:{
 "Frame Theater":"Frame Theater",
 "Comparer":"Comparar",
 "Replay Analyzer":"Replay Analyzer",
-"home.lead":"Seis módulos. Pasa el cursor para la leyenda, clic para entrar.",
+"home.lead":"Siete módulos. Pasa el cursor para la leyenda, clic para entrar.",
 "home.people":"Personajes — fichas de combo, favoritos, entrenamiento.",
 "home.frames":"Frame Theater — datos de frames, hitbox, on-block.",
-"home.compare":"Comparar — dos combos del mismo personaje, lado a lado.",
+"home.compare":"Comparar — dos combos, del mismo personaje u otros.",
 "Comparer par le bot":"Comparar con el bot",
 "bot.need":"Elige primero dos combos del mismo personaje. Luego abro la ventana.",
 "bot.tag":"Bot básico · lee las dos fichas, no el lab. No ve tus manos.",
