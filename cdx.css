@@ -512,12 +512,13 @@ body.atelier-dragging{user-select:none}
 .kc-enc-split .kc-card{overflow-wrap:anywhere}
 .kc-split.kc-enc-split{grid-template-columns:minmax(200px,260px) minmax(0,1fr)}
 .kc-enc-split>.kc-detail{height:auto;min-height:0;overflow:visible}
-.kc-enc-split>.kc-list{position:sticky;top:8px;height:auto;max-height:calc(100vh - 24px)}
+.kc-enc-split>.kc-list{position:sticky;top:76px;height:auto;max-height:calc(100vh - 92px)}
 .kc-gl{width:34px;height:14px;margin:0 1px;vertical-align:-3px}
 .kc-gp{display:inline-flex;flex-wrap:wrap;gap:2px;vertical-align:middle}
-.kc-keys{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:2px 14px}
+.kc-keys{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:2px 16px}
 .kc-keys h4{grid-column:1/-1}
-.kc-key-row{grid-template-columns:36px minmax(0,auto) 1fr;gap:6px;padding:3px 0;border-top:0}
+.kc-key-row{grid-template-columns:36px 120px minmax(0,1fr);gap:6px;padding:3px 0;border-top:0}
+.kc-key-row .kc-inp{overflow-wrap:normal;word-break:normal}
 .kc-per{grid-template-columns:minmax(0,max-content) minmax(0,1fr);gap:4px 10px}
 .kc-per dt{max-width:180px}
 .kc-enc-all{grid-column:1/-1;flex-direction:row;align-items:center;gap:12px}
