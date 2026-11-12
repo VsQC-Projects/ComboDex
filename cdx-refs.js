@@ -108,19 +108,46 @@ function obstacles(root, out) {
   walk(root);
 }
 
-function place() { 
-  if (activeTab() === "people") {
-    placePeople();
-    return;
+
+/* Placement commun des refs : tous les modules */
+let refVisitTab = null;
+let refVisitSeed = 0;
+let refVisitItems = [];
+let refVisitWidth = 0;
+
+function refNewVisit(tab) {
+  refVisitTab = tab;
+  refVisitSeed = Math.floor(Math.random() * 4294967295);
+
+  const mobile = window.innerWidth < 700;
+  const limit = mobile ? 12 : (tab === "people" ? 12 : 8);
+
+  refVisitItems = [];
+
+  for (const [g, rows] of Object.entries(DATA)) {
+    if (!Array.isArray(rows)) continue;
+
+    const shuffled = [...rows]
+      .map(row => ({row, random: Math.random()}))
+      .sort((a, b) => a.random - b.random)
+      .slice(0, limit);
+
+    for (const {row} of shuffled) {
+      refVisitItems.push({
+        g,
+        id: row[0],
+        row
+      });
+    }
   }
-/* Placement renforcé des références — page Personnages */
-function placePeople() {
+
+  refVisitItems.sort(() => Math.random() - 0.5);
+}
+
+function place() {
   if (!layer) return;
 
-  layer.replaceChildren();
-  placed = [];
-  layer.dataset.tab = "people";
-
+  const tab = activeTab();
   const mobile = window.innerWidth < 700;
   const W = document.documentElement.clientWidth;
   const H = Math.max(
@@ -128,23 +155,55 @@ function placePeople() {
     document.documentElement.scrollHeight
   );
 
-  const page = document.getElementById("people");
+  if (tab !== refVisitTab || W !== refVisitWidth) {
+    refNewVisit(tab);
+    refVisitWidth = W;
+  }
+
+  layer.replaceChildren();
+  placed = [];
+  layer.dataset.tab = tab;
+
+  if (tab === "home" || !refVisitItems.length) return;
+
+  const page = document.getElementById(tab);
   if (!page) return;
 
-  const limit = mobile ? PEOPLE_MOBILE : PEOPLE_DESKTOP;
-  const counts = new Map();
+  const rect = el => {
+    const r = el.getBoundingClientRect();
+    return {
+      left: r.left + scrollX,
+      right: r.right + scrollX,
+      top: r.top + scrollY,
+      bottom: r.bottom + scrollY,
+      width: r.width,
+      height: r.height
+    };
+  };
 
-  const items = (PLAN.people || []).filter(it => {
-    const n = counts.get(it.g) || 0;
-    if (n >= limit) return false;
-    counts.set(it.g, n + 1);
-    return true;
-  });
+  const area = rect(page);
 
-const random = rng(Math.floor(Math.random() * 4294967295));  const occupied = [];
+  const panels = [...page.querySelectorAll(
+    ".panel, .card, .section, .ft-stage, " +
+    ".ft-row, .character-panel, " +
+    ".ra-theater-panel, .compare-hero, " +
+    ".kc-head, .kc-card, .atelier-dash"
+  )]
+    .map(rect)
+    .filter(p => p.width > W * 0.42 && p.height > 55);
 
-  const overlap = (x, y, size) =>
-    occupied.some(p =>
+  const edgePanel = (y, left) => panels
+    .filter(p => y >= p.top - 12 && y <= p.bottom + 12)
+    .filter(p => left ? p.left > 4 : p.right < W - 4)
+    .sort((a, b) =>
+      left ? b.left - a.left : a.right - b.right
+    )[0];
+
+  const random = rng(refVisitSeed);
+  const occupied = [];
+
+  const canPlace = (x, y, size) =>
+    !occupied.some(p =>
       x < p.x + p.size + 3 &&
       x + size + 3 > p.x &&
       y < p.y + p.size + 5 &&
@@ -155,12 +214,13 @@ const random = rng(Math.floor(Math.random() * 4294967295));  const occupied = []
     x = Math.round(Math.max(3, Math.min(W - size - 3, x)));
     y = Math.round(Math.max(3, Math.min(H - size - 3, y)));
 
-    if (overlap(x, y, size)) return false;
+    if (!canPlace(x, y, size)) return false;
 
     const img = new Image();
+
     img.src = src;
     img.alt = "";
-    img.className = "cdx-ref";
+    img.className = "cdx-ref cdx-ref-edge";
     img.loading = "lazy";
     img.decoding = "async";
     img.draggable = false;
@@ -170,305 +230,163 @@ const random = rng(Math.floor(Math.random() * 4294967295));  const occupied = []
     img.style.cssText =
       `left:${x}px;top:${y}px;` +
       `width:${size}px;height:${size}px;` +
-      `--rot:${Math.round(random() * 28 - 14)}deg`;
+      `--rot:${Math.round(random() * 30 - 15)}deg`;
 
     img.onerror = () => {
       img.remove();
-      const i = placed.findIndex(p => p.img === img);
-      if (i >= 0) placed.splice(i, 1);
+      const index = placed.findIndex(p => p.img === img);
+      if (index >= 0) placed.splice(index, 1);
     };
 
     layer.appendChild(img);
     placed.push({it, img});
     occupied.push({x, y, size});
+
     return true;
   };
 
-  const rect = el => {
-    const r = el.getBoundingClientRect();
-    return {
-      left: r.left + scrollX,
-      right: r.right + scrollX,
-      top: r.top + scrollY,
-      bottom: r.bottom + scrollY
-    };
-  };
+  const items = refVisitItems;
+  const startY = Math.max(4, area.top);
+  const endY = Math.min(H - 45, area.bottom + 25);
+  const span = Math.max(1, endY - startY);
 
-  const panels = [...page.querySelectorAll(
-    ".panel, .card, .character-panel, .section"
-  )]
-    .map(rect)
-    .filter(p => p.right - p.left > W * 0.45)
-    .sort((a, b) => a.top - b.top);
-
-  const mainRect = rect(page);
-
-  // En-tête : zone libre entre le logo et les langues.
-  const header = document.querySelector(".head");
-  const brand = document.querySelector(
-    ".brand, .brand-word, .brand-btn"
-  );
-  const languages = document.querySelector(".lang-switch");
-
-  let headerZone = null;
-
-  if (!mobile && header && brand && languages) {
-    const h = rect(header);
-    const b = rect(brand);
-    const l = rect(languages);
-
-    if (l.left - b.right > 60) {
-      headerZone = {
-        left: b.right + 8,
-        right: l.left - 8,
-        top: h.top + 4,
-        bottom: h.bottom - 4
-      };
-    }
-  }
-
-  // Les positions verticales sont réparties sur toute la page.
-  const top = Math.max(5, mainRect.top - (mobile ? 12 : 0));
-  const bottom = Math.min(H - 48, mainRect.bottom + 12);
-  const span = Math.max(1, bottom - top);
-
-  const shuffled = items
-    .map(it => ({it, sort: random()}))
-    .sort((a, b) => a.sort - b.sort)
-    .map(x => x.it);
-
-  shuffled.forEach((it, index) => {
-    const count = Math.max(1, shuffled.length);
-
-    // Dimensions originales des références.
+  /* Alternance gauche / droite comme Personnages */
+  items.forEach((it, i) => {
     const size = Math.round(
       (mobile ? 30 : 40) +
       random() * (mobile ? 14 : 24)
     );
 
-    const n = pieces(it);
-    const src = `objets/${it.g}/${it.id}${n ? "-1" : ""}.webp`;
+    const src =
+      `objets/${it.g}/${it.id}` +
+      `${pieces(it) ? "-1" : ""}.webp`;
 
-    // On alterne gauche/droite et on varie la profondeur.
-    const leftSide = index % 2 === 0;
-    const depth = random();
+    const baseY =
+      startY + (i + 0.5) * span / items.length;
 
-    const yBase =
-      top + ((index + 0.5) / count) * span;
+    const left = i % 2 === 0;
 
-    let success = false;
-
-    // Plusieurs essais autour de la position souhaitée.
-    for (let attempt = 0; attempt < 45 && !success; attempt++) {
-      const offset =
-        attempt === 0 ? 0 :
-        (attempt % 2 ? 1 : -1) *
-        Math.ceil(attempt / 2) * (size + 7);
+    for (let attempt = 0; attempt < 48; attempt++) {
+      const step =
+        Math.ceil(attempt / 2) *
+        (size + 7) *
+        (attempt % 2 ? 1 : -1);
 
       const y = Math.max(
         4,
-        Math.min(H - size - 4, yBase + offset)
+        Math.min(
+          H - size - 4,
+          baseY + (attempt ? step : 0)
+        )
       );
 
+      const panel = edgePanel(y + size / 2, left);
       let x;
 
       if (mobile) {
-        // Une partie reste visible sur les bords du cadre.
-        // Zigzag horizontal, sans sortir du téléphone.
-        const nearby = panels.find(p =>
-          y + size > p.top && y < p.bottom
-        );
+        const edge = panel
+          ? (left ? panel.left : panel.right)
+          : (left
+              ? Math.max(12, area.left + 12)
+              : Math.min(W - 12, area.right - 12));
 
-        const edge = leftSide
-          ? nearby?.left ?? W * 0.09
-          : nearby?.right ?? W * 0.91;
+        const visible = size * (0.72 + random() * 0.20);
 
-        const visiblePart = size * (0.48 + depth * 0.37);
+        x = left
+          ? edge - visible
+          : edge - (size - visible);
 
-        x = leftSide
-          ? edge - visiblePart
-          : edge - (size - visiblePart);
-
-        // Variation pour éviter une ligne verticale parfaite.
-        x += (random() - 0.5) * 14;
+        x += (random() - 0.5) * 12;
       } else {
-        // Ordinateur : marges latérales.
         const band = Math.min(120, W * 0.13);
-        x = leftSide
+
+        x = left
           ? 5 + random() * band
           : W - size - 5 - random() * band;
       }
 
-      success = add(it, src, x, y, size);
+      if (add(it, src, x, y, size)) break;
     }
   });
 
-  // Références supplémentaires dans l'en-tête sur ordinateur.
-  if (headerZone && shuffled.length) {
-    const width = headerZone.right - headerZone.left;
-    const height = headerZone.bottom - headerZone.top;
-    const size = Math.min(34, Math.max(20, height - 8));
-    const capacity = Math.min(8, Math.floor(width / (size + 8)));
+  /* Refs supplémentaires près du pied de page */
+  const footer = document.querySelector(".studio-footer");
 
-    for (let i = 0; i < capacity; i++) {
-      const it = shuffled[i % shuffled.length];
-      const x = headerZone.left +
-        (i + 0.5) * width / capacity - size / 2;
-      const y = headerZone.top + (height - size) / 2;
+  if (footer && items.length) {
+    const f = rect(footer);
+    const count = Math.min(mobile ? 4 : 7, items.length);
 
-      const n = pieces(it);
-      const src =
-        `objets/${it.g}/${it.id}${n ? "-1" : ""}.webp`;
+    for (let i = 0; i < count; i++) {
+      const it = items[(i * 7 + 3) % items.length];
+      const size = mobile ? 30 : 40;
 
-      add(it, src, x, y, size);
+      const x = (i + 0.5) * W / count - size / 2;
+      const y = f.top - size - 6 - (i % 2) * 9;
+
+      add(
+        it,
+        `objets/${it.g}/${it.id}` +
+        `${pieces(it) ? "-1" : ""}.webp`,
+        x, y, size
+      );
     }
   }
 
-  if (game && game.tab === "people") relink();
-}
+  /* Refs dans l'espace à droite du logo ComboDex */
+  if (items.length) {
+    const header = document.querySelector(".head");
+    const logo = document.querySelector(
+      ".head .brand-btn, .head .brand-word, " +
+      ".brand-btn, .brand-word"
+    );
+    const langs = document.querySelector(
+      ".head .lang-switch, .lang-switch"
+    );
 
-  if (!layer) return;
-  layer.textContent = "";
-  placed = [];
-  const tab = activeTab();
-  layer.dataset.tab = tab;
-  const small = innerWidth < 700;
-  const allItems = PLAN[tab] || [];
-  const perGameCounts = new Map();
-  const items = tab === "people" && small
-    ? allItems.filter(it => {
-        const count = perGameCounts.get(it.g) || 0;
-        if (count >= PEOPLE_MOBILE) return false;
-        perGameCounts.set(it.g, count + 1);
-        return true;
-      })
-    : allItems;
-  if (tab === "home" || !items.length) return;
+    if (header && logo) {
+      const h = rect(header);
+      const l = rect(logo);
+      const r = langs ? rect(langs) : null;
 
-  const W = document.documentElement.scrollWidth;
-  const Hh = document.documentElement.scrollHeight;
-  const boxes = [];
-  [".head", ".studio-footer"].forEach(s => {
-    const e = document.querySelector(s);
-    if (e) obstacles(e, boxes);
-  });
-  boxes.push(...[".nav"].map(s => document.querySelector(s)).filter(Boolean).map(e => {
-    const r = e.getBoundingClientRect();
-    return [r.left + scrollX, r.top + scrollY, r.right + scrollX, r.bottom + scrollY];
-  }));
-  obstacles(document.getElementById(tab), boxes);
+      const from = l.right + (mobile ? 5 : 14);
+      const to = (
+        r && r.left > from + 24
+          ? r.left
+          : Math.min(W - 8, h.right - 8)
+      ) - (mobile ? 4 : 14);
 
-  const CELL = 8, cw = Math.ceil(W / CELL), ch = Math.ceil(Hh / CELL);
-  const grid = new Uint8Array(cw * ch);
-  const mark = (x0, y0, x1, y1) => {
-    for (let y = Math.max(0, y0 / CELL | 0); y < Math.min(ch, Math.ceil(y1 / CELL)); y++)
-      grid.fill(1, y * cw + Math.max(0, x0 / CELL | 0), y * cw + Math.min(cw, Math.ceil(x1 / CELL)));
-  };
-  const free = (x0, y0, x1, y1) => {
-    if (x0 < 4 || y0 < 4 || x1 > W - 4 || y1 > Hh - 4) return false;
-    for (let y = y0 / CELL | 0; y < Math.ceil(y1 / CELL); y++)
-      for (let x = x0 / CELL | 0; x < Math.ceil(x1 / CELL); x++) if (grid[y * cw + x]) return false;
-    return true;
-  };
-  const M = 12;
-  boxes.forEach(([a, b2, c, d]) => mark(a - M, b2 - M, c + M, d + M));
+      const size = mobile
+        ? Math.min(25, Math.max(18, h.height - 12))
+        : Math.min(34, Math.max(22, h.height - 12));
 
-  const r = rng(Math.floor(Math.random() * 4294967295));
-  const order = items.map(it => [r(), it]).sort((x, y) => x[0] - y[0]).map(x => x[1]);
-  const gap = small ? 16 : 30;
+      const count = Math.max(
+        0,
+        Math.min(
+          mobile ? 7 : 10,
+          Math.floor((to - from) / (size + 5))
+        )
+      );
 
-  // Personnages mobile : zigzags dans les marges entre le téléphone et les cartes.
-  // Dimensions d'origine conservées.
-  const page = document.getElementById(tab);
-  const cards = tab === "people" && page
-    ? [...page.querySelectorAll(".card, .panel, .box, .section, .character-panel")]
-        .map(el => el.getBoundingClientRect())
-        .filter(a => a.width > W * .42 && a.height > 60)
-        .map(a => ({
-          left: a.left + scrollX,
-          right: a.right + scrollX,
-          top: a.top + scrollY,
-          bottom: a.bottom + scrollY
-        }))
-    : [];
+      for (let i = 0; i < count; i++) {
+        const it = items[(i * 3 + 5) % items.length];
 
-  const candidate = size => {
-    const maxX = Math.max(4, W - size - 4);
-    const maxY = Math.max(4, Hh - size - 4);
-    if (tab !== "people") {
-      return [4 + r() * (maxX - 4), 4 + r() * (maxY - 4)];
-    }
+        const x =
+          from +
+          (i + 0.5) * (to - from) / count -
+          size / 2;
 
-    const y = 4 + r() * (maxY - 4);
-    const nearby = cards.filter(c => y + size > c.top && y < c.bottom);
-    const panel = nearby.sort((a, b) => (b.right - b.left) - (a.right - a.left))[0];
+        const y = h.top + (h.height - size) / 2;
 
-    if (small && panel && r() < .82) {
-      const left = r() < .5;
-      const lo = left ? 4 : panel.right + 2;
-      const hi = left ? panel.left - size - 2 : W - size - 4;
-
-      // Variation horizontale : effet zigzag, pas une ligne rigide.
-      if (hi >= lo) return [lo + r() * (hi - lo), y];
-
-      const otherLo = left ? panel.right + 2 : 4;
-      const otherHi = left ? W - size - 4 : panel.left - size - 2;
-      if (otherHi >= otherLo) {
-        return [otherLo + r() * (otherHi - otherLo), y];
+        add(
+          it,
+          `objets/${it.g}/${it.id}` +
+          `${pieces(it) ? "-1" : ""}.webp`,
+          x, y, size
+        );
       }
     }
-
-    const band = Math.min(maxX / 2, Math.max(small ? 48 : 90, W * (small ? .22 : .18)));
-    const x = r() < .65
-      ? (r() < .5 ? 4 + r() * band : maxX - r() * band)
-      : 4 + r() * (maxX - 4);
-    return [Math.max(4, Math.min(maxX, x)), y];
-  };
-
-  const put = (it, src, x, y, size) => {
-    mark(x - gap, y - gap, x + size + gap, y + size + gap);
-    const img = new Image();
-    img.src = src;
-    img.alt = "";
-    img.className = "cdx-ref";
-    img.loading = "lazy";
-    img.decoding = "async";
-    img.draggable = false;
-    img.title = `${label(it)} · ${gameName(it.g)}`;
-    img.style.cssText = `left:${x | 0}px;top:${y | 0}px;width:${size}px;height:${size}px;--rot:${Math.round(r() * 40 - 20)}deg`;
-    img.dataset.key = it.g + "/" + it.id;
-    img.onerror = () => img.remove();
-    layer.appendChild(img);
-    placed.push({it, img});
-  };
-
-  for (const it of order) {
-    const n = pieces(it);
-    if (n) {
-      const size = small ? 26 : 34, got = [];
-      for (let p = 1; p <= n; p++) {
-        let best = null, bestD = -1;
-        for (let k = 0; k < 220; k++) {
-          const [x, y] = candidate(size);
-          if (!free(x, y, x + size, y + size)) continue;
-          const d = got.length ? Math.min(...got.map(([a, c]) => Math.hypot(a - x, c - y))) : 0;
-          if (d > bestD) { best = [x, y]; bestD = d; }
-        }
-        if (!best) break;
-        got.push(best);
-        put(it, `objets/${it.g}/${it.id}-${p}.webp`, best[0], best[1], size);
-      }
-      continue;
-    }
-
-    const size = Math.round((small ? 30 : 40) + r() * (small ? 14 : 24));
-    let spot = null;
-    for (let k = 0; k < 160 && !spot; k++) {
-      const [x, y] = candidate(size);
-      if (free(x, y, x + size, y + size)) spot = [x, y];
-    }
-    if (spot) put(it, `objets/${it.g}/${it.id}.webp`, spot[0], spot[1], size);
   }
+
   if (game && game.tab === tab) relink();
 }
 
