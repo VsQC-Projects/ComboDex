@@ -2537,4 +2537,3 @@ function cdxCookiePath(){const p=location.pathname.replace(/[^/]+$/,"")||"/";ret
 function cdxGetCookie(n){const m=document.cookie.match(new RegExp("(?:^|; )"+n.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"=([^;]*)"));return m?decodeURIComponent(m[1]):""}
 function cdxSetCookie(n,v,days){const d=new Date();d.setDate(d.getDate()+(days||365));document.cookie=n+"="+encodeURIComponent(v)+"; expires="+d.toUTCString()+"; path="+cdxCookiePath()+"; SameSite=Lax"+(location.protocol==="https:"?"; Secure":"")}
 (function(){const bar=a("cookieBar"),ok=a("cookieOk");if(!bar||!ok)return;if(cdxGetCookie("cdx_ok"))return;bar.classList.remove("hidden");ok.onclick=()=>{cdxSetCookie("cdx_ok","1",365);bar.classList.add("hidden")}})();
-
