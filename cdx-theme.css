@@ -636,3 +636,50 @@ html[data-theme="official"] .cdx-ref {
   overflow-y: auto !important;
   z-index: 99999 !important;
 }
+
+/* MINI-JEU : réduction supplémentaire de 20 % */
+
+/* PC : 420 px -> 336 px */
+#cdxHunt.cdx-hunt {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  right: auto !important;
+  bottom: auto !important;
+  transform: translate(-50%, -50%) !important;
+
+  width: min(336px, calc(100vw - 32px)) !important;
+  max-height: 56dvh !important;
+  overflow-y: auto !important;
+  z-index: 99999 !important;
+}
+
+/* Mobile : 250 px -> 200 px */
+@media (max-width: 699px) {
+  #cdxHunt.cdx-hunt {
+    width: min(200px, calc(100vw - 32px)) !important;
+    max-height: 36dvh !important;
+    padding: 8px !important;
+    font-size: 11px !important;
+  }
+
+  #cdxHunt .hunt-hint {
+    font-size: 11px !important;
+    line-height: 1.25 !important;
+  }
+
+  #cdxHunt .hunt-top {
+    font-size: 11px !important;
+  }
+
+  #cdxHunt .hunt-btns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  #cdxHunt .hunt-btns button {
+    font-size: 10px !important;
+    padding: 4px 6px !important;
+  }
+}
