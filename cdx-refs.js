@@ -1,4 +1,3 @@
-
 (() => {
 "use strict";
 const UI_KEY = "combo-dex-ui-v1";
@@ -14,14 +13,14 @@ const TXT = {
   en: {wood: "Wood", official: "Official", dojo: "Dojo", da: "Art direction",
     title: "Mini-game: find the object!", find: "Find this object hidden on the page:", from: "Game",
     quit: "Give up", again: "Play again", found: "Found it!", miss: "Not that one…",
-    time: "Time", scroll: "It can be anywhere in the page, scroll around.",
+    time: "Time", scroll: "It can be anywhere on the page, scroll around.",
     all: "They are scattered across the page: find them all.", got: "Found",
     gave: "You gave up… it was right here!", gaveN: "You gave up… they were right here!", close: "Close"},
   es: {wood: "Madera", official: "Oficial", dojo: "Dojo", da: "Dirección artística",
     title: "Minijuego: ¡encuentra el objeto!", find: "Encuentra este objeto escondido en la página:", from: "Juego",
     quit: "Rendirse", again: "Jugar otra vez", found: "¡Encontrado!", miss: "Ese no es…",
     time: "Tiempo", scroll: "Puede estar en cualquier parte de la página, desplázate.",
-    all: "Están repartidas por la página: encuentra todas.", got: "Encontradas",
+    all: "Están repartidas por la página: encuéntralas todas.", got: "Encontradas",
     gave: "Te rendiste… ¡estaba aquí!", gaveN: "Te rendiste… ¡estaban aquí!", close: "Cerrar"},
 };
 const lang = () => (TXT[window.cdxLang] ? window.cdxLang : "fr");
@@ -65,14 +64,13 @@ function labelSwitch() {
   });
 }
 
-/* ---------- refs data ---------- */
+/* ---------- refs data: each game's refs spread over the modules, never twice on one page ---------- */
 const DATA = window.CDX_OBJETS || {};
 const gameName = g => { try { if (typeof b === "object" && b[g] && b[g].name) return b[g].name; } catch {} return g.toUpperCase(); };
-const PER_GAME = 8;
-const PEOPLE_DESKTOP = 12;
-const PEOPLE_MOBILE = 12;
+const PER_GAME = 4;
 const PLAN = {};
 MODULES.forEach(m => (PLAN[m] = []));
+/* row[7] = number of pieces: one ref made of several images scattered over the same page */
 const pieces = it => it.row[7] || 0;
 const label = it => it.row[1 + LI[lang()]] || it.row[1];
 const hint = it => it.row[4 + LI[lang()]] || label(it);
@@ -82,7 +80,7 @@ const rng = seed => () => { seed = seed + 0x6D2B79F5 | 0; let x = Math.imul(seed
 for (const m of MODULES)
   for (const [g, rows] of Object.entries(DATA)) {
     const r = rng(hash(m + "/" + g));
-    rows.map(row => [r(), row]).sort((a, c) => a[0] - c[0]).slice(0, m === "people" ? PEOPLE_DESKTOP : PER_GAME)
+    rows.map(row => [r(), row]).sort((a, c) => a[0] - c[0]).slice(0, PER_GAME)
       .forEach(([, row]) => PLAN[m].push({g, id: row[0], row}));
   }
 
@@ -108,285 +106,76 @@ function obstacles(root, out) {
   walk(root);
 }
 
-
-/* Placement commun des refs : tous les modules */
-let refVisitTab = null;
-let refVisitSeed = 0;
-let refVisitItems = [];
-let refVisitWidth = 0;
-
-function refNewVisit(tab) {
-  refVisitTab = tab;
-  refVisitSeed = Math.floor(Math.random() * 4294967295);
-
-  const mobile = window.innerWidth < 700;
-  const limit = mobile ? 12 : (tab === "people" ? 12 : 8);
-
-  refVisitItems = [];
-
-  for (const [g, rows] of Object.entries(DATA)) {
-    if (!Array.isArray(rows)) continue;
-
-    const shuffled = [...rows]
-      .map(row => ({row, random: Math.random()}))
-      .sort((a, b) => a.random - b.random)
-      .slice(0, limit);
-
-    for (const {row} of shuffled) {
-      refVisitItems.push({
-        g,
-        id: row[0],
-        row
-      });
-    }
-  }
-
-  refVisitItems.sort(() => Math.random() - 0.5);
-}
-
 function place() {
   if (!layer) return;
-
-  const tab = activeTab();
-  const mobile = window.innerWidth < 700;
-  const W = document.documentElement.clientWidth;
-  const H = Math.max(
-    document.body.scrollHeight,
-    document.documentElement.scrollHeight
-  );
-
-  if (tab !== refVisitTab || W !== refVisitWidth) {
-    refNewVisit(tab);
-    refVisitWidth = W;
-  }
-
-  layer.replaceChildren();
+  layer.textContent = "";
   placed = [];
+  const tab = activeTab();
   layer.dataset.tab = tab;
-
-  if (tab === "home" || !refVisitItems.length) return;
-
-  const page = document.getElementById(tab);
-  if (!page) return;
-
-  const rect = el => {
-    const r = el.getBoundingClientRect();
-    return {
-      left: r.left + scrollX,
-      right: r.right + scrollX,
-      top: r.top + scrollY,
-      bottom: r.bottom + scrollY,
-      width: r.width,
-      height: r.height
-    };
+  const items = PLAN[tab] || [];
+  if (tab === "home" || !items.length) return;
+  const W = document.documentElement.scrollWidth, Hh = document.documentElement.scrollHeight;
+  const boxes = [];
+  [".head", ".studio-footer"].forEach(s => { const e = document.querySelector(s); if (e) obstacles(e, boxes); });
+  boxes.push(...[".nav"].map(s => document.querySelector(s)).filter(Boolean).map(e => {
+    const r = e.getBoundingClientRect(); return [r.left + scrollX, r.top + scrollY, r.right + scrollX, r.bottom + scrollY];
+  }));
+  obstacles(document.getElementById(tab), boxes);
+  const CELL = 8, cw = Math.ceil(W / CELL), ch = Math.ceil(Hh / CELL), grid = new Uint8Array(cw * ch);
+  const mark = (x0, y0, x1, y1) => {
+    for (let y = Math.max(0, y0 / CELL | 0); y < Math.min(ch, Math.ceil(y1 / CELL)); y++)
+      grid.fill(1, y * cw + Math.max(0, x0 / CELL | 0), y * cw + Math.min(cw, Math.ceil(x1 / CELL)));
   };
-
-  const area = rect(page);
-
-  const panels = [...page.querySelectorAll(
-    ".panel, .card, .section, .ft-stage, " +
-    ".ft-row, .character-panel, " +
-    ".ra-theater-panel, .compare-hero, " +
-    ".kc-head, .kc-card, .atelier-dash"
-  )]
-    .map(rect)
-    .filter(p => p.width > W * 0.42 && p.height > 55);
-
-  const edgePanel = (y, left) => panels
-    .filter(p => y >= p.top - 12 && y <= p.bottom + 12)
-    .filter(p => left ? p.left > 4 : p.right < W - 4)
-    .sort((a, b) =>
-      left ? b.left - a.left : a.right - b.right
-    )[0];
-
-  const random = rng(refVisitSeed);
-  const occupied = [];
-
-  const canPlace = (x, y, size) =>
-    !occupied.some(p =>
-      x < p.x + p.size + 3 &&
-      x + size + 3 > p.x &&
-      y < p.y + p.size + 5 &&
-      y + size + 5 > p.y
-    );
-
-  const add = (it, src, x, y, size) => {
-    x = Math.round(Math.max(3, Math.min(W - size - 3, x)));
-    y = Math.round(Math.max(3, Math.min(H - size - 3, y)));
-
-    if (!canPlace(x, y, size)) return false;
-
-    const img = new Image();
-
-    img.src = src;
-    img.alt = "";
-    img.className = "cdx-ref cdx-ref-edge";
-    img.loading = "lazy";
-    img.decoding = "async";
-    img.draggable = false;
-    img.dataset.key = it.g + "/" + it.id;
-    img.title = `${label(it)} · ${gameName(it.g)}`;
-
-    img.style.cssText =
-      `left:${x}px;top:${y}px;` +
-      `width:${size}px;height:${size}px;` +
-      `--rot:${Math.round(random() * 30 - 15)}deg`;
-
-    img.onerror = () => {
-      img.remove();
-      const index = placed.findIndex(p => p.img === img);
-      if (index >= 0) placed.splice(index, 1);
-    };
-
-    layer.appendChild(img);
-    placed.push({it, img});
-    occupied.push({x, y, size});
-
+  const free = (x0, y0, x1, y1) => {
+    if (x0 < 4 || y0 < 4 || x1 > W - 4 || y1 > Hh - 4) return false;
+    for (let y = y0 / CELL | 0; y < Math.ceil(y1 / CELL); y++)
+      for (let x = x0 / CELL | 0; x < Math.ceil(x1 / CELL); x++) if (grid[y * cw + x]) return false;
     return true;
   };
-
-  const items = refVisitItems;
-  const startY = Math.max(4, area.top);
-  const endY = Math.min(H - 45, area.bottom + 25);
-  const span = Math.max(1, endY - startY);
-
-  /* Alternance gauche / droite comme Personnages */
-  items.forEach((it, i) => {
-    const size = Math.round(
-      (mobile ? 30 : 40) +
-      random() * (mobile ? 14 : 24)
-    );
-
-    const src =
-      `objets/${it.g}/${it.id}` +
-      `${pieces(it) ? "-1" : ""}.webp`;
-
-    const baseY =
-      startY + (i + 0.5) * span / items.length;
-
-    const left = i % 2 === 0;
-
-    for (let attempt = 0; attempt < 48; attempt++) {
-      const step =
-        Math.ceil(attempt / 2) *
-        (size + 7) *
-        (attempt % 2 ? 1 : -1);
-
-      const y = Math.max(
-        4,
-        Math.min(
-          H - size - 4,
-          baseY + (attempt ? step : 0)
-        )
-      );
-
-      const panel = edgePanel(y + size / 2, left);
-      let x;
-
-      if (mobile) {
-        const edge = panel
-          ? (left ? panel.left : panel.right)
-          : (left
-              ? Math.max(12, area.left + 12)
-              : Math.min(W - 12, area.right - 12));
-
-        const visible = size * (0.72 + random() * 0.20);
-
-        x = left
-          ? edge - visible
-          : edge - (size - visible);
-
-        x += (random() - 0.5) * 12;
-      } else {
-        const band = Math.min(120, W * 0.13);
-
-        x = left
-          ? 5 + random() * band
-          : W - size - 5 - random() * band;
+  const M = 12;
+  boxes.forEach(([a, b2, c, d]) => mark(a - M, b2 - M, c + M, d + M));
+  const small = innerWidth < 700;
+  const r = rng(hash(tab + W));
+  const order = items.map(it => [r(), it]).sort((x, y) => x[0] - y[0]).map(x => x[1]);
+  const gap = small ? 16 : 30;
+  const put = (it, src, x, y, size) => {
+    mark(x - gap, y - gap, x + size + gap, y + size + gap);
+    const img = new Image();
+    img.src = src;
+    img.alt = ""; img.className = "cdx-ref"; img.loading = "lazy"; img.decoding = "async"; img.draggable = false;
+    img.title = `${label(it)} · ${gameName(it.g)}`;
+    img.style.cssText = `left:${x | 0}px;top:${y | 0}px;width:${size}px;height:${size}px;--rot:${Math.round(r() * 40 - 20)}deg`;
+    img.dataset.key = it.g + "/" + it.id;
+    img.onerror = () => img.remove();
+    layer.appendChild(img);
+    placed.push({it, img});
+  };
+  for (const it of order) {
+    const n = pieces(it);
+    if (n) {
+      const size = small ? 26 : 34, got = [];
+      for (let p = 1; p <= n; p++) {
+        let best = null, bestD = -1;
+        for (let k = 0; k < 220; k++) {
+          const x = r() * (W - size), y = r() * (Hh - size);
+          if (!free(x, y, x + size, y + size)) continue;
+          const d = got.length ? Math.min(...got.map(([a, c]) => Math.hypot(a - x, c - y))) : 0;
+          if (d > bestD) { best = [x, y]; bestD = d; }
+        }
+        if (!best) break;
+        got.push(best);
+        put(it, `objets/${it.g}/${it.id}-${p}.webp`, best[0], best[1], size);
       }
-
-      if (add(it, src, x, y, size)) break;
+      continue;
     }
-  });
-
-  /* Refs supplémentaires près du pied de page */
-  const footer = document.querySelector(".studio-footer");
-
-  if (footer && items.length) {
-    const f = rect(footer);
-    const count = Math.min(mobile ? 4 : 7, items.length);
-
-    for (let i = 0; i < count; i++) {
-      const it = items[(i * 7 + 3) % items.length];
-      const size = mobile ? 30 : 40;
-
-      const x = (i + 0.5) * W / count - size / 2;
-      const y = f.top - size - 6 - (i % 2) * 9;
-
-      add(
-        it,
-        `objets/${it.g}/${it.id}` +
-        `${pieces(it) ? "-1" : ""}.webp`,
-        x, y, size
-      );
+    const size = Math.round((small ? 30 : 40) + r() * (small ? 14 : 24));
+    let spot = null;
+    for (let k = 0; k < 160 && !spot; k++) {
+      const x = r() * (W - size), y = r() * (Hh - size);
+      if (free(x, y, x + size, y + size)) spot = [x, y];
     }
+    if (spot) put(it, `objets/${it.g}/${it.id}.webp`, spot[0], spot[1], size);
   }
-
-  /* Refs dans l'espace à droite du logo ComboDex */
-  if (items.length) {
-    const header = document.querySelector(".head");
-    const logo = document.querySelector(
-      ".head .brand-btn, .head .brand-word, " +
-      ".brand-btn, .brand-word"
-    );
-    const langs = document.querySelector(
-      ".head .lang-switch, .lang-switch"
-    );
-
-    if (header && logo) {
-      const h = rect(header);
-      const l = rect(logo);
-      const r = langs ? rect(langs) : null;
-
-      const from = l.right + (mobile ? 5 : 14);
-      const to = (
-        r && r.left > from + 24
-          ? r.left
-          : Math.min(W - 8, h.right - 8)
-      ) - (mobile ? 4 : 14);
-
-      const size = mobile
-        ? Math.min(25, Math.max(18, h.height - 12))
-        : Math.min(34, Math.max(22, h.height - 12));
-
-      const count = Math.max(
-        0,
-        Math.min(
-          mobile ? 7 : 10,
-          Math.floor((to - from) / (size + 5))
-        )
-      );
-
-      for (let i = 0; i < count; i++) {
-        const it = items[(i * 3 + 5) % items.length];
-
-        const x =
-          from +
-          (i + 0.5) * (to - from) / count -
-          size / 2;
-
-        const y = h.top + (h.height - size) / 2;
-
-        add(
-          it,
-          `objets/${it.g}/${it.id}` +
-          `${pieces(it) ? "-1" : ""}.webp`,
-          x, y, size
-        );
-      }
-    }
-  }
-
   if (game && game.tab === tab) relink();
 }
 
@@ -395,95 +184,60 @@ function schedule(ms = 250) { clearTimeout(timer); timer = setTimeout(place, ms)
 
 /* ---------- mini-game ---------- */
 let game = null, audio = null;
-function ctx() {
-  try {
-    audio = audio || new (window.AudioContext || window.webkitAudioContext)();
-    if (audio.state === "suspended") audio.resume();
-  } catch {}
-  return audio;
-}
+function ctx() { try { audio = audio || new (window.AudioContext || window.webkitAudioContext)(); if (audio.state === "suspended") audio.resume(); } catch {} return audio; }
 function tone(ac, f, at, dur, type = "square", vol = 0.08) {
   const o = ac.createOscillator(), g = ac.createGain();
-  o.type = type;
-  o.frequency.setValueAtTime(f, at);
-  g.gain.setValueAtTime(0, at);
-  g.gain.linearRampToValueAtTime(vol, at + 0.012);
-  g.gain.setValueAtTime(vol, at + dur * 0.7);
-  g.gain.exponentialRampToValueAtTime(0.0008, at + dur);
-  o.connect(g).connect(ac.destination);
-  o.start(at);
-  o.stop(at + dur + 0.02);
+  o.type = type; o.frequency.setValueAtTime(f, at);
+  g.gain.setValueAtTime(0, at); g.gain.linearRampToValueAtTime(vol, at + 0.012);
+  g.gain.setValueAtTime(vol, at + dur * 0.7); g.gain.exponentialRampToValueAtTime(0.0008, at + dur);
+  o.connect(g).connect(ac.destination); o.start(at); o.stop(at + dur + 0.02);
 }
 function fanfare() {
   const ac = ctx(); if (!ac) return;
   const n = ac.currentTime + 0.05, s = 0.105;
-  [392, 415.3, 440, 466.2, 493.9, 523.3, 554.4, 587.3].forEach((f, i) =>
-    tone(ac, f, n + i * s, s * 1.1, "triangle", 0.07)
-  );
+  [392, 415.3, 440, 466.2, 493.9, 523.3, 554.4, 587.3].forEach((f, i) => tone(ac, f, n + i * s, s * 1.1, "triangle", 0.07));
   const end = n + 8 * s;
-  [[523.3, 659.3, 784], [587.3, 740, 880]].forEach((ch, i) =>
-    ch.forEach(f => tone(ac, f, end + i * 0.3, i ? 1.1 : 0.28, "square", 0.035))
-  );
+  [[523.3, 659.3, 784], [587.3, 740, 880]].forEach((ch, i) => ch.forEach(f => tone(ac, f, end + i * 0.3, i ? 1.1 : 0.28, "square", 0.035)));
   tone(ac, 1174.7, end + 0.3, 1.1, "triangle", 0.05);
 }
 function jingle(ok) {
   const ac = ctx(); if (!ac) return;
   const n = ac.currentTime + 0.02;
-  (ok ? [784, 988, 1175, 1568] : [330, 262]).forEach((f, i) =>
-    tone(ac, f, n + i * 0.09, ok ? 0.16 : 0.2, ok ? "square" : "sawtooth", 0.05)
-  );
+  (ok ? [784, 988, 1175, 1568] : [330, 262]).forEach((f, i) => tone(ac, f, n + i * 0.09, ok ? 0.16 : 0.2, ok ? "square" : "sawtooth", 0.05));
 }
 
 function panel() {
   let p = document.getElementById("cdxHunt");
   if (!p) {
     p = document.createElement("div");
-    p.id = "cdxHunt";
-    p.className = "cdx-hunt";
-    p.setAttribute("role", "dialog");
-    p.setAttribute("aria-live", "polite");
+    p.id = "cdxHunt"; p.className = "cdx-hunt"; p.setAttribute("role", "dialog"); p.setAttribute("aria-live", "polite");
     document.body.appendChild(p);
   }
   return p;
 }
 function renderPanel(state) {
-  const p = panel();
-  if (!game) { p.remove(); return; }
-  const it = game.target.it;
-  const secs = Math.floor(((game.end || Date.now()) - game.start) / 1000);
-  const done = state === "found" || state === "gave";
-  const need = game.need;
-  const src = `objets/${it.g}/${it.id}${pieces(it) ? "-1" : ""}.webp`;
-  const prog = need > 1
-    ? `<div class="hunt-prog"><b>${t("got")} : ${game.got.size}/${need}</b> · ${t("all")}</div>`
-    : "";
+  const p = panel(); if (!game) { p.remove(); return; }
+  const it = game.target.it, secs = Math.floor(((game.end || Date.now()) - game.start) / 1000);
+  const done = state === "found" || state === "gave", need = game.need, src = `objets/${it.g}/${it.id}${pieces(it) ? "-1" : ""}.webp`;
+  const prog = need > 1 ? `<div class="hunt-prog"><b>${t("got")} : ${game.got.size}/${need}</b> · ${t("all")}</div>` : "";
   const head = state === "gave" ? t(need > 1 ? "gaveN" : "gave") : t("found");
-
   p.innerHTML = `<div class="hunt-top"><b>${t("title")}</b><span class="hunt-time">${t("time")} ${secs}s</span></div>
-    ${done
-      ? `<div class="hunt-found"><img src="${src}" alt=""><div><b>${head}</b><div>${label(it)}</div><div class="muted small">${gameName(it.g)}</div></div></div>`
+    ${done ? `<div class="hunt-found"><img src="${src}" alt=""><div><b>${head}</b><div>${label(it)}</div><div class="muted small">${gameName(it.g)}</div></div></div>`
       : `<div class="small muted">${t("find")}</div><div class="hunt-hint">« ${hint(it)} »</div>${prog}<div class="small muted">${t("from")} : ${gameName(it.g)} · ${t("scroll")}</div>`}
     ${state === "miss" ? `<div class="hunt-miss">${t("miss")}</div>` : ""}
     <div class="hunt-btns"><button type="button" class="tiny" data-h="${done ? "close" : "quit"}">${done ? t("close") : t("quit")}</button><button type="button" class="tiny primary" data-h="again">${t("again")}</button></div>`;
-
   p.onclick = e => {
-    const b = e.target.closest("[data-h]");
-    if (!b) return;
-    if (b.dataset.h === "quit") giveUp();
-    else if (b.dataset.h === "close") stop();
-    else start();
+    const b = e.target.closest("[data-h]"); if (!b) return;
+    if (b.dataset.h === "quit") giveUp(); else if (b.dataset.h === "close") stop(); else start();
   };
 }
 function giveUp() {
   if (!game || game.end) return;
-  game.end = Date.now();
-  game.gave = true;
-  clearInterval(game.tick);
+  game.end = Date.now(); game.gave = true; clearInterval(game.tick);
   const imgs = placed.filter(p => p.img.dataset.key === game.key).map(p => p.img);
   imgs.forEach(i => i.classList.add("hunt-reveal"));
   if (imgs[0]) imgs[0].scrollIntoView({behavior: "smooth", block: "center"});
-  jingle(false);
-  renderPanel("gave");
+  jingle(false); renderPanel("gave");
 }
 function relink() {
   if (!game) return;
@@ -500,38 +254,24 @@ function start() {
     tab = MODULES[Math.floor(Math.random() * MODULES.length)];
     const btn = document.querySelector(`.nav .tab[data-tab="${tab}"]`);
     if (btn) btn.click();
-    clearTimeout(timer);
-    place();
+    clearTimeout(timer); place();
   }
   if (!placed.length) return;
   if (game) clearInterval(game.tick);
-  document.querySelectorAll(".cdx-ref.hunt-win,.cdx-ref.hunt-got,.cdx-ref.hunt-reveal")
-    .forEach(i => i.classList.remove("hunt-win", "hunt-got", "hunt-reveal"));
+  document.querySelectorAll(".cdx-ref.hunt-win,.cdx-ref.hunt-got,.cdx-ref.hunt-reveal").forEach(i => i.classList.remove("hunt-win", "hunt-got", "hunt-reveal"));
   const keys = [...new Set(placed.map(p => p.img.dataset.key))];
   const key = keys[Math.floor(Math.random() * keys.length)];
   const target = placed.find(p => p.img.dataset.key === key);
-  game = {
-    tab, target, key,
-    need: placed.filter(p => p.img.dataset.key === key).length,
-    got: new Set(),
-    start: Date.now(),
-    end: 0
-  };
+  game = {tab, target, key, need: placed.filter(p => p.img.dataset.key === key).length, got: new Set(), start: Date.now(), end: 0};
   document.documentElement.classList.add("cdx-hunting");
   renderPanel();
-  game.tick = setInterval(() => {
-    if (game && !game.end) {
-      const el = document.querySelector("#cdxHunt .hunt-time");
-      if (el) el.textContent = `${t("time")} ${Math.floor((Date.now() - game.start) / 1000)}s`;
-    }
-  }, 1000);
+  game.tick = setInterval(() => { if (game && !game.end) { const el = document.querySelector("#cdxHunt .hunt-time"); if (el) el.textContent = `${t("time")} ${Math.floor((Date.now() - game.start) / 1000)}s`; } }, 1000);
 }
 function stop() {
   if (game) clearInterval(game.tick);
   game = null;
   document.documentElement.classList.remove("cdx-hunting");
-  document.querySelectorAll(".cdx-ref.hunt-win,.cdx-ref.hunt-got,.cdx-ref.hunt-reveal")
-    .forEach(i => i.classList.remove("hunt-win", "hunt-got", "hunt-reveal"));
+  document.querySelectorAll(".cdx-ref.hunt-win,.cdx-ref.hunt-got,.cdx-ref.hunt-reveal").forEach(i => i.classList.remove("hunt-win", "hunt-got", "hunt-reveal"));
   renderPanel();
 }
 function onRefClick(e) {
@@ -542,59 +282,31 @@ function onRefClick(e) {
     game.got.add(img.src);
     if (game.got.size < game.need) {
       img.classList.add("hunt-got");
-      const ac = ctx();
-      if (ac) tone(ac, 988, ac.currentTime + 0.02, 0.14, "square", 0.05);
-      renderPanel();
-      return;
+      const ac = ctx(); if (ac) tone(ac, 988, ac.currentTime + 0.02, 0.14, "square", 0.05);
+      renderPanel(); return;
     }
-    game.end = Date.now();
-    clearInterval(game.tick);
-    placed.forEach(p => {
-      if (game.got.has(p.img.src)) {
-        p.img.classList.remove("hunt-got");
-        p.img.classList.add("hunt-win");
-      }
-    });
-    jingle(true);
-    renderPanel("found");
+    game.end = Date.now(); clearInterval(game.tick);
+    placed.forEach(p => { if (game.got.has(p.img.src)) { p.img.classList.remove("hunt-got"); p.img.classList.add("hunt-win"); } });
+    jingle(true); renderPanel("found");
   } else {
-    img.classList.remove("hunt-shake");
-    void img.offsetWidth;
-    img.classList.add("hunt-shake");
-    jingle(false);
-    renderPanel("miss");
+    img.classList.remove("hunt-shake"); void img.offsetWidth; img.classList.add("hunt-shake");
+    jingle(false); renderPanel("miss");
   }
 }
 
-/* brand long-press: 5 s opens the mini-game */
+/* brand long-press: 5 s opens the mini-game; short taps keep the original behaviour */
 function bindBrand() {
-  const hb = document.getElementById("homeBrand");
-  if (!hb) return;
+  const hb = document.getElementById("homeBrand"); if (!hb) return;
   let hold = 0, fired = false;
-  const cancel = () => {
-    clearTimeout(hold);
-    hb.classList.remove("brand-charging");
-  };
+  const cancel = () => { clearTimeout(hold); hb.classList.remove("brand-charging"); };
   hb.addEventListener("pointerdown", e => {
     if (e.button > 0) return;
-    fired = false;
-    ctx();
+    fired = false; ctx();
     hb.classList.add("brand-charging");
-    hold = setTimeout(() => {
-      fired = true;
-      hb.classList.remove("brand-charging");
-      fanfare();
-      start();
-    }, 5000);
+    hold = setTimeout(() => { fired = true; hb.classList.remove("brand-charging"); fanfare(); start(); }, 5000);
   });
   ["pointerup", "pointerleave", "pointercancel"].forEach(ev => hb.addEventListener(ev, cancel));
-  hb.addEventListener("click", e => {
-    if (fired) {
-      fired = false;
-      e.stopImmediatePropagation();
-      e.preventDefault();
-    }
-  }, true);
+  hb.addEventListener("click", e => { if (fired) { fired = false; e.stopImmediatePropagation(); e.preventDefault(); } }, true);
   hb.addEventListener("contextmenu", e => e.preventDefault());
 }
 
@@ -602,36 +314,20 @@ function init() {
   setTheme(readUI().theme || document.documentElement.dataset.theme || "official");
   buildSwitch();
   layer = document.createElement("div");
-  layer.id = "cdxRefs";
-  layer.className = "cdx-refs";
-  layer.setAttribute("aria-hidden", "true");
+  layer.id = "cdxRefs"; layer.className = "cdx-refs"; layer.setAttribute("aria-hidden", "true");
   layer.addEventListener("click", onRefClick);
   document.body.appendChild(layer);
   bindBrand();
   const main = document.getElementById("main");
   if (main) new ResizeObserver(() => schedule(300)).observe(main);
   if (main) new MutationObserver(() => {
-    if (layer.dataset.tab !== activeTab()) {
-      layer.textContent = "";
-      placed = [];
-      layer.dataset.tab = activeTab();
-    }
+    if (layer.dataset.tab !== activeTab()) { layer.textContent = ""; placed = []; layer.dataset.tab = activeTab(); }
     schedule(400);
-  }).observe(main, {
-    subtree: true,
-    childList: true,
-    attributes: true,
-    attributeFilter: ["class"]
-  });
+  }).observe(main, {subtree: true, childList: true, attributes: true, attributeFilter: ["class"]});
   addEventListener("resize", () => schedule(300));
   addEventListener("hashchange", () => schedule(120));
-  window.addEventListener("cdx-lang", () => {
-    labelSwitch();
-    placed.forEach(p => (p.img.title = `${label(p.it)} · ${gameName(p.it.g)}`));
-    if (game) renderPanel(game.end ? "found" : "");
-  });
+  window.addEventListener("cdx-lang", () => { labelSwitch(); placed.forEach(p => (p.img.title = `${label(p.it)} · ${gameName(p.it.g)}`)); if (game) renderPanel(game.end ? "found" : ""); });
   (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => schedule(300));
 }
-if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
-else init();
+if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init); else init();
 })();
