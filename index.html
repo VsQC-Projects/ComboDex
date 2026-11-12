@@ -620,8 +620,7 @@ document.addEventListener("DOMContentLoaded", () => {
     controls = document.createElement("div");
     controls.id = "raControlPanel";
     controls.className = "ra-control-panel";
-    theater.appendChild(controls);
-  }
+stage.insertAdjacentElement("afterend", controls);  }
 
   // Déplacer les éléments existants sans les recréer
   controls.appendChild(labbar);
