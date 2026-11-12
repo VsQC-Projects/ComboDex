@@ -68,7 +68,7 @@ function labelSwitch() {
 /* ---------- refs data ---------- */
 const DATA = window.CDX_OBJETS || {};
 const gameName = g => { try { if (typeof b === "object" && b[g] && b[g].name) return b[g].name; } catch {} return g.toUpperCase(); };
-const PER_GAME = 6;
+const PER_GAME = 8;
 const PEOPLE_DESKTOP = 12;
 const PEOPLE_MOBILE = 12;
 const PLAN = {};
@@ -141,8 +141,7 @@ function placePeople() {
     return true;
   });
 
-  const random = rng(hash("people-v4-" + W));
-  const occupied = [];
+const random = rng(Math.floor(Math.random() * 4294967295));  const occupied = [];
 
   const overlap = (x, y, size) =>
     occupied.some(p =>
@@ -374,7 +373,7 @@ function placePeople() {
   const M = 12;
   boxes.forEach(([a, b2, c, d]) => mark(a - M, b2 - M, c + M, d + M));
 
-  const r = rng(hash(tab + W));
+  const r = rng(Math.floor(Math.random() * 4294967295));
   const order = items.map(it => [r(), it]).sort((x, y) => x[0] - y[0]).map(x => x[1]);
   const gap = small ? 16 : 30;
 
