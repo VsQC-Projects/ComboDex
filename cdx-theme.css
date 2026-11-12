@@ -622,3 +622,17 @@ html[data-theme="official"] .cdx-ref {
     opacity: 1;
   }
 }
+
+/* Fenêtre du mini-jeu exactement au centre */
+#cdxHunt.cdx-hunt {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  right: auto !important;
+  bottom: auto !important;
+  transform: translate(-50%, -50%) !important;
+  width: min(420px, calc(100vw - 32px)) !important;
+  max-height: 70dvh !important;
+  overflow-y: auto !important;
+  z-index: 99999 !important;
+}
