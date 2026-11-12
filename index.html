@@ -593,5 +593,58 @@
       </div>
     </div>
 
+<!-- Replay Analyzer : commandes sous la vidéo -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const theater = document.querySelector(
+    "#replay .ra-theater-panel"
+  );
+  const stage = document.getElementById("raStage");
+  const playbox = document.querySelector(
+    "#replay .ra-playbox"
+  );
+  const labbar = document.querySelector(
+    "#replay .ra-labbar"
+  );
+  const sequence = document.getElementById("raSeq");
+
+  if (!theater || !stage || !playbox || !labbar) {
+    console.warn("Replay Analyzer : éléments introuvables.");
+    return;
+  }
+
+  // Un panneau indépendant sous le lecteur
+  let controls = document.getElementById("raControlPanel");
+
+  if (!controls) {
+    controls = document.createElement("div");
+    controls.id = "raControlPanel";
+    controls.className = "ra-control-panel";
+    theater.appendChild(controls);
+  }
+
+  // Déplacer les éléments existants sans les recréer
+  controls.appendChild(labbar);
+
+  // Garder les marqueurs et la timeline sur la première ligne
+  const markRow = labbar.querySelector(".ra-lab-mark");
+
+  // Commandes supplémentaires et réglages
+  const extra = document.createElement("div");
+  extra.className = "ra-control-extra";
+
+  extra.appendChild(playbox);
+
+  if (sequence) {
+    extra.appendChild(sequence);
+  }
+
+  controls.appendChild(extra);
+
+  // Le déplacement du lecteur flottant est désactivé
+  // par le CSS, car il fait désormais partie du panneau.
+});
+</script>
+
   </body>
 </html>
