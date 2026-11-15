@@ -655,9 +655,17 @@ html[data-theme="dojo"] body.cdx-admin .atelier-tree button.sel{
   color:#fff;
 }
 body.cdx-admin .admin-ref-meta{
-  margin:0 0 12px;
+  margin:0 0 8px;
   line-height:1.45;
 }
+body.cdx-admin .admin-ref-propose{
+  margin:8px 0 14px;
+  padding:12px 14px 4px;
+  border:1px solid var(--admin-line,#2c3144);
+  border-radius:14px;
+  background:#10141d66;
+}
+body.cdx-admin .admin-ref-propose .atelier-ref-row{margin:8px 0}
 body.cdx-admin .admin-foot{color:#c5cad6}
 @media(prefers-reduced-motion:reduce){
   body.cdx-admin *{transition:none !important}

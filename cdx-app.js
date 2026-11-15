@@ -364,6 +364,7 @@ async function cdxObjetMeta(fr,gameName,gameId){
   return {en,es,hintFr:hints.hintFr,hintEn:hints.hintEn,hintEs:hints.hintEs};
 }
 let atelierRefMetaCache={fr:"",meta:null};
+let atelierRefDirty={en:!1,es:!1,hintFr:!1,hintEn:!1,hintEs:!1};
 function cdxCompressImage(file,max,q){
   max=max||256;q=q==null?.82:q;
   return new Promise((resolve,reject)=>{
@@ -1071,6 +1072,14 @@ function atelierRefsHtml(){
       <label class="atelier-ref-row"><span>${l(cdxT("admin.import.file"))}</span><input id="atelierRefFile" type="file" accept="image/png,image/webp,image/jpeg"></label>
       <label class="atelier-ref-row"><span>${l(cdxT("admin.import.name"))} FR</span><input id="atelierRefFr" type="text" maxlength="80" autocomplete="off"></label>
       <p class="muted small admin-ref-meta" id="atelierRefMeta">${l(cdxT("admin.import.auto"))}</p>
+      <div class="admin-ref-propose" id="atelierRefPropose">
+        <label class="atelier-ref-row"><span>${l(cdxT("admin.import.name"))} EN</span><input id="atelierRefEn" type="text" maxlength="80" autocomplete="off"></label>
+        <label class="atelier-ref-row"><span>${l(cdxT("admin.import.name"))} ES</span><input id="atelierRefEs" type="text" maxlength="80" autocomplete="off"></label>
+        <label class="atelier-ref-row"><span>${l(cdxT("admin.import.hint"))} FR</span><input id="atelierRefHintFr" type="text" maxlength="140" autocomplete="off"></label>
+        <label class="atelier-ref-row"><span>${l(cdxT("admin.import.hint"))} EN</span><input id="atelierRefHintEn" type="text" maxlength="140" autocomplete="off"></label>
+        <label class="atelier-ref-row"><span>${l(cdxT("admin.import.hint"))} ES</span><input id="atelierRefHintEs" type="text" maxlength="140" autocomplete="off"></label>
+        <div class="row atelier-ref-actions"><button type="button" class="tiny" id="atelierRefReload">${l(cdxT("admin.import.reload"))}</button></div>
+      </div>
       <div class="row"><button type="button" class="primary" id="atelierRefSave">${l(cdxT("admin.import.save"))}</button></div>
     </div>
     <div class="admin-card">
@@ -1161,44 +1170,71 @@ function bindAtelierAssets(){
     };
   });
   const save=a("atelierRefSave");
+  const refVal=(id,fallback)=>{const v=((a(id)||{}).value||"").trim();return v||fallback||""};
   const paintRefMeta=meta=>{
-    const el=a("atelierRefMeta");if(!el||!meta)return;
-    el.innerHTML=`${l(cdxT("admin.import.meta")).replace("{0}",l(meta.en)).replace("{1}",l(meta.es))}<br>${l(cdxT("admin.import.meta.hint")).replace("{0}",l(meta.hintFr))}`;
+    const el=a("atelierRefMeta");
+    if(el)el.textContent=cdxT("admin.import.auto");
+    if(!meta)return;
+    const fill=(id,key,val)=>{const inp=a(id);if(!inp||atelierRefDirty[key])return;inp.value=val||""};
+    fill("atelierRefEn","en",meta.en);
+    fill("atelierRefEs","es",meta.es);
+    fill("atelierRefHintFr","hintFr",meta.hintFr);
+    fill("atelierRefHintEn","hintEn",meta.hintEn);
+    fill("atelierRefHintEs","hintEs",meta.hintEs);
   };
+  [["atelierRefEn","en"],["atelierRefEs","es"],["atelierRefHintFr","hintFr"],["atelierRefHintEn","hintEn"],["atelierRefHintEs","hintEs"]].forEach(([id,key])=>{
+    const inp=a(id);if(!inp)return;
+    inp.addEventListener("input",()=>{atelierRefDirty[key]=!0});
+  });
   const frInp=a("atelierRefFr");
+  let wait=0;
+  const lookup=force=>{
+    const name=(frInp&&frInp.value||"").trim();
+    const el=a("atelierRefMeta");
+    if(!name){
+      atelierRefMetaCache={fr:"",meta:null};
+      atelierRefDirty={en:!1,es:!1,hintFr:!1,hintEn:!1,hintEs:!1};
+      if(el)el.textContent=cdxT("admin.import.auto");
+      ["atelierRefEn","atelierRefEs","atelierRefHintFr","atelierRefHintEn","atelierRefHintEs"].forEach(id=>{const inp=a(id);if(inp)inp.value=""});
+      return;
+    }
+    if(el)el.textContent=cdxT("admin.import.lookup");
+    const gid=atelierRefGame||o.game;
+    cdxObjetMeta(name,cdxObjetGameName(gid),gid).then(meta=>{
+      if(frInp&&frInp.value.trim()!==name)return;
+      atelierRefMetaCache={fr:name,meta};
+      if(force)atelierRefDirty={en:!1,es:!1,hintFr:!1,hintEn:!1,hintEs:!1};
+      paintRefMeta(meta);
+    });
+  };
   if(frInp){
-    let wait=0;
-    const lookup=()=>{
-      const name=frInp.value.trim();
-      const el=a("atelierRefMeta");
-      if(!name){atelierRefMetaCache={fr:"",meta:null};if(el)el.textContent=cdxT("admin.import.auto");return}
-      const gid=atelierRefGame||o.game;
-      cdxObjetMeta(name,cdxObjetGameName(gid),gid).then(meta=>{
-        if(frInp.value.trim()!==name)return;
-        atelierRefMetaCache={fr:name,meta};
-        paintRefMeta(meta);
-      });
-    };
-    frInp.addEventListener("input",()=>{clearTimeout(wait);wait=setTimeout(lookup,450)});
-    frInp.addEventListener("blur",lookup);
+    frInp.addEventListener("input",()=>{
+      if(frInp.value.trim()!==atelierRefMetaCache.fr)atelierRefDirty={en:!1,es:!1,hintFr:!1,hintEn:!1,hintEs:!1};
+      clearTimeout(wait);wait=setTimeout(()=>lookup(!1),450);
+    });
+    frInp.addEventListener("blur",()=>lookup(!1));
   }
+  const reload=a("atelierRefReload");
+  if(reload)reload.onclick=()=>lookup(!0);
   if(save)save.onclick=async()=>{
     const game=atelierRefGame||o.game,file=(a("atelierRefFile")||{}).files&&a("atelierRefFile").files[0];
     const fr=((a("atelierRefFr")||{}).value||"").trim();
     if(!game||!file||!fr){g(cdxT("admin.import.need"),!0);return}
     save.disabled=true;
     try{
-      g(cdxT("admin.import.lookup"));
       let meta=atelierRefMetaCache.fr===fr?atelierRefMetaCache.meta:null;
-      if(!meta)meta=await cdxObjetMeta(fr,cdxObjetGameName(game),game);
-      atelierRefMetaCache={fr,meta};
-      paintRefMeta(meta);
+      if(!meta){g(cdxT("admin.import.lookup"));meta=await cdxObjetMeta(fr,cdxObjetGameName(game),game);atelierRefMetaCache={fr,meta};paintRefMeta(meta)}
+      const en=refVal("atelierRefEn",meta.en);
+      const es=refVal("atelierRefEs",meta.es);
+      const hintFr=refVal("atelierRefHintFr",meta.hintFr);
+      const hintEn=refVal("atelierRefHintEn",meta.hintEn||hintFr);
+      const hintEs=refVal("atelierRefHintEs",meta.hintEs||hintFr);
       const img=await cdxCompressImage(file);
       const id="cdx-obj-"+game+"-"+cdxSlug(fr);
-      const en=meta.en,es=meta.es,hintFr=meta.hintFr,hintEn=meta.hintEn,hintEs=meta.hintEs;
       const row={id,game,character:"_objet",name:fr,tokens:["objet"],origin:"objet",fr,en,es,hintFr,hintEn,hintEs,obj:{id,fr,en,es,hintFr,hintEn,hintEs,img,pieces:0},img,updatedAt:new Date().toISOString()};
       const ok=await saveWikiAsset(row);
       if(ok)upsertWikiObjet(row);
+      atelierRefDirty={en:!1,es:!1,hintFr:!1,hintEn:!1,hintEs:!1};
       try{window.CDX_REF_API&&window.CDX_REF_API.reload&&window.CDX_REF_API.reload()}catch{}
       renderAtelierDash();
       g(ok?cdxT("admin.import.ok")+" "+cdxT("admin.import.meta").replace("{0}",en).replace("{1}",es):cdxT("admin.import.fail"),!ok);
