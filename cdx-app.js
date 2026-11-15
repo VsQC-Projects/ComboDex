@@ -593,7 +593,8 @@ function dirPadHtml(e){
 }
 function palTokBtn(s,e,attr){return `<span class="pal-tok" data-pal="${l(s)}"><button type="button" ${attr} class="${tokCls(s,e).trim()}" data-tip="${l(tokTip(s,e))}">${l(s)}</button></span>`}
 const ATELIER_K="cdx-atelier";
-const ATELIER_H="810086e3fdf240ad45e1c0ccf8a7710a211729ae42e682afc76f780f7af18f3a";
+const ATELIER_S="r2";
+const ATELIER_H="0f8692d36f539db737abca7de9bb1ae569db8b914d55211252061c52e5fe60e7";
 let atelierLive=!1;
 function isAtelier(){return atelierLive}
 function atelierMark(){
@@ -614,7 +615,7 @@ function bindAtelierLogin(after){
     const h=await atelierHash((a("atelierKey")||{}).value||"");
     if(h!==ATELIER_H){g(cdxT("atelier.bad"),!0);return}
     atelierLive=!0;
-    try{localStorage.setItem(ATELIER_K,"1")}catch{}
+    try{localStorage.setItem(ATELIER_K,ATELIER_S)}catch{}
     atelierMark();
     if(typeof G==="function")try{G()}catch{}
     loadWiki().then(()=>{try{C()}catch{}try{renderAtelierDash()}catch{}});
@@ -1064,7 +1065,7 @@ function askWipe(ids){
     e.preventDefault();
     const h=await atelierHash((a("atelierKey")||{}).value||"");
     if(h!==ATELIER_H){g(cdxT("atelier.bad"),!0);return}
-    if(window.CDX_ADMIN){atelierLive=!0;try{localStorage.setItem(ATELIER_K,"1")}catch{}atelierMark();atelierDash("home")}
+    if(window.CDX_ADMIN){atelierLive=!0;try{localStorage.setItem(ATELIER_K,ATELIER_S)}catch{}atelierMark();atelierDash("home")}
     const idList=list.map(c=>c.id);
     G();
     const ok=await wipeWiki(idList);
@@ -2845,7 +2846,7 @@ function applyHomeFont(id){
   root.setProperty("--cdx-brand-size",x.s);
   document.querySelectorAll("[data-home-font]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.homeFont===homeFontId?"true":"false"));
 }
-try{if(window.CDX_ADMIN){try{atelierLive=localStorage.getItem(ATELIER_K)==="1"}catch{}atelierMark();if(!atelierLive)bindAtelierLogin()}else{atelierLive=!1;atelierMark()}const hb=a("homeBrand");if(hb)hb.onclick=()=>j("home");const hg=a("homeGrid");if(hg)hg.addEventListener("click",e=>{const v=e.target.closest("[data-kc-view]"),t=e.target.closest("[data-tab]");if(t&&t.dataset.tab==="knowledge")o.kcView=v?v.dataset.kcView:"hub";t&&j(t.dataset.tab)});applyHomeFont(d.siteFont||"stencil")}catch{}
+try{if(window.CDX_ADMIN){try{atelierLive=localStorage.getItem(ATELIER_K)===ATELIER_S}catch{}atelierMark();if(!atelierLive)bindAtelierLogin()}else{atelierLive=!1;atelierMark()}const hb=a("homeBrand");if(hb)hb.onclick=()=>j("home");const hg=a("homeGrid");if(hg)hg.addEventListener("click",e=>{const v=e.target.closest("[data-kc-view]"),t=e.target.closest("[data-tab]");if(t&&t.dataset.tab==="knowledge")o.kcView=v?v.dataset.kcView:"hub";t&&j(t.dataset.tab)});applyHomeFont(d.siteFont||"stencil")}catch{}
 function homeFaces(){
   const faces=[["bbcf","Ragna the Bloodedge"],["mvc2","Shuma-Gorath"],["tokon","Captain America"],["sf6","Ryu"],["ggst","Sol"],["2xko","Ahri"],["al","Aang"],["umvc3","Dante"],["dbfz","Krillin"],["gbvsr","Avatar Belial"]];
   const people=a("hvPeople");
