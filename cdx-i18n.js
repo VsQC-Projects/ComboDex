@@ -123,11 +123,11 @@ fr:{
 ,"admin.task.keys":"Touches de la palette du jeu ouvert."
 ,"admin.task.site":"Vue d’ensemble du wiki public."
 ,"admin.import.ref":"Importer une référence"
-,"admin.import.ref.lead":"PNG + nom français. ComboDex trouve tout de suite l’anglais, l’espagnol, et invente l’indice de chasse."
+,"admin.import.ref.lead":"PNG + nom français. ComboDex récupère les noms officiels EN/ES et invente l’indice de chasse."
 ,"admin.import.file":"Fichier image"
 ,"admin.import.name":"Nom"
 ,"admin.import.hint":"Indice (chasse d’objet)"
-,"admin.import.auto":"Tape le nom français : EN, ES et l’indice se remplissent tout seuls."
+,"admin.import.auto":"Tape le nom français : les noms officiels EN/ES et l’indice se remplissent tout seuls."
 ,"admin.import.lookup":"Recherche des noms et de l’indice…"
 ,"admin.import.meta":"EN {0} · ES {1}"
 ,"admin.import.meta.hint":"Indice : {0}"
@@ -444,11 +444,11 @@ en:{
 "admin.task.keys":"Palette keys for the open game.",
 "admin.task.site":"Overview of the public wiki.",
 "admin.import.ref":"Import a reference",
-"admin.import.ref.lead":"PNG + French name. ComboDex fills English, Spanish, and invents the hunt hint.",
+"admin.import.ref.lead":"PNG + French name. ComboDex fetches the official EN/ES names and invents the hunt hint.",
 "admin.import.file":"Image file",
 "admin.import.name":"Name",
 "admin.import.hint":"Hint (object hunt)",
-"admin.import.auto":"Type the French name: EN, ES and the hint fill themselves.",
+"admin.import.auto":"Type the French name: official EN/ES names and the hint fill themselves.",
 "admin.import.lookup":"Looking up names and the hunt hint…",
 "admin.import.meta":"EN {0} · ES {1}",
 "admin.import.meta.hint":"Hint: {0}",
@@ -878,11 +878,11 @@ es:{
 "admin.task.keys":"Teclas de la paleta del juego abierto.",
 "admin.task.site":"Vista general del wiki público.",
 "admin.import.ref":"Importar una referencia",
-"admin.import.ref.lead":"PNG + nombre francés. ComboDex encuentra el inglés, el español y inventa la pista de caza.",
+"admin.import.ref.lead":"PNG + nombre francés. ComboDex recupera los nombres oficiales EN/ES e inventa la pista de caza.",
 "admin.import.file":"Archivo de imagen",
 "admin.import.name":"Nombre",
 "admin.import.hint":"Pista (caza de objeto)",
-"admin.import.auto":"Escribe el nombre en francés: EN, ES y la pista se rellenan solos.",
+"admin.import.auto":"Escribe el nombre en francés: los nombres oficiales EN/ES y la pista se rellenan solos.",
 "admin.import.lookup":"Buscando nombres y la pista…",
 "admin.import.meta":"EN {0} · ES {1}",
 "admin.import.meta.hint":"Pista: {0}",

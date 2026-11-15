@@ -180,45 +180,24 @@ function cdxFold(s){return String(s||"").normalize("NFD").replace(/[\u0300-\u036
 function cdxCap(s){s=String(s||"").trim();return s?s.charAt(0).toUpperCase()+s.slice(1):s}
 function cdxClipHint(s){s=String(s||"").replace(/\s+/g," ").trim();const cut=s.split(/(?<=\.)\s/)[0]||s;return cut.length>140?cut.slice(0,137)+"…":cut}
 function cdxTitleEn(s){return String(s||"").split(/\s+/).filter(Boolean).map(w=>/^[A-Z0-9]/.test(w)?w:w.charAt(0).toUpperCase()+w.slice(1)).join(" ")}
-const CDX_OBJ_SKIP={le:1,la:1,les:1,un:1,une:1,des:1,du:1,de:1,d:1,l:1,au:1,aux:1,et:1,en:1,the:1,a:1,an:1,of:1};
-const CDX_OBJ_ADJ={magique:1,sacre:1,divin:1,spatial:1,eternel:1,secret:1,rouge:1,vert:1,bleu:1,noir:1,blanc:1,dore:1,doree:1,saint:1,sainte:1,special:1,speciale:1,ultime:1,legendaire:1,volant:1,volante:1,geant:1,geante:1};
-const CDX_OBJ_LEX={epee:["Sword","Espada"],epees:["Swords","Espadas"],lame:["Blade","Hoja"],lames:["Blades","Hojas"],katana:["Katana","Katana"],sabre:["Saber","Sable"],bouclier:["Shield","Escudo"],masque:["Mask","Máscara"],casque:["Helmet","Casco"],casquette:["Cap","Gorra"],chapeau:["Hat","Sombrero"],gourde:["Gourd","Calabaza"],baton:["Staff","Bastón"],marteau:["Hammer","Martillo"],lance:["Spear","Lanza"],arc:["Bow","Arco"],eventail:["Fan","Abanico"],pistolet:["Pistol","Pistola"],pistolets:["Pistols","Pistolas"],amulette:["Amulet","Amuleto"],medaillon:["Medallion","Medallón"],pendentif:["Pendant","Colgante"],fiole:["Vial","Frasco"],piece:["Coin","Moneda"],pieces:["Coins","Monedas"],logo:["Logo","Logo"],embleme:["Emblem","Emblema"],badge:["Badge","Insignia"],visiere:["Visor","Visor"],miroir:["Mirror","Espejo"],hache:["Axe","Hacha"],nuage:["Cloud","Nube"],carapace:["Shell","Caparazón"],gant:["Glove","Guante"],anneau:["Ring","Anillo"],etoile:["Star","Estrella"],champignon:["Mushroom","Champiñón"],fleur:["Flower","Flor"],balle:["Ball","Bola"],boule:["Ball","Bola"],boules:["Balls","Bolas"],bombe:["Bomb","Bomba"],donut:["Donut","Dónut"],trompette:["Trumpet","Trompeta"],poids:["Weight","Pesa"],ours:["Bear","Oso"],peluche:["Plush","Peluche"],poupee:["Doll","Muñeco"],capsule:["Capsule","Cápsula"],radar:["Radar","Radar"],detecteur:["Scouter","Rastreador"],haricot:["Bean","Semilla"],sceptre:["Scepter","Cetro"],ombrelle:["Parasol","Sombrilla"],ballon:["Balloon","Globo"],cristal:["Crystal","Cristal"],dragon:["Dragon","Dragón"],feu:["Fire","Fuego"],magique:["Magic","Mágico"],sacre:["Sacred","Sagrado"],divin:["Divine","Divino"],spatial:["Space","Espacial"],volant:["Flying","Volador"],geant:["Giant","Gigante"],geante:["Giant","Gigante"]};
+const CDX_OBJ_SKIP={le:1,la:1,les:1,un:1,une:1,des:1,du:1,de:1,d:1,l:1,au:1,aux:1,et:1,en:1,the:1,el:1,los:1,las:1,a:1,an:1,of:1};
+const CDX_OBJ_LEX={epee:["Sword","Espada"],epees:["Swords","Espadas"],lame:["Blade","Hoja"],lames:["Blades","Hojas"],katana:["Katana","Katana"],sabre:["Saber","Sable"],bouclier:["Shield","Escudo"],masque:["Mask","Máscara"],casque:["Helmet","Casco"],casquette:["Cap","Gorra"],chapeau:["Hat","Sombrero"],gourde:["Gourd","Calabaza"],baton:["Staff","Bastón"],marteau:["Hammer","Martillo"],lance:["Spear","Lanza"],arc:["Bow","Arco"],eventail:["Fan","Abanico"],pistolet:["Pistol","Pistola"],pistolets:["Pistols","Pistolas"],amulette:["Amulet","Amuleto"],medaillon:["Medallion","Medallón"],pendentif:["Pendant","Colgante"],fiole:["Vial","Frasco"],piece:["Coin","Moneda"],pieces:["Coins","Monedas"],logo:["Logo","Logo"],embleme:["Emblem","Emblema"],badge:["Badge","Insignia"],visiere:["Visor","Visor"],miroir:["Mirror","Espejo"],hache:["Axe","Hacha"],carapace:["Shell","Caparazón"],gant:["Glove","Guante"],anneau:["Ring","Anillo"],champignon:["Mushroom","Champiñón"],fleur:["Flower","Flor"],bombe:["Bomb","Bomba"],sceptre:["Scepter","Cetro"],ballon:["Balloon","Globo"],radar:["Radar","Radar"],detecteur:["Scouter","Rastreador"]};
 function cdxObjetGameName(id){
   try{if(typeof b==="object"&&b[id]&&b[id].name)return b[id].name}catch{}
   try{const hit=(window.CDX_REF_API&&window.CDX_REF_API.games&&window.CDX_REF_API.games()||[]).find(x=>x[0]===id);if(hit)return hit[1]}catch{}
   return id||"";
 }
-function cdxTranslatePhrase(fr){
-  const words=String(fr||"").trim().split(/\s+/).filter(Boolean);
-  const mapped=[];
-  let changed=false;
-  for(const w of words){
-    const k=cdxFold(w.replace(/[.,]/g,""));
-    if(!k||CDX_OBJ_SKIP[k])continue;
-    if(/^\d+$/.test(k)){mapped.push({en:k,es:k,adj:false});continue}
-    const pair=CDX_OBJ_LEX[k];
-    if(pair){changed=true;mapped.push({en:pair[0],es:pair[1],adj:!!CDX_OBJ_ADJ[k]})}
-    else mapped.push({en:w.replace(/[.,]/g,""),es:w.replace(/[.,]/g,""),adj:false});
-  }
-  if(!mapped.length)return {en:fr,es:fr,changed:false};
-  const en=cdxTitleEn([...mapped.filter(x=>x.adj),...mapped.filter(x=>!x.adj)].map(x=>x.en).join(" "));
-  const es=cdxCap(mapped.map(x=>x.es).join(" "));
-  return {en,es,changed};
-}
 function cdxLocalObjetNames(fr){
   const raw=String(fr||"").trim();
   const de=raw.match(/^(.+?)\s+(?:de|du|des|d'|d’)\s+(?:la\s+|l'|l’)?(.+)$/i);
-  if(de){
-    const head=de[1].replace(/^(le|la|les|un|une|l'|l’)\s+/i,"").trim();
-    const owner=de[2].trim();
-    const headT=cdxTranslatePhrase(head);
-    const ownerT=cdxTranslatePhrase(owner);
-    const ownerName=/^[A-ZÉÈÀÙÂÊÎÔÛÄËÏÖÜ0-9]/.test(owner)||!ownerT.changed;
-    if(ownerName){
-      return {en:cdxTitleEn(owner.replace(/'s$/i,"")+"'s "+headT.en),es:cdxCap((headT.changed?headT.es:head)+" de "+owner),changed:true};
-    }
-  }
-  return cdxTranslatePhrase(raw);
+  if(!de)return {en:"",es:"",changed:false};
+  const head=de[1].replace(/^(le|la|les|un|une|l'|l’)\s+/i,"").trim();
+  const owner=de[2].trim();
+  const pair=CDX_OBJ_LEX[cdxFold(head)];
+  if(!pair)return {en:"",es:"",changed:false};
+  const ownerLex=cdxFold(owner).split(" ").filter(Boolean).every(w=>CDX_OBJ_LEX[w]||CDX_OBJ_SKIP[w]||/^\d+$/.test(w));
+  if(ownerLex)return {en:"",es:"",changed:false};
+  return {en:cdxTitleEn(owner.replace(/'s$/i,"")+"'s "+pair[0]),es:cdxCap(pair[1]+" de "+owner),changed:true};
 }
 function cdxInventHints(fr,en,es,gameName,wiki){
   if(wiki&&wiki.hintFr){
@@ -260,44 +239,52 @@ function cdxWikiScore(name,gameName,item){
   return s;
 }
 async function cdxWikiJson(url){
-  const ctrl=new AbortController();
-  const t=setTimeout(()=>ctrl.abort(),2800);
-  try{
-    const r=await fetch(url,{signal:ctrl.signal});
-    if(!r.ok)return null;
-    return await r.json();
-  }catch{return null}
-  finally{clearTimeout(t)}
+  for(let n=0;n<2;n++){
+    const ctrl=new AbortController();
+    const t=setTimeout(()=>ctrl.abort(),3200);
+    try{
+      const r=await fetch(url,{signal:ctrl.signal});
+      if(r.status===429){await new Promise(res=>setTimeout(res,800));continue}
+      if(!r.ok)return null;
+      return await r.json();
+    }catch{if(n)return null}
+    finally{clearTimeout(t)}
+  }
+  return null;
+}
+function cdxWikiQueries(name,gameName){
+  const q=[name];
+  if(gameName&&cdxFold(gameName)!==cdxFold(name))q.push(name+" "+gameName);
+  return q;
 }
 async function cdxWikidataObjet(name,gameName){
-  const queries=[name];
-  if(gameName)queries.push(name+" "+gameName);
   let best=null,bestS=-99;
-  for(const q of queries){
+  for(const q of cdxWikiQueries(name,gameName)){
     const j=await cdxWikiJson("https://www.wikidata.org/w/api.php?action=wbsearchentities&search="+encodeURIComponent(q)+"&language=fr&uselang=fr&type=item&limit=6&format=json&origin=*");
-    const rows=(j&&j.search)||[];
-    for(const it of rows){
+    for(const it of (j&&j.search)||[]){
       const sc=cdxWikiScore(name,gameName,it);
       if(sc>bestS){bestS=sc;best=it}
     }
     if(bestS>=8)break;
   }
   if(!best||bestS<5)return null;
-  const ent=await cdxWikiJson("https://www.wikidata.org/w/api.php?action=wbgetentities&ids="+encodeURIComponent(best.id)+"&props=labels|descriptions&languages=en|es|fr&format=json&origin=*");
+  const ent=await cdxWikiJson("https://www.wikidata.org/w/api.php?action=wbgetentities&ids="+encodeURIComponent(best.id)+"&props=labels|descriptions|sitelinks&sitefilter=enwiki|eswiki|frwiki&languages=en|es|fr&format=json&origin=*");
   const e=ent&&ent.entities&&ent.entities[best.id];
   if(!e)return null;
   const lab=k=>e.labels&&e.labels[k]&&e.labels[k].value||"";
   const des=k=>e.descriptions&&e.descriptions[k]&&e.descriptions[k].value||"";
-  return {en:lab("en"),es:lab("es"),hintFr:des("fr"),hintEn:des("en"),hintEs:des("es")};
+  const site=k=>e.sitelinks&&e.sitelinks[k]&&e.sitelinks[k].title||"";
+  return {en:lab("en")||site("enwiki"),es:lab("es")||site("eswiki"),hintFr:des("fr"),hintEn:des("en"),hintEs:des("es")};
 }
 async function cdxWikipediaObjet(name,gameName){
-  const q=gameName?name+" "+gameName:name;
-  const s=await cdxWikiJson("https://fr.wikipedia.org/w/api.php?action=query&list=search&srsearch="+encodeURIComponent(q)+"&srlimit=5&format=json&formatversion=2&origin=*");
-  const hits=(s&&s.query&&s.query.search)||[];
   let hit=null,bestS=-99;
-  for(const it of hits){
-    const sc=cdxWikiScore(name,gameName,{label:it.title,description:(it.snippet||"").replace(/<[^>]+>/g,"")});
-    if(sc>bestS){bestS=sc;hit=it}
+  for(const q of cdxWikiQueries(name,gameName)){
+    const s=await cdxWikiJson("https://fr.wikipedia.org/w/api.php?action=query&list=search&srsearch="+encodeURIComponent(q)+"&srlimit=5&format=json&formatversion=2&origin=*");
+    for(const it of (s&&s.query&&s.query.search)||[]){
+      const sc=cdxWikiScore(name,gameName,{label:it.title,description:(it.snippet||"").replace(/<[^>]+>/g,"")});
+      if(sc>bestS){bestS=sc;hit=it}
+    }
+    if(bestS>=8)break;
   }
   if(!hit||bestS<5)return null;
   const p=await cdxWikiJson("https://fr.wikipedia.org/w/api.php?action=query&prop=langlinks|extracts&exintro=1&explaintext=1&exchars=220&lllimit=40&titles="+encodeURIComponent(hit.title)+"&format=json&formatversion=2&origin=*");
@@ -319,31 +306,36 @@ function cdxCatalogObjet(fr){
   const packs=[];
   try{if(window.CDX_OBJETS)packs.push(window.CDX_OBJETS)}catch{}
   try{if(typeof d==="object"&&d&&d.objets)packs.push(d.objets)}catch{}
+  let loose=null;
   for(const pack of packs){
     for(const rows of Object.values(pack||{})){
       for(const row of rows||[]){
-        if(!row||!row[1])continue;
-        if(cdxFold(row[1])===q)return {en:row[2]||"",es:row[3]||"",hintFr:row[4]||"",hintEn:row[5]||"",hintEs:row[6]||""};
+        if(!row)continue;
+        const names=[row[1],row[2],row[3]].map(cdxFold).filter(Boolean);
+        if(!names.length)continue;
+        const hit={en:row[2]||"",es:row[3]||"",hintFr:row[4]||"",hintEn:row[5]||"",hintEs:row[6]||""};
+        if(names[0]===q)return hit;
+        if(!loose&&names.includes(q))loose=hit;
       }
     }
   }
-  return null;
+  return loose;
 }
 async function cdxObjetMeta(fr,gameName){
   const name=String(fr||"").trim();
-  const local=cdxLocalObjetNames(name);
   const cat=cdxCatalogObjet(name);
-  let wiki=cat&&(cat.en||cat.es||cat.hintFr)?cat:null;
-  if(!wiki){
+  let official=cat&&(cat.en||cat.es||cat.hintFr)?cat:null;
+  if(!official){
     try{
       const [wd,wp]=await Promise.all([cdxWikidataObjet(name,gameName),cdxWikipediaObjet(name,gameName)]);
-      wiki=wd&&(wd.en||wd.es||wd.hintFr)?wd:wp;
-      if(wd&&wp)wiki={en:wd.en||wp.en,es:wd.es||wp.es,hintFr:wd.hintFr||wp.hintFr,hintEn:wd.hintEn||wp.hintEn,hintEs:wd.hintEs||wp.hintEs};
+      official=wd&&(wd.en||wd.es)?wd:wp;
+      if(wd&&wp)official={en:wd.en||wp.en,es:wd.es||wp.es,hintFr:wd.hintFr||wp.hintFr,hintEn:wd.hintEn||wp.hintEn,hintEs:wd.hintEs||wp.hintEs};
     }catch{}
   }
-  const en=(wiki&&wiki.en||local.en||name).trim();
-  const es=(wiki&&wiki.es||local.es||name).trim();
-  const hints=cdxInventHints(name,en,es,gameName,wiki);
+  const local=(!official||!official.en||!official.es)?cdxLocalObjetNames(name):{en:"",es:"",changed:false};
+  const en=(official&&official.en||(local.changed&&local.en)||name).trim();
+  const es=(official&&official.es||(local.changed&&local.es)||name).trim();
+  const hints=cdxInventHints(name,en,es,gameName,official);
   return {en,es,hintFr:hints.hintFr,hintEn:hints.hintEn,hintEs:hints.hintEs};
 }
 let atelierRefMetaCache={fr:"",meta:null};
