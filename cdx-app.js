@@ -199,8 +199,11 @@ function cdxLocalObjetNames(fr){
   if(ownerLex)return {en:"",es:"",changed:false};
   return {en:cdxTitleEn(owner.replace(/'s$/i,"")+"'s "+pair[0]),es:cdxCap(pair[1]+" de "+owner),changed:true};
 }
+function cdxWikiPersonText(s){
+  return /acteur|actrice|ne a |nee a |personnalite|chanteur|footballeur|homme politique|realisateur|ecrivain|rappe|youtubeur|journaliste|animateur|depute|biographie|homme d affaires/i.test(cdxFold(s||""));
+}
 function cdxInventHints(fr,en,es,gameName,wiki){
-  if(wiki&&wiki.hintFr){
+  if(wiki&&wiki.hintFr&&!cdxWikiPersonText(wiki.hintFr+" "+(wiki.hintEn||"")+" "+(wiki.hintEs||""))){
     return {
       hintFr:cdxClipHint(cdxCap(wiki.hintFr)),
       hintEn:cdxClipHint(cdxCap(wiki.hintEn||wiki.hintFr)),
@@ -233,9 +236,10 @@ function cdxWikiScore(name,gameName,item){
   if(cdxFold(label)===q)s+=8;
   if(blob.includes(q))s+=3;
   q.split(" ").filter(w=>w.length>2).forEach(w=>{if(blob.includes(w))s+=1});
-  if(/fictif|fiction|jeu|video game|comics|manga|anime|objet|arme|marvel|nintendo|capcom|dragon ball|street fighter|guilty gear|tekken|smash|persona|blazblue|granblue/i.test(desc+" "+label))s+=5;
-  if(gameName){const g=cdxFold(gameName).split(" ").filter(w=>w.length>3);g.forEach(w=>{if(blob.includes(w))s+=3})}
-  if(/gare|ville|prenom|nom de famille|commune|riviere|etablissement humain|famille noble/i.test(cdxFold(desc)))s-=8;
+  if(/fictif|fiction|jeu video|video game|comics|manga|anime|objet|item|arme|pokemon|nintendo|marvel|capcom|dragon ball|street fighter|guilty gear|tekken|smash|persona|blazblue|granblue/i.test(blob))s+=8;
+  if(gameName){cdxFold(gameName).split(" ").filter(w=>w.length>3).forEach(w=>{if(blob.includes(w))s+=3})}
+  if(/gare|ville|prenom|nom de famille|commune|riviere|etablissement humain|famille noble/i.test(blob))s-=8;
+  if(cdxWikiPersonText(desc+" "+label))s-=25;
   return s;
 }
 async function cdxWikiJson(url){
@@ -252,39 +256,57 @@ async function cdxWikiJson(url){
   }
   return null;
 }
-function cdxWikiQueries(name,gameName){
+function cdxWikiQueries(name,gameName,gameId){
   const q=[name];
   if(gameName&&cdxFold(gameName)!==cdxFold(name))q.push(name+" "+gameName);
+  const extra={ssbu:"Pokémon",sf6:"Street Fighter",sf4:"Street Fighter",mvc2:"Marvel",umvc3:"Marvel",tokon:"Marvel",dbfz:"Dragon Ball",ggst:"Guilty Gear",bbcf:"BlazBlue",gbvsr:"Granblue",t8:"Tekken",mkxl:"Mortal Kombat",cotw:"Fatal Fury"};
+  if(gameId&&extra[gameId])q.push(name+" "+extra[gameId]);
   return q;
 }
-async function cdxWikidataObjet(name,gameName){
-  let best=null,bestS=-99;
-  for(const q of cdxWikiQueries(name,gameName)){
-    const j=await cdxWikiJson("https://www.wikidata.org/w/api.php?action=wbsearchentities&search="+encodeURIComponent(q)+"&language=fr&uselang=fr&type=item&limit=6&format=json&origin=*");
-    for(const it of (j&&j.search)||[]){
-      const sc=cdxWikiScore(name,gameName,it);
-      if(sc>bestS){bestS=sc;best=it}
-    }
-    if(bestS>=8)break;
-  }
-  if(!best||bestS<5)return null;
-  const ent=await cdxWikiJson("https://www.wikidata.org/w/api.php?action=wbgetentities&ids="+encodeURIComponent(best.id)+"&props=labels|descriptions|sitelinks&sitefilter=enwiki|eswiki|frwiki&languages=en|es|fr&format=json&origin=*");
-  const e=ent&&ent.entities&&ent.entities[best.id];
-  if(!e)return null;
-  const lab=k=>e.labels&&e.labels[k]&&e.labels[k].value||"";
-  const des=k=>e.descriptions&&e.descriptions[k]&&e.descriptions[k].value||"";
-  const site=k=>e.sitelinks&&e.sitelinks[k]&&e.sitelinks[k].title||"";
-  return {en:lab("en")||site("enwiki"),es:lab("es")||site("eswiki"),hintFr:des("fr"),hintEn:des("en"),hintEs:des("es")};
+function cdxWikiIsHuman(e){
+  const claims=e&&e.claims&&e.claims.P31||[];
+  return claims.some(c=>{
+    const id=c.mainsnak&&c.mainsnak.datavalue&&c.mainsnak.datavalue.value&&c.mainsnak.datavalue.value.id;
+    return id==="Q5"||id==="Q215627";
+  });
 }
-async function cdxWikipediaObjet(name,gameName){
+async function cdxWikidataObjet(name,gameName,gameId){
+  const ranked=[];
+  const seen=new Set();
+  for(const q of cdxWikiQueries(name,gameName,gameId)){
+    const j=await cdxWikiJson("https://www.wikidata.org/w/api.php?action=wbsearchentities&search="+encodeURIComponent(q)+"&language=fr&uselang=fr&type=item&limit=8&format=json&origin=*");
+    for(const it of (j&&j.search)||[]){
+      if(!it.id||seen.has(it.id))continue;
+      seen.add(it.id);
+      ranked.push({it,sc:cdxWikiScore(name,gameName,it)});
+    }
+  }
+  ranked.sort((a,b)=>b.sc-a.sc);
+  for(const {it,sc} of ranked){
+    if(sc<5)break;
+    if(cdxWikiPersonText((it.description||"")+" "+(it.label||"")))continue;
+    const ent=await cdxWikiJson("https://www.wikidata.org/w/api.php?action=wbgetentities&ids="+encodeURIComponent(it.id)+"&props=labels|descriptions|sitelinks|claims&sitefilter=enwiki|eswiki|frwiki&languages=en|es|fr&format=json&origin=*");
+    const e=ent&&ent.entities&&ent.entities[it.id];
+    if(!e||cdxWikiIsHuman(e))continue;
+    const lab=k=>e.labels&&e.labels[k]&&e.labels[k].value||"";
+    const des=k=>e.descriptions&&e.descriptions[k]&&e.descriptions[k].value||"";
+    const site=k=>e.sitelinks&&e.sitelinks[k]&&e.sitelinks[k].title||"";
+    const hintFr=des("fr"),hintEn=des("en"),hintEs=des("es");
+    if(cdxWikiPersonText(hintFr+" "+hintEn+" "+hintEs))continue;
+    return {en:lab("en")||site("enwiki"),es:lab("es")||site("eswiki"),hintFr,hintEn,hintEs};
+  }
+  return null;
+}
+async function cdxWikipediaObjet(name,gameName,gameId){
   let hit=null,bestS=-99;
-  for(const q of cdxWikiQueries(name,gameName)){
-    const s=await cdxWikiJson("https://fr.wikipedia.org/w/api.php?action=query&list=search&srsearch="+encodeURIComponent(q)+"&srlimit=5&format=json&formatversion=2&origin=*");
+  for(const q of cdxWikiQueries(name,gameName,gameId)){
+    const s=await cdxWikiJson("https://fr.wikipedia.org/w/api.php?action=query&list=search&srsearch="+encodeURIComponent(q)+"&srlimit=8&format=json&formatversion=2&origin=*");
     for(const it of (s&&s.query&&s.query.search)||[]){
-      const sc=cdxWikiScore(name,gameName,{label:it.title,description:(it.snippet||"").replace(/<[^>]+>/g,"")});
+      const snippet=(it.snippet||"").replace(/<[^>]+>/g,"");
+      if(cdxWikiPersonText(snippet+" "+(it.title||"")))continue;
+      const sc=cdxWikiScore(name,gameName,{label:it.title,description:snippet});
       if(sc>bestS){bestS=sc;hit=it}
     }
-    if(bestS>=8)break;
   }
   if(!hit||bestS<5)return null;
   const p=await cdxWikiJson("https://fr.wikipedia.org/w/api.php?action=query&prop=langlinks|extracts&exintro=1&explaintext=1&exchars=220&lllimit=40&titles="+encodeURIComponent(hit.title)+"&format=json&formatversion=2&origin=*");
@@ -293,6 +315,7 @@ async function cdxWikipediaObjet(name,gameName){
   const links=page.langlinks||[];
   const lang=code=>{const x=links.find(l=>l.lang===code);return x&&(x.title||x["*"])||""};
   const extract=String(page.extract||"").replace(/\s+/g," ").trim();
+  if(cdxWikiPersonText(extract+" "+(page.title||hit.title||"")))return null;
   const strip=txt=>{
     let out=txt.replace(new RegExp(name.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"),"gi"),"cet objet");
     if(hit.title)out=out.replace(new RegExp(hit.title.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"),"gi"),"cet objet");
@@ -321,20 +344,22 @@ function cdxCatalogObjet(fr){
   }
   return loose;
 }
-async function cdxObjetMeta(fr,gameName){
+async function cdxObjetMeta(fr,gameName,gameId){
   const name=String(fr||"").trim();
   const cat=cdxCatalogObjet(name);
   let official=cat&&(cat.en||cat.es||cat.hintFr)?cat:null;
   if(!official){
     try{
-      const [wd,wp]=await Promise.all([cdxWikidataObjet(name,gameName),cdxWikipediaObjet(name,gameName)]);
+      const [wd,wp]=await Promise.all([cdxWikidataObjet(name,gameName,gameId),cdxWikipediaObjet(name,gameName,gameId)]);
       official=wd&&(wd.en||wd.es)?wd:wp;
       if(wd&&wp)official={en:wd.en||wp.en,es:wd.es||wp.es,hintFr:wd.hintFr||wp.hintFr,hintEn:wd.hintEn||wp.hintEn,hintEs:wd.hintEs||wp.hintEs};
     }catch{}
   }
+  if(official&&cdxWikiPersonText((official.hintFr||"")+" "+(official.hintEn||"")+" "+(official.hintEs||"")))official=null;
   const local=(!official||!official.en||!official.es)?cdxLocalObjetNames(name):{en:"",es:"",changed:false};
-  const en=(official&&official.en||(local.changed&&local.en)||name).trim();
-  const es=(official&&official.es||(local.changed&&local.es)||name).trim();
+  const titled=cdxTitleEn(name);
+  const en=(official&&official.en||(local.changed&&local.en)||titled).trim();
+  const es=(official&&official.es||(local.changed&&local.es)||titled).trim();
   const hints=cdxInventHints(name,en,es,gameName,official);
   return {en,es,hintFr:hints.hintFr,hintEn:hints.hintEn,hintEs:hints.hintEs};
 }
@@ -1147,7 +1172,8 @@ function bindAtelierAssets(){
       const name=frInp.value.trim();
       const el=a("atelierRefMeta");
       if(!name){atelierRefMetaCache={fr:"",meta:null};if(el)el.textContent=cdxT("admin.import.auto");return}
-      cdxObjetMeta(name,cdxObjetGameName(atelierRefGame||o.game)).then(meta=>{
+      const gid=atelierRefGame||o.game;
+      cdxObjetMeta(name,cdxObjetGameName(gid),gid).then(meta=>{
         if(frInp.value.trim()!==name)return;
         atelierRefMetaCache={fr:name,meta};
         paintRefMeta(meta);
@@ -1164,7 +1190,7 @@ function bindAtelierAssets(){
     try{
       g(cdxT("admin.import.lookup"));
       let meta=atelierRefMetaCache.fr===fr?atelierRefMetaCache.meta:null;
-      if(!meta)meta=await cdxObjetMeta(fr,cdxObjetGameName(game));
+      if(!meta)meta=await cdxObjetMeta(fr,cdxObjetGameName(game),game);
       atelierRefMetaCache={fr,meta};
       paintRefMeta(meta);
       const img=await cdxCompressImage(file);
