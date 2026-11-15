@@ -552,7 +552,7 @@ html[data-theme="dojo"] .da-switch{background:#1d1d22}
 html[data-theme="dojo"] .da-switch button[aria-pressed="true"]{background:#d9412b;border-color:#d9412b;color:#fff}
 html[data-theme="wood"] .da-switch{background:#2a1d12d9}
 body{position:relative}
-.cdx-refs{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden}
+.cdx-refs{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden}
 .cdx-ref{position:absolute;object-fit:contain;pointer-events:auto;transform:rotate(var(--rot,0deg));transition:transform .18s,opacity .18s,filter .18s;user-select:none;-webkit-user-drag:none}
 .cdx-ref:hover{transform:rotate(var(--rot,0deg)) scale(1.18)}
 html[data-theme="official"] .cdx-ref{opacity:.5;filter:grayscale(.35)}

@@ -552,7 +552,7 @@ function askAtelier(after){
   ce(cdxT("Clef d'atelier"),`<form id="atelierForm"><input id="atelierKey" type="password" autocomplete="off" autofocus placeholder="${l(cdxT("Clef d'atelier"))}"><div class="row" style="margin-top:10px"><button type="submit" class="primary">${l(cdxT("Ouvrir"))}</button></div></form>`);
   const form=a("atelierForm");if(form)form.onsubmit=async e=>{e.preventDefault();const h=await atelierHash((a("atelierKey")||{}).value||"");if(h!==ATELIER_H){g(cdxT("atelier.bad"),!0);return}atelierLive=!0;atelierMark();G();loadWiki().then(()=>{try{C()}catch{}try{renderAtelierDash()}catch{}try{if(o.tab==="replay"){raVid="";raRender()}}catch{}});const n=reportedCombos().length+pendingXRows().length+labRequests().length+editRequests().length+reviewRows().length;g(n?cdxT("atelier.notif.some").replace("{0}",n):cdxT("atelier.ok"));after&&after()};
 }
-let atelierView="home",atelierTop=0,atelierW=0,atelierY=-1;
+let atelierView="home",atelierTop=0,atelierW=0,atelierY=-1,atelierRefGame="";
 function atelierBoxApply(){const dash=a("atelierDash");if(!dash)return;if(atelierW){dash.style.width=atelierW+"px";document.body.style.setProperty("--at-w",atelierW+"px")}if(atelierY>=0){dash.style.top=atelierY+"px";dash.style.bottom="0";dash.style.height="auto"}}
 function atelierDrag(e,el,onMove){e.preventDefault();el.setPointerCapture(e.pointerId);const up=()=>{el.removeEventListener("pointermove",onMove);el.removeEventListener("pointerup",up);el.removeEventListener("pointercancel",up);document.body.classList.remove("atelier-dragging")};document.body.classList.add("atelier-dragging");el.addEventListener("pointermove",onMove);el.addEventListener("pointerup",up);el.addEventListener("pointercancel",up)}
 document.addEventListener("pointerdown",e=>{const gx=e.target.closest("#atelierGripX");if(gx){atelierDrag(e,gx,ev=>{atelierW=Math.round(Math.max(260,Math.min(innerWidth*.85,innerWidth-ev.clientX)));atelierBoxApply()});return}const hd=e.target.closest("#atelierDash .atelier-head");if(!hd||e.target.closest("button,a,input,select"))return;const dash=a("atelierDash"),off=e.clientY-dash.getBoundingClientRect().top;atelierDrag(e,hd,ev=>{atelierY=Math.round(Math.max(0,Math.min(innerHeight-hd.offsetHeight,ev.clientY-off)));atelierBoxApply()})});
@@ -568,7 +568,7 @@ function atelierDash(view){
   renderAtelierDash();
 }
 function atelierPath(){
-  const map={home:cdxT("atelier.dash"),font:cdxT("atelier.tree.font"),x:cdxT("atelier.tree.x"),reports:cdxT("atelier.tree.reports"),lab:cdxT("atelier.tree.lab"),import:cdxT("atelier.tree.import"),people:cdxT("atelier.tree.people"),portraits:cdxT("atelier.tree.portraits"),keys:cdxT("atelier.tree.keys"),replay:cdxT("atelier.tree.replay"),site:cdxT("atelier.tree.site")};
+  const map={home:cdxT("atelier.dash"),font:cdxT("atelier.tree.font"),x:cdxT("atelier.tree.x"),reports:cdxT("atelier.tree.reports"),lab:cdxT("atelier.tree.lab"),import:cdxT("atelier.tree.import"),people:cdxT("atelier.tree.people"),portraits:cdxT("atelier.tree.portraits"),keys:cdxT("atelier.tree.keys"),replay:cdxT("atelier.tree.replay"),site:cdxT("atelier.tree.site"),refs:cdxT("atelier.tree.refs")};
   const now=map[atelierView]||map.home;
   return cdxT("atelier.crumb")+" / COMBODEX / "+now;
 }
@@ -599,6 +599,7 @@ function renderAtelierDash(){
       <nav class="atelier-tree" id="atelierTree" aria-label="${l(cdxT("atelier.path"))}">
         <button type="button" data-av="home" class="${atelierView==="home"?"sel":""}">COMBODEX</button>
         <button type="button" class="leaf${atelierView==="font"?" sel":""}" data-av="font">${l(cdxT("atelier.tree.font"))}</button>
+        <button type="button" class="leaf${atelierView==="refs"?" sel":""}" data-av="refs">${l(cdxT("atelier.tree.refs"))}</button>
         ${leaf("reports",cdxT("atelier.tree.reports"),reps.length)}
         ${leaf("x",cdxT("atelier.tree.x"),pend.length)}
         ${leaf("lab",cdxT("atelier.tree.lab"),labs.length)}
@@ -638,6 +639,8 @@ function renderAtelierDash(){
   const charsRow=a("atelierChars");if(charsRow)charsRow.onclick=e=>{const b=e.target.closest("[data-atelier-char]");if(!b)return;o.char=b.dataset.atelierChar;o.selected.clear();j("people");renderAtelierDash()};
   const fontsRow=a("atelierFonts");if(fontsRow)fontsRow.onclick=e=>{const b=e.target.closest("[data-home-font]");b&&saveSiteFont(b.dataset.homeFont)};
   const go=a("atelierXGo");if(go)go.onclick=()=>saveXOk((a("atelierX")||{}).value);
+  const goRefs=a("atelierGoRefs");if(goRefs)goRefs.onclick=()=>{atelierView="refs";renderAtelierDash()};
+  bindAtelierRefs();
   const out=a("atelierOut");if(out)out.onclick=()=>{atelierForget();try{C()}catch{}g(cdxT("atelier.out"))};
 }
 function atelierWorkHtml(pend,fonts){
@@ -662,9 +665,73 @@ function atelierWorkHtml(pend,fonts){
   if(atelierView==="portraits")return `<h3>${l(cdxT("atelier.tree.portraits"))}</h3><p class="muted small">${l(cdxT("atelier.dash.portraits"))}</p><p>${l(b[o.game]?b[o.game].name:"")} · ${l(charLabel(o.char||""))}</p>`;
   if(atelierView==="keys"){const keys=Ae(o.game)||[];return `<h3>${l(cdxT("atelier.tree.keys"))}</h3><p class="muted small">${l(b[o.game]?b[o.game].name:"")}</p><div class="chips">${keys.map(k=>`<span class="chip">${l(k)}</span>`).join("")}</div>`}
   if(atelierView==="replay")return `<h3>${l(cdxT("atelier.tree.replay"))}</h3><p class="muted small">${l(cdxT("atelier.dash.replay"))}</p>`;
+  if(atelierView==="refs")return atelierRefsHtml();
   if(atelierView==="site")return `<h3>${l(cdxT("atelier.tree.site"))}</h3><p>${y((d.combos||[]).length,"combo")} ${cdxT((d.combos||[]).length>1?"publics":"public")}</p><p class="muted small">${l(cdxT("atelier.font"))}</p>`;
   const n=pend.length;
-  return `<h3>${l(cdxT("atelier.dash"))}</h3><p class="muted small">${l(cdxT("atelier.dash.lead"))}</p><p>${y((d.combos||[]).length,"combo")} · ${n?y(n,"vidéo")+" X "+cdxT("atelier.waiting"):cdxT("atelier.x.none")}</p>`;
+  return `<h3>${l(cdxT("atelier.dash"))}</h3><p class="muted small">${l(cdxT("atelier.dash.lead"))}</p><p>${y((d.combos||[]).length,"combo")} · ${n?y(n,"vidéo")+" X "+cdxT("atelier.waiting"):cdxT("atelier.x.none")}</p><p><button type="button" class="tiny" id="atelierGoRefs">${l(cdxT("atelier.tree.refs"))}</button></p>`;
+}
+function atelierRefVal(key,v){
+  if((key==="footerPc"||key==="footerMobile"||key==="logoPc")&&!Number(v))return cdxT("atelier.refs.space");
+  return String(v);
+}
+function atelierRefRow(key,val,min,max){
+  return `<label class="atelier-ref-row"><span>${l(cdxT("atelier.refs."+key))}<b data-ref-val="${key}">${l(atelierRefVal(key,val))}</b></span><input type="range" min="${min}" max="${max}" value="${val}" data-ref-cfg="${key}"><span class="muted small">${l(cdxT("atelier.refs."+key+".hint"))}</span></label>`;
+}
+function atelierRefsHtml(){
+  const api=window.CDX_REF_API;
+  if(!api)return `<h3>${l(cdxT("atelier.tree.refs"))}</h3><p class="muted small">${l(cdxT("atelier.refs.wait"))}</p>`;
+  const cfg=api.get(),mx=api.max;
+  const games=api.games();
+  if(!atelierRefGame||!games.some(([id])=>id===atelierRefGame))atelierRefGame=(o.game&&games.some(([id])=>id===o.game)?o.game:(games[0]||[])[0])||"";
+  const ov=cfg.games[atelierRefGame]||{};
+  const gPer=ov.perGame!=null?ov.perGame:cfg.perGame;
+  const gDesk=ov.peopleDesktop!=null?ov.peopleDesktop:cfg.peopleDesktop;
+  const gMob=ov.peopleMobile!=null?ov.peopleMobile:cfg.peopleMobile;
+  const opts=games.map(([id,name])=>`<option value="${l(id)}"${id===atelierRefGame?" selected":""}>${l(name)}</option>`).join("");
+  const custom=ov.perGame!=null||ov.peopleDesktop!=null||ov.peopleMobile!=null;
+  return `<h3>${l(cdxT("atelier.tree.refs"))}</h3>
+    <p class="muted small">${l(cdxT("atelier.refs.lead"))}</p>
+    <h4>${l(cdxT("atelier.refs.global"))}</h4>
+    ${atelierRefRow("perGame",cfg.perGame,0,mx.perGame)}
+    ${atelierRefRow("peopleDesktop",cfg.peopleDesktop,0,mx.peopleDesktop)}
+    ${atelierRefRow("peopleMobile",cfg.peopleMobile,0,mx.peopleMobile)}
+    ${atelierRefRow("footerPc",cfg.footerPc,0,mx.footerPc)}
+    ${atelierRefRow("footerMobile",cfg.footerMobile,0,mx.footerMobile)}
+    ${atelierRefRow("logoPc",cfg.logoPc,0,mx.logoPc)}
+    ${atelierRefRow("gap",cfg.gap,4,mx.gap)}
+    ${atelierRefRow("tries",cfg.tries,80,mx.tries)}
+    <div class="atelier-ref-actions"><button type="button" class="tiny" id="atelierRefsReset">${l(cdxT("atelier.refs.reset"))}</button></div>
+    <h4>${l(cdxT("atelier.refs.game"))}</h4>
+    <p class="muted small">${l(cdxT("atelier.refs.game.hint"))}</p>
+    <label class="atelier-ref-row"><span>${l(cdxT("atelier.refs.pick"))}</span><select id="atelierRefGame">${opts}</select></label>
+    <label class="atelier-ref-row"><span>${l(cdxT("atelier.refs.perGame"))}<b data-ref-val="g.perGame">${gPer}</b></span><input type="range" min="0" max="${mx.perGame}" value="${gPer}" data-ref-game="perGame"></label>
+    <label class="atelier-ref-row"><span>${l(cdxT("atelier.refs.peopleDesktop"))}<b data-ref-val="g.peopleDesktop">${gDesk}</b></span><input type="range" min="0" max="${mx.peopleDesktop}" value="${gDesk}" data-ref-game="peopleDesktop"></label>
+    <label class="atelier-ref-row"><span>${l(cdxT("atelier.refs.peopleMobile"))}<b data-ref-val="g.peopleMobile">${gMob}</b></span><input type="range" min="0" max="${mx.peopleMobile}" value="${gMob}" data-ref-game="peopleMobile"></label>
+    <p class="muted small">${custom?l(cdxT("atelier.refs.custom")):l(cdxT("atelier.refs.inherit"))}</p>
+    <div class="atelier-ref-actions"><button type="button" class="tiny" id="atelierRefsResetGame">${l(cdxT("atelier.refs.resetGame"))}</button></div>`;
+}
+function bindAtelierRefs(){
+  const api=window.CDX_REF_API;if(!api)return;
+  const dash=a("atelierDash");if(!dash)return;
+  const paint=(key,v)=>{const el=dash.querySelector(`[data-ref-val="${key}"]`);if(el)el.textContent=atelierRefVal(key.replace(/^g\./,""),v)};
+  dash.querySelectorAll("[data-ref-cfg]").forEach(inp=>{
+    inp.oninput=()=>{const k=inp.dataset.refCfg,v=+inp.value;paint(k,v);api.set({[k]:v})};
+  });
+  dash.querySelectorAll("[data-ref-game]").forEach(inp=>{
+    inp.oninput=()=>{
+      const g=atelierRefGame;if(!g)return;
+      const k=inp.dataset.refGame,v=+inp.value;
+      paint("g."+k,v);
+      const cur=api.get();
+      api.setGame(g,{...(cur.games[g]||{}),[k]:v});
+    };
+  });
+  const sel=a("atelierRefGame");
+  if(sel)sel.onchange=()=>{atelierRefGame=sel.value;renderAtelierDash()};
+  const reset=a("atelierRefsReset");
+  if(reset)reset.onclick=()=>{api.reset();atelierRefGame="";renderAtelierDash();g(cdxT("atelier.refs.reset.ok"))};
+  const resetG=a("atelierRefsResetGame");
+  if(resetG)resetG.onclick=()=>{if(!atelierRefGame)return;api.setGame(atelierRefGame,null);renderAtelierDash();g(cdxT("atelier.refs.resetGame.ok"))};
 }
 async function saveSiteRow(){
   if(!isAtelier())return !1;

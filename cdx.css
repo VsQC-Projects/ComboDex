@@ -729,3 +729,8 @@ body:has(#bulkActions:not(.hidden)) #personCombos{padding-bottom:190px}
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
   .home-tile:hover,.home-tile:focus-visible{transform:none}
 }
+.head,.panel,.combo,.tile,.studio-footer,.brand,.lang-switch,.person-dock,.person-panel,.charlist,.logo-slot,.workspace .side,article.combo,#personCombos,#combosHeading,#personTitle{position:relative;z-index:3}
+.atelier-ref-row{display:grid;gap:4px;margin:0 0 12px}
+.atelier-ref-row>span{display:flex;justify-content:space-between;gap:8px;align-items:baseline;font-weight:650;font-size:13px}
+.atelier-ref-row input[type=range]{width:100%;min-height:28px;accent-color:var(--purple)}
+.atelier-ref-actions{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}

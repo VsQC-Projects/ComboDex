@@ -64,10 +64,12 @@ function labelSwitch() {
   });
 }
 
-/* ---------- refs data: each game's refs spread over the modules, never twice on one page ---------- */
+/* ---------- refs data + Atelier VSQC config (combo-dex-ui-v1.refs) ---------- */
 const DATA = window.CDX_OBJETS || {};
 const gameName = g => { try { if (typeof b === "object" && b[g] && b[g].name) return b[g].name; } catch {} return g.toUpperCase(); };
-const PER_GAME = 4;
+/* Actual current ceilings (Nov 2026 e13). Old named PEOPLE/footer/logo constants did not exist: people used PER_GAME, zones had no count cap. */
+const REF_DEFAULTS = {perGame: 4, peopleDesktop: 4, peopleMobile: 4, footerPc: 0, footerMobile: 0, logoPc: 0, gap: 12, tries: 420, games: {}};
+const REF_MAX = {perGame: 24, peopleDesktop: 24, peopleMobile: 24, footerPc: 24, footerMobile: 24, logoPc: 24, gap: 30, tries: 800};
 const PLAN = {};
 MODULES.forEach(m => (PLAN[m] = []));
 /* row[7] = number of pieces: one ref made of several images scattered over the same page */
@@ -77,12 +79,89 @@ const hint = it => it.row[4 + LI[lang()]] || label(it);
 
 const hash = s => { let h = 2166136261; for (const c of s) h = Math.imul(h ^ c.charCodeAt(0), 16777619); return h >>> 0; };
 const rng = seed => () => { seed = seed + 0x6D2B79F5 | 0; let x = Math.imul(seed ^ seed >>> 15, 1 | seed); x = x + Math.imul(x ^ x >>> 7, 61 | x) ^ x; return ((x ^ x >>> 14) >>> 0) / 4294967296; };
-for (const m of MODULES)
-  for (const [g, rows] of Object.entries(DATA)) {
-    const r = rng(hash(m + "/" + g));
-    rows.map(row => [r(), row]).sort((a, c) => a[0] - c[0]).slice(0, PER_GAME)
-      .forEach(([, row]) => PLAN[m].push({g, id: row[0], row}));
+const clampN = (n, lo, hi, fb) => { n = Number(n); return Number.isFinite(n) ? Math.max(lo, Math.min(hi, Math.round(n))) : fb; };
+function readRefs() {
+  const raw = (readUI().refs && typeof readUI().refs === "object") ? readUI().refs : {};
+  const out = {perGame: REF_DEFAULTS.perGame, peopleDesktop: REF_DEFAULTS.peopleDesktop, peopleMobile: REF_DEFAULTS.peopleMobile, footerPc: REF_DEFAULTS.footerPc, footerMobile: REF_DEFAULTS.footerMobile, logoPc: REF_DEFAULTS.logoPc, gap: REF_DEFAULTS.gap, tries: REF_DEFAULTS.tries, games: {}};
+  for (const k of ["perGame", "peopleDesktop", "peopleMobile", "footerPc", "footerMobile", "logoPc", "gap", "tries"]) {
+    if (raw[k] != null) out[k] = clampN(raw[k], k === "tries" ? 80 : 0, REF_MAX[k], out[k]);
   }
+  if (out.gap < 4) out.gap = 4;
+  if (raw.games && typeof raw.games === "object") {
+    for (const [g, v] of Object.entries(raw.games)) {
+      if (!v || typeof v !== "object") continue;
+      const row = {};
+      for (const k of ["perGame", "peopleDesktop", "peopleMobile"]) if (v[k] != null) row[k] = clampN(v[k], 0, REF_MAX[k], out[k]);
+      if (Object.keys(row).length) out.games[g] = row;
+    }
+  }
+  return out;
+}
+function gameQuota(cfg, g, tab, small) {
+  const ov = cfg.games[g] || {};
+  if (tab === "people") {
+    const k = small ? "peopleMobile" : "peopleDesktop";
+    return ov[k] != null ? ov[k] : cfg[k];
+  }
+  return ov.perGame != null ? ov.perGame : cfg.perGame;
+}
+function rebuildPlan() {
+  const cfg = readRefs();
+  const small = innerWidth < 700;
+  MODULES.forEach(m => (PLAN[m] = []));
+  for (const m of MODULES)
+    for (const [g, rows] of Object.entries(DATA)) {
+      const cap = gameQuota(cfg, g, m, small);
+      if (!cap || !rows || !rows.length) continue;
+      const r = rng(hash(m + "/" + g));
+      rows.map(row => [r(), row]).sort((a, c) => a[0] - c[0]).slice(0, cap)
+        .forEach(([, row]) => PLAN[m].push({g, id: row[0], row}));
+    }
+}
+function writeRefs(next) {
+  const ui = readUI();
+  ui.refs = next;
+  try { if (typeof H === "object" && H) H.refs = next; } catch {}
+  try { localStorage.setItem(UI_KEY, JSON.stringify(ui)); } catch {}
+  rebuildPlan();
+  schedule(80);
+}
+rebuildPlan();
+window.CDX_REF_API = {
+  defaults: () => ({perGame: 4, peopleDesktop: 4, peopleMobile: 4, footerPc: 0, footerMobile: 0, logoPc: 0, gap: 12, tries: 420, games: {}}),
+  max: REF_MAX,
+  get: readRefs,
+  games() {
+    const ids = new Set([...Object.keys(DATA)]);
+    try { if (typeof b === "object" && b) Object.keys(b).forEach(id => ids.add(id)); } catch {}
+    return [...ids].sort().map(id => [id, gameName(id)]);
+  },
+  set(patch) {
+    const cur = readRefs();
+    const next = {...cur, games: {...cur.games}};
+    if (patch && typeof patch === "object") {
+      for (const k of ["perGame", "peopleDesktop", "peopleMobile", "footerPc", "footerMobile", "logoPc", "gap", "tries"]) if (patch[k] != null) next[k] = clampN(patch[k], k === "tries" ? 80 : 0, REF_MAX[k], next[k]);
+      if (patch.games && typeof patch.games === "object") {
+        for (const [g, v] of Object.entries(patch.games)) {
+          if (v === null) { delete next.games[g]; continue; }
+          next.games[g] = {...(next.games[g] || {}), ...v};
+        }
+      }
+    }
+    writeRefs(next);
+    return next;
+  },
+  setGame(g, row) {
+    const cur = readRefs();
+    const next = {...cur, games: {...cur.games}};
+    if (!row || !Object.keys(row).length) delete next.games[g];
+    else next.games[g] = row;
+    writeRefs(next);
+    return next;
+  },
+  reset() { writeRefs(window.CDX_REF_API.defaults()); return readRefs(); }
+};
+addEventListener("cdx-refs-cfg", () => { rebuildPlan(); schedule(80); });
 
 let layer, placed = [];
 function activeTab() { const s = [...document.querySelectorAll("main > .page")].find(p => !p.classList.contains("hidden")); return s ? s.id : "home"; }
@@ -108,12 +187,14 @@ function obstacles(root, out) {
 
 function place() {
   if (!layer) return;
+  rebuildPlan();
   layer.textContent = "";
   placed = [];
   const tab = activeTab();
   layer.dataset.tab = tab;
   const items = PLAN[tab] || [];
   if (tab === "home" || !items.length) return;
+  const cfg = readRefs();
   const W = document.documentElement.scrollWidth, Hh = document.documentElement.scrollHeight;
   const boxes = [];
   [".head", ".studio-footer"].forEach(s => { const e = document.querySelector(s); if (e) obstacles(e, boxes); });
@@ -132,13 +213,39 @@ function place() {
       for (let x = x0 / CELL | 0; x < Math.ceil(x1 / CELL); x++) if (grid[y * cw + x]) return false;
     return true;
   };
-  const M = 12;
-  boxes.forEach(([a, b2, c, d]) => mark(a - M, b2 - M, c + M, d + M));
   const small = innerWidth < 700;
-  const r = rng(hash(tab + W));
+  const gap = small ? Math.max(4, cfg.gap - 4) : cfg.gap;
+  const tries = cfg.tries;
+  const M = Math.max(2, Math.round(gap / 3));
+  boxes.forEach(([a, b2, c, d]) => mark(a - M, b2 - M, c + M, d + M));
+  const rectOf = sel => {
+    const e = document.querySelector(sel);
+    if (!e) return null;
+    const r = e.getBoundingClientRect();
+    return {t: r.top + scrollY, b: r.bottom + scrollY, l: r.left + scrollX, r: r.right + scrollX};
+  };
+  const zones = {footer: rectOf(".studio-footer"), logo: rectOf(".head"), peopleLogo: rectOf("#peopleLogo")};
+  const inRect = (box, x, y, size) => box && x + size / 2 >= box.l && x + size / 2 <= box.r && y + size / 2 >= box.t && y + size / 2 <= box.b;
+  const zoneOf = (x, y, size) => {
+    if (inRect(zones.footer, x, y, size)) return "footer";
+    if (inRect(zones.logo, x, y, size) || inRect(zones.peopleLogo, x, y, size)) return "logo";
+    return "main";
+  };
+  const capFooter = small ? cfg.footerMobile : cfg.footerPc;
+  const capLogo = cfg.logoPc;
+  let usedFooter = 0, usedLogo = 0;
+  const zoneOk = (x, y, size) => {
+    const z = zoneOf(x, y, size);
+    if (z === "footer" && capFooter > 0 && usedFooter >= capFooter) return false;
+    if (z === "logo" && capLogo > 0 && usedLogo >= capLogo) return false;
+    return true;
+  };
+  const r = rng(hash(tab + W + gap));
   const order = items.map(it => [r(), it]).sort((x, y) => x[0] - y[0]).map(x => x[1]);
-  const gap = small ? 16 : 30;
   const put = (it, src, x, y, size) => {
+    const z = zoneOf(x, y, size);
+    if (z === "footer") usedFooter++;
+    if (z === "logo") usedLogo++;
     mark(x - gap, y - gap, x + size + gap, y + size + gap);
     const img = new Image();
     img.src = src;
@@ -150,18 +257,33 @@ function place() {
     layer.appendChild(img);
     placed.push({it, img});
   };
+  const scanFree = (size, avoid) => {
+    const step = Math.max(CELL, Math.min(size, 16));
+    for (let y = 4; y <= Hh - size - 4; y += step)
+      for (let x = 4; x <= W - size - 4; x += step) {
+        if (!free(x, y, x + size, y + size) || !zoneOk(x, y, size)) continue;
+        if (avoid && avoid.length && Math.min(...avoid.map(([a, c]) => Math.hypot(a - x, c - y))) < size + gap) continue;
+        return [x, y];
+      }
+    return null;
+  };
+  const pickSpot = (size, avoid) => {
+    let best = null, bestD = -1;
+    for (let k = 0; k < tries; k++) {
+      const x = r() * (W - size), y = r() * (Hh - size);
+      if (!free(x, y, x + size, y + size) || !zoneOk(x, y, size)) continue;
+      const d = avoid && avoid.length ? Math.min(...avoid.map(([a, c]) => Math.hypot(a - x, c - y))) : 0;
+      if (!avoid) return [x, y];
+      if (d > bestD) { best = [x, y]; bestD = d; }
+    }
+    return best || scanFree(size, avoid);
+  };
   for (const it of order) {
     const n = pieces(it);
     if (n) {
       const size = small ? 26 : 34, got = [];
       for (let p = 1; p <= n; p++) {
-        let best = null, bestD = -1;
-        for (let k = 0; k < 220; k++) {
-          const x = r() * (W - size), y = r() * (Hh - size);
-          if (!free(x, y, x + size, y + size)) continue;
-          const d = got.length ? Math.min(...got.map(([a, c]) => Math.hypot(a - x, c - y))) : 0;
-          if (d > bestD) { best = [x, y]; bestD = d; }
-        }
+        const best = pickSpot(size, got);
         if (!best) break;
         got.push(best);
         put(it, `objets/${it.g}/${it.id}-${p}.webp`, best[0], best[1], size);
@@ -169,11 +291,7 @@ function place() {
       continue;
     }
     const size = Math.round((small ? 30 : 40) + r() * (small ? 14 : 24));
-    let spot = null;
-    for (let k = 0; k < 160 && !spot; k++) {
-      const x = r() * (W - size), y = r() * (Hh - size);
-      if (free(x, y, x + size, y + size)) spot = [x, y];
-    }
+    const spot = pickSpot(size, null);
     if (spot) put(it, `objets/${it.g}/${it.id}.webp`, spot[0], spot[1], size);
   }
   if (game && game.tab === tab) relink();

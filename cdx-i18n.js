@@ -48,6 +48,36 @@ fr:{
 ,"atelier.tree.keys":"Commandes"
 ,"atelier.tree.replay":"Replay Analyzer"
 ,"atelier.tree.site":"Site"
+,"atelier.tree.refs":"Références"
+,"atelier.refs.lead":"Plafonds et espacement des objets décoratifs. Les plafonds peuvent monter sans afficher plus d’objets tout de suite : le nombre actuel reste 4 par jeu tant que tu ne le changes pas. 0 au pied de page ou au logo = selon l’espace, sans plafond numérique."
+,"atelier.refs.global":"Réglages communs"
+,"atelier.refs.game":"Par jeu"
+,"atelier.refs.game.hint":"Chaque jeu a ses propres quantités. Un nouveau jeu ajouté à ComboDex apparaît ici tout seul, avec les valeurs communes."
+,"atelier.refs.pick":"Jeu"
+,"atelier.refs.perGame":"Par jeu (hors Personnages)"
+,"atelier.refs.perGame.hint":"Nombre max d’objets de ce jeu sur Frames, Comparer, Replay, Créer, Importer, Knowledge."
+,"atelier.refs.peopleDesktop":"Personnages · PC"
+,"atelier.refs.peopleDesktop.hint":"Onglet Personnages, écran large."
+,"atelier.refs.peopleMobile":"Personnages · mobile"
+,"atelier.refs.peopleMobile.hint":"Onglet Personnages, écran étroit."
+,"atelier.refs.footerPc":"Pied de page · PC"
+,"atelier.refs.footerPc.hint":"0 = selon l’espace. Un nombre limite les objets dans le pied."
+,"atelier.refs.footerMobile":"Pied de page · mobile"
+,"atelier.refs.footerMobile.hint":"0 = selon l’espace. Un nombre limite les objets dans le pied."
+,"atelier.refs.logoPc":"Zone du logo"
+,"atelier.refs.logoPc.hint":"0 = selon l’espace autour du logo ComboDex."
+,"atelier.refs.gap":"Espacement"
+,"atelier.refs.gap.hint":"Distance minimale entre deux objets, sans chevauchement. Plus bas = plus serré. La taille des objets ne change pas."
+,"atelier.refs.tries":"Essais de placement"
+,"atelier.refs.tries.hint":"Plus d’essais : moins d’emplacements libres refusés. N’affiche pas plus d’objets à lui seul."
+,"atelier.refs.space":"espace"
+,"atelier.refs.reset":"Réinitialiser tout"
+,"atelier.refs.resetGame":"Réinitialiser ce jeu"
+,"atelier.refs.reset.ok":"Références : valeurs par défaut."
+,"atelier.refs.resetGame.ok":"Ce jeu reprend les réglages communs."
+,"atelier.refs.custom":"Ce jeu a des quantités à lui. Les autres jeux ne bougent pas."
+,"atelier.refs.inherit":"Ce jeu suit encore les réglages communs."
+,"atelier.refs.wait":"Le calque des références n’est pas encore chargé."
 ,"atelier.notif":"Notifications"
 ,"atelier.tree.reports":"Signalements"
 ,"atelier.tree.lab":"Demandes lab","cmp.char1":"Personnage 1","cmp.char2":"Personnage 2","atelier.tree.review":"Import à valider","review.pending":"En attente de validation","review.sent":"Envoyé. Visible pour tout le monde après validation dans l’atelier.","review.ok":"Publier","review.no":"Refuser et supprimer","review.confirmNo":"Refuser cet import ? Il sera supprimé."
@@ -267,6 +297,36 @@ en:{
 "atelier.tree.keys":"Commands",
 "atelier.tree.replay":"Replay Analyzer",
 "atelier.tree.site":"Site",
+"atelier.tree.refs":"References",
+"atelier.refs.lead":"Quantity caps and spacing for decorative objects. Caps can rise without showing more objects right away: the current count stays 4 per game until you change it. 0 in the footer or logo zone = fill available space, no numeric cap.",
+"atelier.refs.global":"Shared settings",
+"atelier.refs.game":"Per game",
+"atelier.refs.game.hint":"Each game has its own quantities. A new game added to ComboDex shows up here on its own, with the shared defaults.",
+"atelier.refs.pick":"Game",
+"atelier.refs.perGame":"Per game (except Characters)",
+"atelier.refs.perGame.hint":"Max objects from this game on Frames, Compare, Replay, Create, Import, Knowledge.",
+"atelier.refs.peopleDesktop":"Characters · desktop",
+"atelier.refs.peopleDesktop.hint":"Characters tab, wide screen.",
+"atelier.refs.peopleMobile":"Characters · mobile",
+"atelier.refs.peopleMobile.hint":"Characters tab, narrow screen.",
+"atelier.refs.footerPc":"Footer · desktop",
+"atelier.refs.footerPc.hint":"0 = fill available space. A number caps objects in the footer.",
+"atelier.refs.footerMobile":"Footer · mobile",
+"atelier.refs.footerMobile.hint":"0 = fill available space. A number caps objects in the footer.",
+"atelier.refs.logoPc":"Logo zone",
+"atelier.refs.logoPc.hint":"0 = fill available space around the ComboDex logo.",
+"atelier.refs.gap":"Spacing",
+"atelier.refs.gap.hint":"Minimum distance between two objects, without overlap. Lower = tighter. Object size does not change.",
+"atelier.refs.tries":"Placement attempts",
+"atelier.refs.tries.hint":"More attempts: fewer free spots refused. Does not add objects by itself.",
+"atelier.refs.space":"space",
+"atelier.refs.reset":"Reset all",
+"atelier.refs.resetGame":"Reset this game",
+"atelier.refs.reset.ok":"References: default values.",
+"atelier.refs.resetGame.ok":"This game follows the shared settings again.",
+"atelier.refs.custom":"This game has its own quantities. Other games are unchanged.",
+"atelier.refs.inherit":"This game still follows the shared settings.",
+"atelier.refs.wait":"The references layer is not loaded yet.",
 "atelier.notif":"Notifications",
 "atelier.tree.reports":"Reports",
 "atelier.tree.lab":"Lab requests","cmp.char1":"Character 1","cmp.char2":"Character 2","atelier.tree.review":"Import to review","review.pending":"Awaiting review","review.sent":"Sent. Visible to everyone after workshop review.","review.ok":"Publish","review.no":"Reject and delete","review.confirmNo":"Reject this import? It will be deleted.",
@@ -599,6 +659,36 @@ es:{
 "atelier.tree.keys":"Comandos",
 "atelier.tree.replay":"Replay Analyzer",
 "atelier.tree.site":"Sitio",
+"atelier.tree.refs":"Referencias",
+"atelier.refs.lead":"Límites de cantidad y espacio de los objetos decorativos. Los techos pueden subir sin mostrar más objetos de inmediato: la cantidad actual sigue en 4 por juego hasta que la cambies. 0 en el pie o el logo = según el espacio, sin tope numérico.",
+"atelier.refs.global":"Ajustes comunes",
+"atelier.refs.game":"Por juego",
+"atelier.refs.game.hint":"Cada juego tiene sus propias cantidades. Un juego nuevo en ComboDex aparece aquí solo, con los valores comunes.",
+"atelier.refs.pick":"Juego",
+"atelier.refs.perGame":"Por juego (salvo Personajes)",
+"atelier.refs.perGame.hint":"Máximo de objetos de este juego en Frames, Comparar, Replay, Crear, Importar, Knowledge.",
+"atelier.refs.peopleDesktop":"Personajes · PC",
+"atelier.refs.peopleDesktop.hint":"Pestaña Personajes, pantalla ancha.",
+"atelier.refs.peopleMobile":"Personajes · móvil",
+"atelier.refs.peopleMobile.hint":"Pestaña Personajes, pantalla estrecha.",
+"atelier.refs.footerPc":"Pie de página · PC",
+"atelier.refs.footerPc.hint":"0 = según el espacio. Un número limita los objetos del pie.",
+"atelier.refs.footerMobile":"Pie de página · móvil",
+"atelier.refs.footerMobile.hint":"0 = según el espacio. Un número limita los objetos del pie.",
+"atelier.refs.logoPc":"Zona del logo",
+"atelier.refs.logoPc.hint":"0 = según el espacio alrededor del logo ComboDex.",
+"atelier.refs.gap":"Espaciado",
+"atelier.refs.gap.hint":"Distancia mínima entre dos objetos, sin solaparse. Más bajo = más juntos. El tamaño no cambia.",
+"atelier.refs.tries":"Intentos de colocación",
+"atelier.refs.tries.hint":"Más intentos: menos huecos libres rechazados. No añade objetos por sí solo.",
+"atelier.refs.space":"espacio",
+"atelier.refs.reset":"Restablecer todo",
+"atelier.refs.resetGame":"Restablecer este juego",
+"atelier.refs.reset.ok":"Referencias: valores por defecto.",
+"atelier.refs.resetGame.ok":"Este juego vuelve a los ajustes comunes.",
+"atelier.refs.custom":"Este juego tiene cantidades propias. Los demás no cambian.",
+"atelier.refs.inherit":"Este juego sigue los ajustes comunes.",
+"atelier.refs.wait":"La capa de referencias aún no está cargada.",
 "atelier.notif":"Notificaciones",
 "atelier.tree.reports":"Reportes",
 "atelier.tree.lab":"Peticiones lab","cmp.char1":"Personaje 1","cmp.char2":"Personaje 2","atelier.tree.review":"Importación por validar","review.pending":"Pendiente de validación","review.sent":"Enviado. Visible para todos tras la validación en el taller.","review.ok":"Publicar","review.no":"Rechazar y borrar","review.confirmNo":"¿Rechazar esta importación? Se borrará.",
