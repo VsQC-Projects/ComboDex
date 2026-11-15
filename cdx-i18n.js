@@ -121,6 +121,10 @@ fr:{
 ,"admin.task.refs":"PNG et objets décoratifs, liés au jeu."
 ,"admin.task.people":"Roster et fiches, par jeu."
 ,"admin.task.keys":"Touches de la palette du jeu ouvert."
+,"admin.keys.add":"Ajouter"
+,"admin.keys.ph":"Nouvelle touche (ex. 5H)"
+,"admin.keys.empty":"Aucune touche pour ce jeu."
+,"admin.keys.dup":"Cette touche est déjà dans la palette."
 ,"admin.task.site":"Vue d’ensemble du wiki public."
 ,"admin.import.ref":"Importer une référence"
 ,"admin.import.ref.lead":"PNG + nom français. ComboDex propose EN, ES et l’indice : tu corriges si besoin, tu enregistres pour valider."
@@ -258,6 +262,11 @@ fr:{
 ,"home.font.cabinet":"Cabinet 80s"
 ,"home.font.marquee":"Enseigne"
 ,"home.font.stencil":"Stencil"
+,"home.font.orbitron":"Orbitron"
+,"home.font.russo":"Russo"
+,"home.font.neon":"Néon"
+,"home.font.silkscreen":"Silkscreen"
+,"home.font.teko":"Teko"
 ,"Combos · Frame data · Entraînement":"Combos · frames · entraînement"
 ,"Accueil":"Accueil"
 ,"Light Punch":"Direct léger","Medium Punch":"Direct moyen","Heavy Punch":"Direct fort","Light Kick":"Coup de pied léger","Medium Kick":"Coup de pied moyen","Heavy Kick":"Coup de pied fort","Punch":"Coup de poing","Kick":"Coup de pied","Slash":"Slash","Heavy Slash":"Heavy Slash","Dust":"Dust","Special":"Special","Special 1":"Special 1","Special 2":"Special 2"},
@@ -319,6 +328,11 @@ en:{
 "home.font.cabinet":"80s cabinet",
 "home.font.marquee":"Marquee",
 "home.font.stencil":"Stencil",
+"home.font.orbitron":"Orbitron",
+"home.font.russo":"Russo",
+"home.font.neon":"Neon",
+"home.font.silkscreen":"Silkscreen",
+"home.font.teko":"Teko",
 "combo 1":"combo 1",
 "combo 2":"combo 2",
 "Crayon":"Pen",
@@ -443,6 +457,10 @@ en:{
 "admin.task.refs":"PNGs and decorative objects, tied to a game.",
 "admin.task.people":"Roster and cards, per game.",
 "admin.task.keys":"Palette keys for the open game.",
+"admin.keys.add":"Add",
+"admin.keys.ph":"New key (e.g. 5H)",
+"admin.keys.empty":"No keys for this game.",
+"admin.keys.dup":"That key is already on the palette.",
 "admin.task.site":"Overview of the public wiki.",
 "admin.import.ref":"Import a reference",
 "admin.import.ref.lead":"PNG + French name. ComboDex suggests EN, ES and the hint: fix if needed, save to confirm.",
@@ -754,6 +772,11 @@ es:{
 "home.font.cabinet":"Cabinet 80s",
 "home.font.marquee":"Letrero",
 "home.font.stencil":"Stencil",
+"home.font.orbitron":"Orbitron",
+"home.font.russo":"Russo",
+"home.font.neon":"Neón",
+"home.font.silkscreen":"Silkscreen",
+"home.font.teko":"Teko",
 "combo 1":"combo 1",
 "combo 2":"combo 2",
 "Crayon":"Lápiz",
@@ -878,6 +901,10 @@ es:{
 "admin.task.refs":"PNG y objetos decorativos, ligados al juego.",
 "admin.task.people":"Roster y fichas, por juego.",
 "admin.task.keys":"Teclas de la paleta del juego abierto.",
+"admin.keys.add":"Añadir",
+"admin.keys.ph":"Tecla nueva (ej. 5H)",
+"admin.keys.empty":"Ninguna tecla para este juego.",
+"admin.keys.dup":"Esa tecla ya está en la paleta.",
 "admin.task.site":"Vista general del wiki público.",
 "admin.import.ref":"Importar una referencia",
 "admin.import.ref.lead":"PNG + nombre francés. ComboDex propone EN, ES y la pista: corrige si hace falta, guarda para validar.",

@@ -150,7 +150,12 @@ const HOME_FONTS={
   pixel:{f:'"Press Start 2P",cursive',l:".06em",w:"400",s:"clamp(22px,4.8vw,44px)"},
   cabinet:{f:"Audiowide,sans-serif",l:".08em",w:"400",s:"clamp(48px,8.2vw,90px)"},
   marquee:{f:"Bungee,sans-serif",l:".03em",w:"400",s:"clamp(46px,7.8vw,86px)"},
-  stencil:{f:'"Black Ops One",sans-serif',l:".05em",w:"400",s:"clamp(46px,8vw,88px)"}
+  stencil:{f:'"Black Ops One",sans-serif',l:".05em",w:"400",s:"clamp(46px,8vw,88px)"},
+  orbitron:{f:"Orbitron,sans-serif",l:".08em",w:"700",s:"clamp(42px,7.4vw,82px)"},
+  russo:{f:'"Russo One",sans-serif',l:".04em",w:"400",s:"clamp(46px,8vw,88px)"},
+  neon:{f:"Monoton,cursive",l:".06em",w:"400",s:"clamp(40px,7vw,78px)"},
+  silkscreen:{f:"Silkscreen,sans-serif",l:".04em",w:"400",s:"clamp(28px,5.4vw,52px)"},
+  teko:{f:"Teko,sans-serif",l:".08em",w:"600",s:"clamp(54px,9vw,100px)"}
 };
 function siteFontId(v){return HOME_FONTS[v]?v:null}
 function wikiRow(c){
@@ -840,6 +845,11 @@ function atelierPath(){
   return cdxT("atelier.crumb")+" / COMBODEX / "+now;
 }
 function renderAtelierDash(){
+  if(renderAtelierDash.lock)return;
+  renderAtelierDash.lock=1;
+  try{renderAtelierDashBody()}finally{renderAtelierDash.lock=0}
+}
+function renderAtelierDashBody(){
   const dash=a("atelierDash");if(!dash)return;
   const pend=pendingXRows(),reps=reportedCombos(),labs=labRequests();
   const leaf=(v,label,n)=>`<button type="button" class="leaf${atelierView===v?" sel":""}" data-av="${v}">${l(label)}${n?`<span class="count">${n}</span>`:""}</button>`;
@@ -857,7 +867,7 @@ function renderAtelierDash(){
     const n=d.combos.filter(c=>c.game===id).length;
     return `<button type="button" class="leaf${atelierView==="people"&&o.game===id?" sel":""}" data-av="game" data-game="${l(id)}">${l(name)}${n?`<span class="count">${n}</span>`:""}</button>`;
   }).join("");
-  const fonts=["now","pixel","cabinet","marquee","stencil"].map(id=>`<button type="button" data-home-font="${id}" aria-pressed="${homeFontId===id}">${l(cdxT("home.font."+id))}</button>`).join("");
+  const fonts=Object.keys(HOME_FONTS).map(id=>`<button type="button" data-home-font="${id}" aria-pressed="${homeFontId===id}" style="font-family:${HOME_FONTS[id].f}">${l(cdxT("home.font."+id))}</button>`).join("");
   const work=atelierWorkHtml(pend,fonts);
   const treeNav=`<button type="button" data-av="home" class="${atelierView==="home"?"sel":""}">${l(cdxT("admin.overview"))}</button>
         <div class="admin-nav-group"><span class="admin-nav-label">${l(cdxT("admin.group.mod"))}</span>
@@ -912,7 +922,7 @@ function renderAtelierDash(){
     const go=e.target.closest("[data-go-combo]"),done=e.target.closest("[data-rep-done]"),lab=e.target.closest("[data-lab-set]");
     const avGo=e.target.closest("[data-av-go]");
     if(avGo){atelierView=avGo.dataset.avGo;renderAtelierDash();return}
-    if(go){const c=L(go.dataset.goCombo);if(c){o.game=c.game;o.char=c.character;o.focusId=c.id;if(window.CDX_ADMIN){atelierView="people";j("people");renderAtelierDash();return}j("people")}return}
+    if(go){const c=L(go.dataset.goCombo);if(c){o.game=c.game;o.char=c.character;o.focusId=c.id;if(window.CDX_ADMIN){atelierView="people";renderAtelierDash();return}j("people")}return}
     if(done){const c=L(done.dataset.repDone);if(c){c.reports=[];c.updatedAt=new Date().toISOString();publishQuiet(c)}renderAtelierDash();return}
     const rv=e.target.closest("[data-review-set]");
     if(rv){const c=L(rv.dataset.reviewSet);if(c){if(rv.dataset.review==="ok"){const x=xid(c.video);ae(c.id,{review:"ok"});if(x&&!xApproved(x))saveXOk(c.video)}else if(confirm(cdxT("review.confirmNo"))){wipeWiki([c.id]).then(()=>{dropLocal([c.id]);try{C()}catch{}renderAtelierDash()});return}}try{C()}catch{}renderAtelierDash();return}
@@ -924,11 +934,13 @@ function renderAtelierDash(){
   if(tree)tree.onclick=e=>{
     const b=e.target.closest("[data-av]");if(!b)return;
     const av=b.dataset.av;
-    if(av==="game"){o.game=b.dataset.game;o.char=(T(o.game)[0]||{}).name||o.char;atelierView="people";j("people");renderAtelierDash();return}
+    if(av==="game"){o.game=b.dataset.game;o.char=(T(o.game)[0]||{}).name||o.char;atelierView="people";if(!window.CDX_ADMIN)j("people");renderAtelierDash();return}
     atelierView=av;
-    if(av==="import")j("import");
-    else if(av==="people"||av==="keys"||av==="portraits")j("people");
-    else if(av==="replay")j("replay");
+    if(!window.CDX_ADMIN){
+      if(av==="import")j("import");
+      else if(av==="people"||av==="keys"||av==="portraits")j("people");
+      else if(av==="replay")j("replay");
+    }
     renderAtelierDash();
   };
   const charsRow=a("atelierChars");if(charsRow)charsRow.onclick=e=>{const b=e.target.closest("[data-atelier-char]");if(!b)return;o.char=b.dataset.atelierChar;o.selected.clear();if(!window.CDX_ADMIN)j("people");renderAtelierDash()};
@@ -950,8 +962,9 @@ function renderAtelierDash(){
   bindAtelierAssets();
   const out=a("atelierOut");if(out)out.onclick=()=>{atelierForget();try{C()}catch{}g(window.CDX_ADMIN?cdxT("admin.closed"):cdxT("atelier.out"))};
   try{atelierEmbed()}catch{}
+  try{hydratePortraits()}catch{}
 }
-const ADMIN_EMBED={people:"people",import:"import",replay:"replay",create:"create"};
+const ADMIN_EMBED={import:"import",replay:"replay",create:"create"};
 function atelierEmbed(){
   if(!window.CDX_ADMIN)return;
   const tab=ADMIN_EMBED[atelierView];
@@ -992,9 +1005,9 @@ function atelierWorkHtml(pend,fonts){
   }
   if(atelierView==="import")return atelierTask(cdxT("atelier.tree.import"),cdxT("admin.import.combos"),`<div class="admin-card"><a class="primary" href="${l(atelierSiteHref("#/import"))}">${l(cdxT("admin.open.import"))}</a></div>`);
   if(atelierView==="people"){
-    const chars=T(o.game).filter(r=>!r.orphan||q(o.game,r.name).length).map(r=>{const n=q(o.game,r.name).length;return `<button type="button" data-atelier-char="${l(r.name)}" aria-pressed="${o.char===r.name}">${l(charLabel(r.name))}${n?`<span class="count">${n}</span>`:""}</button>`}).join("");
+    const chars=T(o.game).filter(r=>!r.orphan||q(o.game,r.name).length).map(r=>{const n=q(o.game,r.name).length;return `<button type="button" class="admin-char" data-atelier-char="${l(r.name)}" aria-pressed="${o.char===r.name}">${portrait(o.game,r.name,"tile")}<span class="admin-char-name">${l(charLabel(r.name))}</span>${n?`<span class="count">${n}</span>`:""}</button>`}).join("");
     const gameSel=`<label class="atelier-ref-row"><span>${l(cdxT("atelier.refs.pick"))}</span><select id="atelierPortGame">${De().map(([id,name])=>`<option value="${l(id)}"${id===o.game?" selected":""}>${l(name)}</option>`).join("")}</select></label>`;
-    return atelierTask(cdxT("atelier.tree.people"),cdxT("admin.task.people"),`<div class="admin-card">${gameSel}<p class="muted small">${l(charLabel(o.char||""))} · ${y(q(o.game,o.char).length,"combo")}</p><div class="home-font-row atelier-chars" id="atelierChars" role="group">${chars}</div><p><a class="tiny" href="${l(atelierSiteHref("#/"+encodeURIComponent(o.game)+"/"+encodeURIComponent(o.char||"")))}">${l(cdxT("admin.open.people"))}</a></p></div>`);
+    return atelierTask(cdxT("atelier.tree.people"),cdxT("admin.task.people"),`<div class="admin-card">${gameSel}<p class="muted small">${l(charLabel(o.char||""))} · ${y(q(o.game,o.char).length,"combo")}</p><div class="admin-char-grid atelier-chars" id="atelierChars" role="group">${chars||`<p class="admin-empty">${l(cdxT("Aucun personnage trouvé."))}</p>`}</div><p><a class="tiny" href="${l(atelierSiteHref("#/"+encodeURIComponent(o.game)+"/"+encodeURIComponent(o.char||"")))}">${l(cdxT("admin.open.people"))}</a></p></div>`);
   }
   if(atelierView==="portraits"){
     const chars=T(o.game).map(r=>`<option value="${l(r.name)}"${r.name===o.char?" selected":""}>${l(charLabel(r.name))}</option>`).join("");
@@ -1009,7 +1022,14 @@ function atelierWorkHtml(pend,fonts){
         <div class="row"><button type="button" class="primary" id="atelierPortSave">${l(cdxT("admin.portrait.save"))}</button></div>
       </div>`);
   }
-  if(atelierView==="keys"){const keys=Ae(o.game)||[];return atelierTask(cdxT("atelier.tree.keys"),b[o.game]?b[o.game].name:"",`<div class="admin-card"><div class="chips">${keys.map(k=>`<span class="chip">${l(k)}</span>`).join("")}</div></div>`)}
+  if(atelierView==="keys"){
+    const game=b[o.game]?o.game:"umvc3";
+    if(game!==o.game)o.game=game;
+    const keys=Ae(o.game)||[];
+    const gameSel=`<label class="atelier-ref-row"><span>${l(cdxT("atelier.refs.pick"))}</span><select id="atelierPortGame">${De().map(([id,name])=>`<option value="${l(id)}"${id===o.game?" selected":""}>${l(name)}</option>`).join("")}</select></label>`;
+    const chips=keys.map(k=>`<button type="button" class="chip admin-key" data-hide-key="${l(k)}" title="${l(cdxT("Retirer"))}">${l(k)}</button>`).join("");
+    return atelierTask(cdxT("atelier.tree.keys"),cdxT("admin.task.keys"),`<div class="admin-card">${gameSel}<p class="muted small">${l(b[o.game]?b[o.game].name:"")} · ${l(cdxT("pal.hide.hint"))}</p><div class="admin-keys chips" id="atelierKeys">${chips||`<p class="admin-empty">${l(cdxT("admin.keys.empty"))}</p>`}</div><div class="row" style="margin-top:14px"><input class="grow" id="atelierKeyAdd" maxlength="24" placeholder="${l(cdxT("admin.keys.ph"))}"><button type="button" class="primary" id="atelierKeyAddGo">${l(cdxT("admin.keys.add"))}</button></div></div>`);
+  }
   if(atelierView==="replay")return atelierTask(cdxT("atelier.tree.replay"),cdxT("admin.replay.lead"),`<div class="admin-card"><a class="primary" href="${l(atelierSiteHref("#/replay"))}">${l(cdxT("admin.open.replay"))}</a></div>`);
   if(atelierView==="refs")return atelierRefsHtml();
   if(atelierView==="site")return atelierTask(cdxT("atelier.tree.site"),cdxT("atelier.font"),`<div class="admin-card"><p>${y((d.combos||[]).length,"combo")} ${cdxT((d.combos||[]).length>1?"publics":"public")}</p></div>`);
@@ -1243,6 +1263,19 @@ function bindAtelierAssets(){
   };
   const pg=a("atelierPortGame");
   if(pg)pg.onchange=()=>{o.game=pg.value;o.char=(T(o.game)[0]||{}).name||o.char;renderAtelierDash()};
+  const keysBox=a("atelierKeys");
+  if(keysBox)keysBox.onclick=e=>{const b=e.target.closest("[data-hide-key]");if(!b)return;askHideKey(o.game,b.dataset.hideKey,()=>renderAtelierDash())};
+  const addKey=()=>{
+    const inp=a("atelierKeyAdd");
+    const v=((inp||{}).value||"").trim();
+    if(!v)return;
+    const have=new Set((Ae(o.game)||[]).map(x=>String(x).toLowerCase()));
+    if(have.has(v.toLowerCase())){g(cdxT("admin.keys.dup"),!0);return}
+    ze(o.game,v);
+    renderAtelierDash();
+  };
+  const addGo=a("atelierKeyAddGo");if(addGo)addGo.onclick=addKey;
+  const addInp=a("atelierKeyAdd");if(addInp)addInp.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();addKey()}};
   const pc=a("atelierPortChar");
   if(pc)pc.onchange=()=>{o.char=pc.value;renderAtelierDash()};
   const ps=a("atelierPortSave");
@@ -1653,7 +1686,7 @@ function Lt(){V("import",yt),a("importGame").onchange=e=>{importManual(),me(e.ta
     </div>
   </article>`}function Q(){if(!a("peopleGame"))return;U(),k(a("peopleGame"),De(),o.game),a("onlyWithCombos").checked=o.onlyWithCombos,a("sortCombos").value=o.sort,C(),B(),Ee()}function Ee(){const e=d.combos.length,t=[...d.fav].filter(id=>L(id)).length;a("headerStats").textContent=e?`${y(e,"combo")} ${cdxT(e>1?"publics":"public")} · ${y(t,"favori")}`:cdxT("Combos publics · Frame data · Entraînement")}function ee(){const e=w(a("charFilter").value),t=T(o.game),n=t.filter(r=>charBlob(r.name).includes(e)).map(r=>({...r,count:q(o.game,r.name).length})),s=o.onlyWithCombos?n.filter(r=>r.count):n;a("rosterCount").textContent=`${y(t.filter(r=>!r.orphan).length,"personnage")} ${cdxT("dans")} ${b[o.game].name}`,a("charList").innerHTML=s.map(r=>`<button class="tile ${o.char===r.name?"sel":""} ${r.count?"has-combos":"nocombo"}" data-char="${l(r.name)}" aria-pressed="${o.char===r.name}" title="${l(charLabel(r.name))}${r.count?` · ${y(r.count,"combo")}`:""}">
           ${portrait(o.game,r.name,"tile")}${r.count?`<b class="tile-count">${r.count}</b>`:""}
-          <span class="tile-name">${l(charLabel(r.name))}</span>${r.orphan?`<span class="orphan-tag" title="${l(cdxT("Personnage absent du roster actuel"))}">${cdxT("hors roster")}</span>`:""}</button>`).join("")||`<div class="empty">${o.onlyWithCombos&&!e?cdxT("Aucun combo public pour ce jeu."):cdxT("Aucun personnage trouvé.")}</div>`,hydratePortraits()}function C(){if(!a("personTitle")){if(window.CDX_ADMIN&&isAtelier())renderAtelierDash();return}U(),renderDnaFilter(),a("personTitle").textContent=charLabel(o.char),a("personPortrait").innerHTML=portrait(o.game,o.char,"lg"),a("personGame").textContent=b[o.game].name;const e=q(o.game,o.char),t=pe();const guest=(!o.guestVideo||t.some(n=>te(n.video)===o.guestVideo))?"":`<article class="combo" data-guest-video="${l(o.guestVideo)}"><div class="row between"><h3>${cdxT("Combo vidéo")}</h3></div><div class="combo-video">${leDock("https://www.youtube.com/watch?v="+o.guestVideo)}</div><div class="buttons" style="margin-top:10px"><button class="primary" data-keep-guest>${cdxT("Ajouter à ComboDex")}</button></div></article>`;if(a("combosHeading").textContent=e.length?`${cdxT("Combos")} (${e.length})`:cdxT("Combos"),a("personCombos").innerHTML=guest+(function(){if(!t.length)return e.length?`<div class="empty">${cdxT("Aucun favori pour ce personnage.")}</div>`:guest?"":`<div class="empty">${cdxT("Aucun combo pour {0} pour l’instant. Crée-en un ou importe-le : il restera sur ComboDex pour tout le monde.").replace("{0}",l(charLabel(o.char)))}</div>`;const folders=[["write",cdxT("Combo écrit")],["video",cdxT("Combo vidéo")],["replay",cdxT("Replay Analyzer")]];return folders.map(([id,title])=>{const list=t.filter(c=>comboFolder(c)===id);return `<details class="combo-folder"${list.length?" open":""}><summary>${l(title)} <span class="muted">(${list.length})</span></summary>${list.length?list.map($t).join(""):`<div class="empty">${cdxT("Aucun combo dans ce dossier.")}</div>`}</details>`}).join("")})(),renderPersonDock(),hydrateXVideos(a("personCombos")),ee(),qe(),Ee(),oe(),isAtelier()&&renderAtelierDash(),o.focusId){const n=document.querySelector(`[data-combo="${CSS.escape(o.focusId)}"]`);o.focusId=null,n&&(n.scrollIntoView({behavior:"smooth",block:"center"}),n.classList.add("flash"),setTimeout(()=>n.classList.remove("flash"),1600))}}function qe(){const e=new Set(pe().map(s=>s.id));for(const s of o.selected)e.has(s)||o.selected.delete(s);const t=o.selected.size,n=a("bulkActions");if(n.classList.toggle("hidden",!t),!t){n.innerHTML="";return}n.innerHTML=`<div class="row between"><strong>${y(t,"combo")} coché${t>1?"s":""}</strong>
+          <span class="tile-name">${l(charLabel(r.name))}</span>${r.orphan?`<span class="orphan-tag" title="${l(cdxT("Personnage absent du roster actuel"))}">${cdxT("hors roster")}</span>`:""}</button>`).join("")||`<div class="empty">${o.onlyWithCombos&&!e?cdxT("Aucun combo public pour ce jeu."):cdxT("Aucun personnage trouvé.")}</div>`,hydratePortraits()}function C(){if(!a("personTitle"))return;U(),renderDnaFilter(),a("personTitle").textContent=charLabel(o.char),a("personPortrait").innerHTML=portrait(o.game,o.char,"lg"),a("personGame").textContent=b[o.game].name;const e=q(o.game,o.char),t=pe();const guest=(!o.guestVideo||t.some(n=>te(n.video)===o.guestVideo))?"":`<article class="combo" data-guest-video="${l(o.guestVideo)}"><div class="row between"><h3>${cdxT("Combo vidéo")}</h3></div><div class="combo-video">${leDock("https://www.youtube.com/watch?v="+o.guestVideo)}</div><div class="buttons" style="margin-top:10px"><button class="primary" data-keep-guest>${cdxT("Ajouter à ComboDex")}</button></div></article>`;if(a("combosHeading").textContent=e.length?`${cdxT("Combos")} (${e.length})`:cdxT("Combos"),a("personCombos").innerHTML=guest+(function(){if(!t.length)return e.length?`<div class="empty">${cdxT("Aucun favori pour ce personnage.")}</div>`:guest?"":`<div class="empty">${cdxT("Aucun combo pour {0} pour l’instant. Crée-en un ou importe-le : il restera sur ComboDex pour tout le monde.").replace("{0}",l(charLabel(o.char)))}</div>`;const folders=[["write",cdxT("Combo écrit")],["video",cdxT("Combo vidéo")],["replay",cdxT("Replay Analyzer")]];return folders.map(([id,title])=>{const list=t.filter(c=>comboFolder(c)===id);return `<details class="combo-folder"${list.length?" open":""}><summary>${l(title)} <span class="muted">(${list.length})</span></summary>${list.length?list.map($t).join(""):`<div class="empty">${cdxT("Aucun combo dans ce dossier.")}</div>`}</details>`}).join("")})(),renderPersonDock(),hydrateXVideos(a("personCombos")),ee(),qe(),Ee(),oe(),!window.CDX_ADMIN&&isAtelier()&&renderAtelierDash(),o.focusId){const n=document.querySelector(`[data-combo="${CSS.escape(o.focusId)}"]`);o.focusId=null,n&&(n.scrollIntoView({behavior:"smooth",block:"center"}),n.classList.add("flash"),setTimeout(()=>n.classList.remove("flash"),1600))}}function qe(){const e=new Set(pe().map(s=>s.id));for(const s of o.selected)e.has(s)||o.selected.delete(s);const t=o.selected.size,n=a("bulkActions");if(n.classList.toggle("hidden",!t),!t){n.innerHTML="";return}n.innerHTML=`<div class="row between"><strong>${y(t,"combo")} coché${t>1?"s":""}</strong>
     <div class="buttons"><button class="tiny" id="selectAllCombos">${cdxT("Tout cocher")}</button><button class="tiny" id="clearSelection">${cdxT("Décocher")}</button></div></div>
     <div class="row">${isAtelier()?`<select id="moveGame" aria-label="Jeu de destination"></select><select id="moveChar" aria-label="Personnage de destination"></select>
     <button id="moveSelected" class="primary">${cdxT("Déplacer")}</button>`:""}<button id="reportSelected">${cdxT("Signaler")}</button>${isAtelier()?`<button id="wipeSelected" class="danger">${cdxT("Supprimer")}</button>`:""}</div>
@@ -3126,7 +3159,7 @@ function homeFaces(){
 }
 try{homeFaces()}catch{}
 try{if(!window.CDX_ADMIN){j(o.tab);syncLogos()}}catch(err){console.warn("ComboDex boot",err);try{j("home")}catch{}}
-window.addEventListener("cdx-lang",()=>{try{Q()}catch{}try{if(o.draft)st()}catch{}try{if(o.tab==="compare")Y()}catch{}try{if(o.tab==="frames")renderFrames()}catch{}try{if(o.tab==="replay")raRender()}catch{}try{if(o.tab==="knowledge"&&window.CDX_KC)CDX_KC.render()}catch{}try{padStatus()}catch{}});window.addEventListener("hashchange",()=>{const key=()=>o.tab+"|"+o.kcView+"|"+o.game+"|"+o.char+"|"+(o.watchId||"")+"|"+(o.guestVideo||"");const prev=key();cdxApplyHash();if(prev===key())return;j(o.tab)});
+window.addEventListener("cdx-lang",()=>{try{Q()}catch{}try{if(o.draft)st()}catch{}try{if(o.tab==="compare")Y()}catch{}try{if(o.tab==="frames")renderFrames()}catch{}try{if(o.tab==="replay")raRender()}catch{}try{if(o.tab==="knowledge"&&window.CDX_KC)CDX_KC.render()}catch{}try{padStatus()}catch{}});window.addEventListener("hashchange",()=>{if(window.CDX_ADMIN)return;const key=()=>o.tab+"|"+o.kcView+"|"+o.game+"|"+o.char+"|"+(o.watchId||"")+"|"+(o.guestVideo||"");const prev=key();cdxApplyHash();if(prev===key())return;j(o.tab)});
 V("knowledge",()=>{try{window.CDX_KC&&CDX_KC.render()}catch(err){console.warn("Knowledge Center",err)}});
 try{if(o.tab==="knowledge")j("knowledge")}catch{}
 function cdxCookiePath(){const p=location.pathname.replace(/[^/]+$/,"")||"/";return p.endsWith("/")?p:p+"/"}
