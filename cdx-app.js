@@ -594,7 +594,7 @@ function dirPadHtml(e){
 function palTokBtn(s,e,attr){return `<span class="pal-tok" data-pal="${l(s)}"><button type="button" ${attr} class="${tokCls(s,e).trim()}" data-tip="${l(tokTip(s,e))}">${l(s)}</button></span>`}
 const ATELIER_K="cdx-atelier";
 const ATELIER_S="r2";
-const ATELIER_H="0f8692d36f539db737abca7de9bb1ae569db8b914d55211252061c52e5fe60e7";
+const ATELIER_H="810086e3fdf240ad45e1c0ccf8a7710a211729ae42e682afc76f780f7af18f3a";
 let atelierLive=!1;
 function isAtelier(){return atelierLive}
 function atelierMark(){
@@ -612,7 +612,8 @@ function bindAtelierLogin(after){
   form.dataset.bound="1";
   form.onsubmit=async e=>{
     e.preventDefault();
-    const h=await atelierHash((a("atelierKey")||{}).value||"");
+    let h="";
+    try{h=await atelierHash((a("atelierKey")||{}).value||"")}catch{g(cdxT("atelier.bad"),!0);return}
     if(h!==ATELIER_H){g(cdxT("atelier.bad"),!0);return}
     atelierLive=!0;
     try{localStorage.setItem(ATELIER_K,ATELIER_S)}catch{}
