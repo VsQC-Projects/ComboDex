@@ -49,10 +49,10 @@ fr:{
 ,"atelier.tree.replay":"Replay Analyzer"
 ,"atelier.tree.site":"Site"
 ,"atelier.tree.refs":"Références"
-,"atelier.refs.lead":"Plafonds et espacement des objets décoratifs. Les plafonds peuvent monter sans afficher plus d’objets tout de suite : le nombre actuel reste 4 par jeu tant que tu ne le changes pas. 0 au pied de page ou au logo = selon l’espace, sans plafond numérique."
+,"atelier.refs.lead":"Les jauges commandent vraiment le calque ComboDex. 0 au pied ou au logo = aucun objet dans cette zone. Un nombre = essayer d’y placer autant d’objets. L’espacement est la distance supplémentaire entre deux objets, de 0 à 100 px."
 ,"atelier.refs.global":"Réglages communs"
 ,"atelier.refs.game":"Par jeu"
-,"atelier.refs.game.hint":"Chaque jeu a ses propres quantités. Un nouveau jeu ajouté à ComboDex apparaît ici tout seul, avec les valeurs communes."
+,"atelier.refs.game.hint":"Chaque jeu a ses propres quantités, zones et espacement. Un nouveau jeu reprend d’abord les réglages communs."
 ,"atelier.refs.pick":"Jeu"
 ,"atelier.refs.perGame":"Par jeu (hors Personnages)"
 ,"atelier.refs.perGame.hint":"Nombre max d’objets de ce jeu sur Frames, Comparer, Replay, Créer, Importer, Knowledge."
@@ -61,13 +61,13 @@ fr:{
 ,"atelier.refs.peopleMobile":"Personnages · mobile"
 ,"atelier.refs.peopleMobile.hint":"Onglet Personnages, écran étroit."
 ,"atelier.refs.footerPc":"Pied de page · PC"
-,"atelier.refs.footerPc.hint":"0 = selon l’espace. Un nombre limite les objets dans le pied."
+,"atelier.refs.footerPc.hint":"0 = aucun objet dans le pied. Un nombre place jusqu’à N objets dans le pied de page."
 ,"atelier.refs.footerMobile":"Pied de page · mobile"
-,"atelier.refs.footerMobile.hint":"0 = selon l’espace. Un nombre limite les objets dans le pied."
+,"atelier.refs.footerMobile.hint":"0 = aucun objet dans le pied. Un nombre place jusqu’à N objets dans le pied, sur mobile."
 ,"atelier.refs.logoPc":"Zone du logo"
-,"atelier.refs.logoPc.hint":"0 = selon l’espace autour du logo ComboDex."
+,"atelier.refs.logoPc.hint":"0 = aucun objet près du logo. Un nombre place jusqu’à N objets autour du logo ComboDex."
 ,"atelier.refs.gap":"Espacement"
-,"atelier.refs.gap.hint":"Distance minimale entre deux objets, sans chevauchement. Plus bas = plus serré. La taille des objets ne change pas."
+,"atelier.refs.gap.hint":"Pixels supplémentaires entre deux objets. 0 = collés sans chevauchement. 30 = ~30 px. 100 = nettement plus loin si l’espace le permet."
 ,"atelier.refs.tries":"Essais de placement"
 ,"atelier.refs.tries.hint":"Plus d’essais : moins d’emplacements libres refusés. N’affiche pas plus d’objets à lui seul."
 ,"atelier.refs.space":"espace"
@@ -75,10 +75,14 @@ fr:{
 ,"atelier.refs.resetGame":"Réinitialiser ce jeu"
 ,"atelier.refs.reset.ok":"Références : valeurs par défaut."
 ,"atelier.refs.resetGame.ok":"Ce jeu reprend les réglages communs."
-,"atelier.refs.custom":"Ce jeu a des quantités à lui. Les autres jeux ne bougent pas."
+,"atelier.refs.custom":"Ce jeu a des réglages à lui. Les autres jeux ne bougent pas."
 ,"atelier.refs.inherit":"Ce jeu suit encore les réglages communs."
 ,"atelier.refs.wait":"Le calque des références n’est pas encore chargé."
-,"atelier.refs.live":"{0} objet(s) visibles sur {1}."
+,"atelier.refs.live":"{0} objet(s) visibles / {1} prévus sur {2} · {3} dans le catalogue."
+,"atelier.refs.miss":"{0} non placé(s) : pas assez d’espace ou de références."
+,"atelier.refs.console":"Ouvre ComboDex (pas la console) pour voir le calque décoratif."
+,"atelier.refs.apply":"Appliquer"
+,"atelier.refs.apply.ok":"Références appliquées."
 ,"atelier.refs.catalog":"{0} dans le catalogue · {1} d’origine · {2} importé(s)."
 ,"atelier.refs.qty":"Quantité pour ce jeu"
 ,"atelier.refs.qty.hint":"Même plafond sur Personnages et les autres modules. Le catalogue du jeu reste la limite réelle."
@@ -191,6 +195,20 @@ fr:{
 ,"lab.tip.approve":"Atelier : approuver ce combo."
 ,"lab.tip.unset":"Atelier : retirer l’approbation."
 ,"lab.locked":"Approuvé par l’atelier. Seul l’atelier peut retirer l’approbation."
+,"x.sign.label":"X (Twitter) de l’auteur"
+,"x.sign.ph":"@PlayerName"
+,"x.sign.hint":"Facultatif. Identifiant déclaré, pas une preuve d’identité."
+,"x.sign.tip":"Profil X déclaré par l’auteur (non vérifié)"
+,"x.sign.bad":"Identifiant X invalide : lettres, chiffres ou _ , 1 à 15 caractères."
+,"ra.dock.draw":"Outils de dessin"
+,"ra.dock.reset":"Réinitialiser la disposition"
+,"ra.dock.reset.ok":"Fenêtres remises en place."
+,"ra.dur.frames":"Frames"
+,"ra.dur.seconds":"Secondes"
+,"ra.fps":"Framerate"
+,"ra.fps.hint":"Manuel : la vidéo n’expose pas le framerate."
+,"ra.analyze":"Analyse de combo"
+,"ra.ana.ink":"dessin(s)"
 ,"Vidéo YouTube ou X (facultatif)":"Vidéo YouTube ou X (facultatif)"
 ,"atelier.out":"Atelier fermé."
 ,"atelier.wipe":"Le combo disparaît de ComboDex pour tout le monde. Entre la clef d’atelier pour confirmer."
@@ -385,10 +403,10 @@ en:{
 "atelier.tree.replay":"Replay Analyzer",
 "atelier.tree.site":"Site",
 "atelier.tree.refs":"References",
-"atelier.refs.lead":"Quantity caps and spacing for decorative objects. Caps can rise without showing more objects right away: the current count stays 4 per game until you change it. 0 in the footer or logo zone = fill available space, no numeric cap.",
+"atelier.refs.lead":"These sliders drive the ComboDex layer. 0 in the footer or logo zone = no objects there. A number tries to place that many objects in the zone. Spacing is extra distance between objects, from 0 to 100 px.",
 "atelier.refs.global":"Shared settings",
 "atelier.refs.game":"Per game",
-"atelier.refs.game.hint":"Each game has its own quantities. A new game added to ComboDex shows up here on its own, with the shared defaults.",
+"atelier.refs.game.hint":"Each game has its own quantities, zones and spacing. A new game starts from the shared defaults.",
 "atelier.refs.pick":"Game",
 "atelier.refs.perGame":"Per game (except Characters)",
 "atelier.refs.perGame.hint":"Max objects from this game on Frames, Compare, Replay, Create, Import, Knowledge.",
@@ -397,13 +415,13 @@ en:{
 "atelier.refs.peopleMobile":"Characters · mobile",
 "atelier.refs.peopleMobile.hint":"Characters tab, narrow screen.",
 "atelier.refs.footerPc":"Footer · desktop",
-"atelier.refs.footerPc.hint":"0 = fill available space. A number caps objects in the footer.",
+"atelier.refs.footerPc.hint":"0 = no objects in the footer. A number places up to N objects in the footer.",
 "atelier.refs.footerMobile":"Footer · mobile",
-"atelier.refs.footerMobile.hint":"0 = fill available space. A number caps objects in the footer.",
+"atelier.refs.footerMobile.hint":"0 = no objects in the footer. A number places up to N objects in the footer on mobile.",
 "atelier.refs.logoPc":"Logo zone",
-"atelier.refs.logoPc.hint":"0 = fill available space around the ComboDex logo.",
+"atelier.refs.logoPc.hint":"0 = no objects near the logo. A number places up to N objects around the ComboDex logo.",
 "atelier.refs.gap":"Spacing",
-"atelier.refs.gap.hint":"Minimum distance between two objects, without overlap. Lower = tighter. Object size does not change.",
+"atelier.refs.gap.hint":"Extra pixels between objects. 0 = adjacent without overlap. 30 ≈ 30 px. 100 = clearly farther when space allows.",
 "atelier.refs.tries":"Placement attempts",
 "atelier.refs.tries.hint":"More attempts: fewer free spots refused. Does not add objects by itself.",
 "atelier.refs.space":"space",
@@ -411,10 +429,14 @@ en:{
 "atelier.refs.resetGame":"Reset this game",
 "atelier.refs.reset.ok":"References: default values.",
 "atelier.refs.resetGame.ok":"This game follows the shared settings again.",
-"atelier.refs.custom":"This game has its own quantities. Other games are unchanged.",
+"atelier.refs.custom":"This game has its own settings. Other games are unchanged.",
 "atelier.refs.inherit":"This game still follows the shared settings.",
 "atelier.refs.wait":"The references layer is not loaded yet.",
-"atelier.refs.live":"{0} object(s) visible on {1}.",
+"atelier.refs.live":"{0} object(s) visible / {1} planned on {2} · {3} in the catalog.",
+"atelier.refs.miss":"{0} could not be placed: not enough space or references.",
+"atelier.refs.console":"Open ComboDex (not the console) to see the decorative layer.",
+"atelier.refs.apply":"Apply",
+"atelier.refs.apply.ok":"References applied.",
 "atelier.refs.catalog":"{0} in the catalog · {1} built-in · {2} imported.",
 "atelier.refs.qty":"Quantity for this game",
 "atelier.refs.qty.hint":"Same cap on Characters and the other modules. The game catalog is still the real limit.",
@@ -613,6 +635,20 @@ en:{
 "lab.tip.approve":"Workshop: approve this combo.",
 "lab.tip.unset":"Workshop: remove the approval.",
 "lab.locked":"Approved by the workshop. Only the workshop can remove the approval.",
+"x.sign.label":"Author’s X (Twitter)",
+"x.sign.ph":"@PlayerName",
+"x.sign.hint":"Optional. A declared handle, not a proof of identity.",
+"x.sign.tip":"X profile declared by the author (unverified)",
+"x.sign.bad":"Invalid X handle: letters, digits or _, 1 to 15 characters.",
+"ra.dock.draw":"Drawing tools",
+"ra.dock.reset":"Reset layout",
+"ra.dock.reset.ok":"Windows reset.",
+"ra.dur.frames":"Frames",
+"ra.dur.seconds":"Seconds",
+"ra.fps":"Framerate",
+"ra.fps.hint":"Manual: the video does not expose its framerate.",
+"ra.analyze":"Combo analysis",
+"ra.ana.ink":"drawing(s)",
 "Vérifié et testé en lab":"Verified and lab-tested",
 "Ajouter aux favoris":"Add to favorites",
 "Notes de lab (facultatif)":"Lab notes (optional)",
@@ -829,10 +865,10 @@ es:{
 "atelier.tree.replay":"Replay Analyzer",
 "atelier.tree.site":"Sitio",
 "atelier.tree.refs":"Referencias",
-"atelier.refs.lead":"Límites de cantidad y espacio de los objetos decorativos. Los techos pueden subir sin mostrar más objetos de inmediato: la cantidad actual sigue en 4 por juego hasta que la cambies. 0 en el pie o el logo = según el espacio, sin tope numérico.",
+"atelier.refs.lead":"Estos controles mueven de verdad la capa de ComboDex. 0 en el pie o el logo = ningún objeto ahí. Un número intenta colocar tantos objetos en la zona. El espaciado es la distancia extra entre objetos, de 0 a 100 px.",
 "atelier.refs.global":"Ajustes comunes",
 "atelier.refs.game":"Por juego",
-"atelier.refs.game.hint":"Cada juego tiene sus propias cantidades. Un juego nuevo en ComboDex aparece aquí solo, con los valores comunes.",
+"atelier.refs.game.hint":"Cada juego tiene sus propias cantidades, zonas y espaciado. Un juego nuevo parte de los ajustes comunes.",
 "atelier.refs.pick":"Juego",
 "atelier.refs.perGame":"Por juego (salvo Personajes)",
 "atelier.refs.perGame.hint":"Máximo de objetos de este juego en Frames, Comparar, Replay, Crear, Importar, Knowledge.",
@@ -841,13 +877,13 @@ es:{
 "atelier.refs.peopleMobile":"Personajes · móvil",
 "atelier.refs.peopleMobile.hint":"Pestaña Personajes, pantalla estrecha.",
 "atelier.refs.footerPc":"Pie de página · PC",
-"atelier.refs.footerPc.hint":"0 = según el espacio. Un número limita los objetos del pie.",
+"atelier.refs.footerPc.hint":"0 = ningún objeto en el pie. Un número coloca hasta N objetos en el pie.",
 "atelier.refs.footerMobile":"Pie de página · móvil",
-"atelier.refs.footerMobile.hint":"0 = según el espacio. Un número limita los objetos del pie.",
+"atelier.refs.footerMobile.hint":"0 = ningún objeto en el pie. Un número coloca hasta N objetos en el pie, en móvil.",
 "atelier.refs.logoPc":"Zona del logo",
-"atelier.refs.logoPc.hint":"0 = según el espacio alrededor del logo ComboDex.",
+"atelier.refs.logoPc.hint":"0 = ningún objeto junto al logo. Un número coloca hasta N objetos alrededor del logo ComboDex.",
 "atelier.refs.gap":"Espaciado",
-"atelier.refs.gap.hint":"Distancia mínima entre dos objetos, sin solaparse. Más bajo = más juntos. El tamaño no cambia.",
+"atelier.refs.gap.hint":"Píxeles extra entre objetos. 0 = juntos sin solaparse. 30 ≈ 30 px. 100 = claramente más lejos si hay espacio.",
 "atelier.refs.tries":"Intentos de colocación",
 "atelier.refs.tries.hint":"Más intentos: menos huecos libres rechazados. No añade objetos por sí solo.",
 "atelier.refs.space":"espacio",
@@ -855,10 +891,14 @@ es:{
 "atelier.refs.resetGame":"Restablecer este juego",
 "atelier.refs.reset.ok":"Referencias: valores por defecto.",
 "atelier.refs.resetGame.ok":"Este juego vuelve a los ajustes comunes.",
-"atelier.refs.custom":"Este juego tiene cantidades propias. Los demás no cambian.",
+"atelier.refs.custom":"Este juego tiene ajustes propios. Los demás no cambian.",
 "atelier.refs.inherit":"Este juego sigue los ajustes comunes.",
 "atelier.refs.wait":"La capa de referencias aún no está cargada.",
-"atelier.refs.live":"{0} objeto(s) visibles en {1}.",
+"atelier.refs.live":"{0} objeto(s) visibles / {1} previstos en {2} · {3} en el catálogo.",
+"atelier.refs.miss":"{0} no colocado(s): no hay espacio o referencias suficientes.",
+"atelier.refs.console":"Abre ComboDex (no la consola) para ver la capa decorativa.",
+"atelier.refs.apply":"Aplicar",
+"atelier.refs.apply.ok":"Referencias aplicadas.",
 "atelier.refs.catalog":"{0} en el catálogo · {1} de origen · {2} importado(s).",
 "atelier.refs.qty":"Cantidad para este juego",
 "atelier.refs.qty.hint":"El mismo tope en Personajes y los demás módulos. El catálogo del juego sigue siendo el límite real.",
@@ -1057,6 +1097,20 @@ es:{
 "lab.tip.approve":"Taller: aprobar este combo.",
 "lab.tip.unset":"Taller: retirar la aprobación.",
 "lab.locked":"Aprobado por el taller. Solo el taller puede retirar la aprobación.",
+"x.sign.label":"X (Twitter) del autor",
+"x.sign.ph":"@PlayerName",
+"x.sign.hint":"Opcional. Identificador declarado, no una prueba de identidad.",
+"x.sign.tip":"Perfil X declarado por el autor (no verificado)",
+"x.sign.bad":"Identificador X no válido: letras, números o _, de 1 a 15 caracteres.",
+"ra.dock.draw":"Herramientas de dibujo",
+"ra.dock.reset":"Restablecer la disposición",
+"ra.dock.reset.ok":"Ventanas restablecidas.",
+"ra.dur.frames":"Frames",
+"ra.dur.seconds":"Segundos",
+"ra.fps":"Framerate",
+"ra.fps.hint":"Manual: el vídeo no expone el framerate.",
+"ra.analyze":"Análisis de combo",
+"ra.ana.ink":"dibujo(s)",
 "Vérifié et testé en lab":"Verificado y probado en lab",
 "Ajouter aux favoris":"Añadir a favoritos",
 "Notes de lab (facultatif)":"Notas de lab (opcional)",

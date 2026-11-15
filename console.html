@@ -12,13 +12,13 @@
     <script>
 (function(){var p=location.pathname;if(!p.endsWith("/")&&!/\.html$/i.test(p))history.replaceState(null,"",p+"/"+location.search+location.hash);})();
 </script>
-    <script src="cdx-i18n.js?v=20261115r10"></script>
+    <script src="cdx-i18n.js?v=20261115r11"></script>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%235b456d'/%3E%3Ctext x='16' y='22' font-size='16' font-family='sans-serif' font-weight='700' text-anchor='middle' fill='%23f5f3f8'%3ECD%3C/text%3E%3C/svg%3E" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Audiowide&family=Black+Ops+One&family=Bungee&family=Press+Start+2P&family=Orbitron:wght@700&family=Russo+One&family=Monoton&family=Silkscreen&family=Teko:wght@600&display=swap" />
-    <link rel="stylesheet" href="cdx.css?v=20261115r5" />
-    <link rel="stylesheet" href="cdx-theme.css?v=20261115r5" />
+    <link rel="stylesheet" href="cdx.css?v=20261115r6" />
+    <link rel="stylesheet" href="cdx-theme.css?v=20261115r6" />
     <link rel="stylesheet" href="cdx-admin.css?v=20261115r12" />
     <link rel="stylesheet" href="pad/gpv/overlay.css?v=20261111e13" />
     <script>
@@ -26,9 +26,9 @@
 </script>
     <script src="cdx-ft.js?v=20261111e13"></script>
     <script src="cdx-portraits.js"></script>
-    <script defer src="cdx-app.js?v=20261115r15"></script>
+    <script defer src="cdx-app.js?v=20261115r16"></script>
     <script defer src="cdx-objets.js?v=20261111e13"></script>
-    <script defer src="cdx-refs.js?v=20261115r6"></script>
+    <script defer src="cdx-refs.js?v=20261115r11"></script>
   </head>
   <body class="cdx-admin">
     <main id="adminGate" class="admin-gate" aria-label="ComboDex Console">
@@ -271,6 +271,12 @@
           <div class="ra-layout">
             <div class="ra-left">
             <div class="panel ra-theater-panel">
+              <div class="ra-dock-bar">
+                <button type="button" class="tiny" id="raOpenPlay" data-i18n="Contrôles de lecture">Contrôles de lecture</button>
+                <button type="button" class="tiny" id="raOpenDraw" data-i18n="ra.dock.draw">Outils de dessin</button>
+                <label class="ra-tog"><input type="checkbox" id="raAnalyzeToggle" checked /> <span data-i18n="ra.analyze">Analyse de combo</span></label>
+                <button type="button" class="tiny" id="raResetLayout" data-i18n="ra.dock.reset">Réinitialiser la disposition</button>
+              </div>
               <div id="raStage" class="ra-stage" data-tool="play">
                 <div id="raPlayerHost" class="ra-player-host"></div>
                 <canvas id="raInk" class="ra-ink" aria-hidden="true"></canvas>
@@ -278,86 +284,122 @@
                 <div id="raLive" class="ra-live" aria-hidden="true"></div>
                 <div id="raEmpty" class="empty ra-empty" data-i18n="x.need">Colle un lien YouTube ou X.</div>
                 <div id="raHud" class="ra-hud">
-                  <div class="ra-hotkeys" data-i18n="ra.keys">ESPACE : lecture — ← → : image — R : replay — H : HUD — M : marquer</div>
-                  <div class="ra-bars">
-                    <div class="ra-bar-side">
-                      <b id="raHudChar">—</b>
-                      <span id="raHudGame" class="muted small">—</span>
-                    </div>
-                    <div class="ra-bar-side ra-bar-right">
-                      <b id="raHudCombo">—</b>
-                    </div>
-                  </div>
-                  <div class="ra-playbox">
-                    <div class="ra-playbox-h" data-i18n="Contrôles de lecture">Contrôles de lecture</div>
-                    <div class="buttons">
-                      <button type="button" id="raPlay" class="primary" data-i18n="▶ Lecture">▶ Lecture</button>
-                      <button type="button" id="raBackF" class="tiny" title="-1f" data-i18n="−1f">−1f</button>
-                      <button type="button" id="raFwdF" class="tiny" title="+1f" data-i18n="+1f">+1f</button>
-                      <button type="button" id="raBack" class="tiny" title="-1s">−1s</button>
-                      <button type="button" id="raFwd" class="tiny" title="+1s">+1s</button>
-                    </div>
-                    <label class="ra-rate-lab" for="raRate" data-i18n="Vitesse">Vitesse</label>
-                    <select id="raRate" class="compact" aria-label="Vitesse">
-                      <option value="0.25">0.25×</option>
-                      <option value="0.5">0.5×</option>
-                      <option value="0.75">0.75×</option>
-                      <option value="1" selected>1×</option>
-                      <option value="1.25">1.25×</option>
-                      <option value="1.5">1.5×</option>
-                    </select>
-                  </div>
-                  <div id="raSeq" class="seq ra-hud-seq"></div>
-                  <div class="ra-labbar">
-                    <div class="ra-lab-row">
-                      <div class="ra-tools">
-                        <button type="button" data-ra-tool="pen" data-i18n="Crayon" data-i18n-tip="ra.tool.pen">Crayon</button>
-                        <button type="button" data-ra-tool="text" data-i18n="Écrire" data-i18n-tip="ra.tool.text">Écrire</button>
-                        <button type="button" data-ra-tool="rect" data-i18n="Rectangle" data-i18n-tip="ra.tool.rect">▭</button>
-                        <button type="button" data-ra-tool="circle" data-i18n="Cercle" data-i18n-tip="ra.tool.circle">○</button>
-                        <button type="button" data-ra-tool="arrow" data-i18n="Flèche" data-i18n-tip="ra.tool.arrow">↗</button>
-                        <label class="ra-dur-lab" for="raInkDur" data-i18n="Durée du dessin">Durée du dessin</label>
-                        <select id="raInkDur" class="compact" aria-label="Durée du dessin" data-i18n-aria="Durée du dessin">
-                          <option value="1">1s</option>
-                          <option value="2">2s</option>
-                          <option value="3" selected>3s</option>
-                          <option value="5">5s</option>
-                          <option value="8">8s</option>
-                          <option value="0" data-i18n="reste du clip">reste du clip</option>
-                        </select>
-                        <button type="button" id="raUndo" data-i18n="Annuler">Annuler</button>
-                        <button type="button" id="raInkClear" data-i18n="Effacer le calque">Effacer le calque</button>
-                        <button type="button" id="raFlip" data-i18n="Retourner">Retourner</button>
+                  <div class="ra-hud-bottom">
+                    <div class="ra-hotkeys" data-i18n="ra.keys">ESPACE : lecture — ← → : image — R : replay — H : HUD — M : marquer</div>
+                    <div class="ra-bars">
+                      <div class="ra-bar-side">
+                        <b id="raHudChar">—</b>
+                        <span id="raHudGame" class="muted small">—</span>
                       </div>
-                      <div class="ra-colors">
-                        <label class="ra-color" title="Couleur">
-                          <input id="raColor" type="color" value="#f6e7a3" aria-label="Couleur" />
-                        </label>
-                      </div>
-                      <div class="ra-toggles">
-                        <label class="ra-tog"><input type="checkbox" id="raHudToggle" checked /> HUD</label>
-                        <label class="ra-tog"><input type="checkbox" id="raInkToggle" checked /> <span data-i18n="Calque">Calque</span></label>
-                        <label class="ra-tog"><input type="checkbox" id="raGhostToggle" checked /> <span data-i18n="Échos" data-i18n-tip="ra.echo.tip">Échos</span></label>
+                      <div class="ra-bar-side ra-bar-right">
+                        <b id="raHudCombo">—</b>
                       </div>
                     </div>
-                    <div class="ra-lab-row ra-lab-mark">
-                      <button type="button" id="raMark" class="primary tiny" data-i18n="Marquer ici">Marquer ici</button>
-                      <button type="button" id="raSaveEdit" class="primary tiny" data-i18n="Enregistrer">Enregistrer</button>
-                      <div class="ra-ruler">
-                        <button type="button" id="raPlayMini" class="ra-play-mini" aria-label="Lecture">▶</button>
-                        <span id="raTime" class="ra-clock">0:00.0</span>
-                        <div class="ra-seek-wrap">
-                          <div class="ra-seek-track" aria-hidden="true"><i id="raSeekFill"></i></div>
-                          <div id="raTicks" class="ra-ticks"></div>
-                          <input id="raSeek" type="range" min="0" max="1000" value="0" step="1" aria-label="Timeline" />
+                    <div id="raAnalyze" class="ra-analyze" hidden>
+                      <span id="raAnaFrame">F —</span>
+                      <span id="raAnaTime">0:00.0</span>
+                      <span id="raAnaRate">1×</span>
+                      <span id="raAnaInk">0</span>
+                    </div>
+                    <div id="raSeq" class="seq ra-hud-seq"></div>
+                    <div class="ra-labbar">
+                      <div class="ra-lab-row ra-lab-mark">
+                        <button type="button" id="raMark" class="primary tiny" data-i18n="Marquer ici">Marquer ici</button>
+                        <button type="button" id="raSaveEdit" class="primary tiny" data-i18n="Enregistrer">Enregistrer</button>
+                        <div class="ra-ruler">
+                          <button type="button" id="raPlayMini" class="ra-play-mini" aria-label="Lecture">▶</button>
+                          <span id="raTime" class="ra-clock">0:00.0</span>
+                          <span id="raFrame" class="ra-clock ra-frame">F —</span>
+                          <div class="ra-seek-wrap">
+                            <div class="ra-seek-track" aria-hidden="true"><i id="raSeekFill"></i></div>
+                            <div id="raTicks" class="ra-ticks"></div>
+                            <input id="raSeek" type="range" min="0" max="1000" value="0" step="1" aria-label="Timeline" />
+                          </div>
+                          <span id="raDur" class="ra-clock">0:00.0</span>
+                          <button type="button" id="raFull" class="ra-full" data-i18n-tip="ra.full" aria-label="Plein écran">⛶</button>
                         </div>
-                        <span id="raDur" class="ra-clock">0:00.0</span>
-                        <button type="button" id="raFull" class="ra-full" data-i18n-tip="ra.full" aria-label="Plein écran">⛶</button>
                       </div>
                     </div>
                   </div>
                 </div>
                 <input id="raText" class="ra-text hidden" maxlength="80" autocomplete="off" data-i18n-placeholder="Clique pour écrire…" placeholder="Clique pour écrire…" />
+              </div>
+            </div>
+            <div id="raDockPlay" class="ra-float" data-dock="play">
+              <div class="ra-float-h" data-ra-drag>
+                <b data-i18n="Contrôles de lecture">Contrôles de lecture</b>
+                <span class="ra-float-acts">
+                  <button type="button" class="tiny" data-ra-min title="Réduire">–</button>
+                  <button type="button" class="tiny" data-ra-close title="Fermer">×</button>
+                </span>
+              </div>
+              <div class="ra-float-body">
+                <div class="buttons">
+                  <button type="button" id="raPlay" class="primary" data-i18n="▶ Lecture">▶ Lecture</button>
+                  <button type="button" id="raBackF" class="tiny" title="-1f" data-i18n="−1f">−1f</button>
+                  <button type="button" id="raFwdF" class="tiny" title="+1f" data-i18n="+1f">+1f</button>
+                  <button type="button" id="raBack" class="tiny" title="-1s">−1s</button>
+                  <button type="button" id="raFwd" class="tiny" title="+1s">+1s</button>
+                </div>
+                <label class="ra-rate-lab" for="raRate" data-i18n="Vitesse">Vitesse</label>
+                <select id="raRate" class="compact" aria-label="Vitesse">
+                  <option value="0.25">0.25×</option>
+                  <option value="0.5">0.5×</option>
+                  <option value="0.75">0.75×</option>
+                  <option value="1" selected>1×</option>
+                  <option value="1.25">1.25×</option>
+                  <option value="1.5">1.5×</option>
+                </select>
+              </div>
+            </div>
+            <div id="raDockDraw" class="ra-float" data-dock="draw">
+              <div class="ra-float-h" data-ra-drag>
+                <b data-i18n="ra.dock.draw">Outils de dessin</b>
+                <span class="ra-float-acts">
+                  <button type="button" class="tiny" data-ra-min title="Réduire">–</button>
+                  <button type="button" class="tiny" data-ra-close title="Fermer">×</button>
+                </span>
+              </div>
+              <div class="ra-float-body">
+                <div class="ra-tools">
+                  <button type="button" data-ra-tool="pen" data-i18n="Crayon" data-i18n-tip="ra.tool.pen">Crayon</button>
+                  <button type="button" data-ra-tool="text" data-i18n="Écrire" data-i18n-tip="ra.tool.text">Écrire</button>
+                  <button type="button" data-ra-tool="rect" data-i18n="Rectangle" data-i18n-tip="ra.tool.rect">▭</button>
+                  <button type="button" data-ra-tool="circle" data-i18n="Cercle" data-i18n-tip="ra.tool.circle">○</button>
+                  <button type="button" data-ra-tool="arrow" data-i18n="Flèche" data-i18n-tip="ra.tool.arrow">↗</button>
+                </div>
+                <div class="ra-dur-row">
+                  <label class="ra-dur-lab" for="raInkUnit" data-i18n="Durée du dessin">Durée du dessin</label>
+                  <select id="raInkUnit" class="compact" aria-label="Unité de durée">
+                    <option value="f" data-i18n="ra.dur.frames">Frames</option>
+                    <option value="s" selected data-i18n="ra.dur.seconds">Secondes</option>
+                    <option value="rest" data-i18n="reste du clip">reste du clip</option>
+                  </select>
+                  <select id="raInkDur" class="compact" aria-label="Durée du dessin" data-i18n-aria="Durée du dessin"></select>
+                </div>
+                <div class="ra-dur-row">
+                  <label class="ra-dur-lab" for="raFps" data-i18n="ra.fps">Framerate</label>
+                  <select id="raFps" class="compact">
+                    <option value="60" selected>60</option>
+                    <option value="30">30</option>
+                  </select>
+                  <span class="muted small" id="raFpsHint" data-i18n="ra.fps.hint">Manuel : la vidéo n’expose pas le framerate.</span>
+                </div>
+                <div class="ra-lab-row">
+                  <button type="button" id="raUndo" data-i18n="Annuler">Annuler</button>
+                  <button type="button" id="raInkClear" data-i18n="Effacer le calque">Effacer le calque</button>
+                  <button type="button" id="raFlip" data-i18n="Retourner">Retourner</button>
+                  <div class="ra-colors">
+                    <label class="ra-color" title="Couleur">
+                      <input id="raColor" type="color" value="#f6e7a3" aria-label="Couleur" />
+                    </label>
+                  </div>
+                </div>
+                <div class="ra-toggles">
+                  <label class="ra-tog"><input type="checkbox" id="raHudToggle" checked /> HUD</label>
+                  <label class="ra-tog"><input type="checkbox" id="raInkToggle" checked /> <span data-i18n="Calque">Calque</span></label>
+                  <label class="ra-tog"><input type="checkbox" id="raGhostToggle" checked /> <span data-i18n="Échos" data-i18n-tip="ra.echo.tip">Échos</span></label>
+                </div>
               </div>
             </div>
             <div class="panel ra-pad-panel">
@@ -453,6 +495,7 @@
                   <div class="field span"><span class="label" data-i18n="Combo DNA">Combo DNA</span><div id="dnaWrap" class="chip-row"></div></div>
                   <div class="field"><label for="editDamage" data-i18n="Dégâts (facultatif)">Dégâts (facultatif)</label><input type="number" min="0" step="1" inputmode="numeric" id="editDamage" /></div>
                   <div class="field"><label for="editVideo" data-i18n="Vidéo YouTube ou X (facultatif)">Vidéo YouTube ou X (facultatif)</label><input type="url" id="editVideo" placeholder="https://www.youtube.com/watch?v=…  ·  https://x.com/compte/status/…" /></div>
+                  <div class="field"><label for="editAuthorX" data-i18n="x.sign.label">X (Twitter) de l’auteur</label><input id="editAuthorX" maxlength="16" autocomplete="off" spellcheck="false" placeholder="@PlayerName" data-i18n-placeholder="x.sign.ph" /><p class="muted small" data-i18n="x.sign.hint">Facultatif. Identifiant déclaré, pas une preuve d’identité.</p></div>
                 </details>
                 <details id="labDetails" class="span">
                   <summary data-i18n="Notes de lab (facultatif)">Notes de lab (facultatif)</summary>
