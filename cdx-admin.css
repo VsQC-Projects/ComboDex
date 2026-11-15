@@ -20,25 +20,38 @@ body.cdx-admin .wrap{
   max-width:none;
   width:100%;
 }
-body.cdx-admin.is-atelier{
+body.cdx-admin.is-atelier #atelierDash:not(.hidden){
   display:grid;
-  min-height:100vh;
+  position:fixed;
+  inset:0;
+  z-index:24;
+  width:100%;
+  height:100%;
+  min-width:0;
+  border:0;
+  background:#0f1219;
   grid-template-columns:260px minmax(0,1fr);
   grid-template-rows:64px minmax(0,1fr) 40px;
   grid-template-areas:"head head" "nav work" "foot foot";
 }
-body.cdx-admin.is-atelier #atelierDash:not(.hidden){display:contents}
 body.cdx-admin.is-atelier .wrap{
   display:none;
-  grid-area:work;
+  position:fixed;
+  z-index:25;
+  top:64px;
+  left:260px;
+  right:0;
+  bottom:40px;
   overflow:auto;
   padding:0 24px 32px;
+  background:#0f1219;
 }
 body.cdx-admin.is-atelier.admin-embed .wrap{display:block}
-body.cdx-admin.is-atelier.admin-embed .atelier-work{display:none}
+body.cdx-admin.is-atelier.admin-embed .atelier-work{visibility:hidden}
 body.cdx-admin.is-atelier .head,
 body.cdx-admin.is-atelier .wrap > .nav,
 body.cdx-admin.is-atelier .studio-footer{display:none}
+body.cdx-admin .toast{z-index:40}
 
 body.cdx-admin #adminGate.hidden{display:none !important}
 .admin-gate{
@@ -554,10 +567,18 @@ body.cdx-admin .home-font-row button[aria-pressed="true"]{
   border-color:#9b78c2;
 }
 @media(max-width:860px){
-  body.cdx-admin.is-atelier{
+  body.cdx-admin.is-atelier #atelierDash:not(.hidden){
     grid-template-columns:1fr;
     grid-template-rows:56px auto minmax(0,1fr) 36px;
     grid-template-areas:"head" "nav" "work" "foot";
+  }
+  body.cdx-admin.is-atelier .wrap{
+    top:auto;
+    left:0;
+    right:0;
+    bottom:36px;
+    height:auto;
+    max-height:calc(100vh - 92px);
   }
   body.cdx-admin .atelier-tree{
     display:flex;
