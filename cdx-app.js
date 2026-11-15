@@ -313,15 +313,34 @@ async function cdxWikipediaObjet(name,gameName){
   };
   return {en:lang("en"),es:lang("es"),hintFr:strip(extract),hintEn:"",hintEs:""};
 }
+function cdxCatalogObjet(fr){
+  const q=cdxFold(fr);
+  if(!q)return null;
+  const packs=[];
+  try{if(window.CDX_OBJETS)packs.push(window.CDX_OBJETS)}catch{}
+  try{if(typeof d==="object"&&d&&d.objets)packs.push(d.objets)}catch{}
+  for(const pack of packs){
+    for(const rows of Object.values(pack||{})){
+      for(const row of rows||[]){
+        if(!row||!row[1])continue;
+        if(cdxFold(row[1])===q)return {en:row[2]||"",es:row[3]||"",hintFr:row[4]||"",hintEn:row[5]||"",hintEs:row[6]||""};
+      }
+    }
+  }
+  return null;
+}
 async function cdxObjetMeta(fr,gameName){
   const name=String(fr||"").trim();
   const local=cdxLocalObjetNames(name);
-  let wiki=null;
-  try{
-    const [wd,wp]=await Promise.all([cdxWikidataObjet(name,gameName),cdxWikipediaObjet(name,gameName)]);
-    wiki=wd&&(wd.en||wd.es||wd.hintFr)?wd:wp;
-    if(wd&&wp)wiki={en:wd.en||wp.en,es:wd.es||wp.es,hintFr:wd.hintFr||wp.hintFr,hintEn:wd.hintEn||wp.hintEn,hintEs:wd.hintEs||wp.hintEs};
-  }catch{}
+  const cat=cdxCatalogObjet(name);
+  let wiki=cat&&(cat.en||cat.es||cat.hintFr)?cat:null;
+  if(!wiki){
+    try{
+      const [wd,wp]=await Promise.all([cdxWikidataObjet(name,gameName),cdxWikipediaObjet(name,gameName)]);
+      wiki=wd&&(wd.en||wd.es||wd.hintFr)?wd:wp;
+      if(wd&&wp)wiki={en:wd.en||wp.en,es:wd.es||wp.es,hintFr:wd.hintFr||wp.hintFr,hintEn:wd.hintEn||wp.hintEn,hintEs:wd.hintEs||wp.hintEs};
+    }catch{}
+  }
   const en=(wiki&&wiki.en||local.en||name).trim();
   const es=(wiki&&wiki.es||local.es||name).trim();
   const hints=cdxInventHints(name,en,es,gameName,wiki);
