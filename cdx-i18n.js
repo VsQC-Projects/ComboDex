@@ -120,7 +120,7 @@ fr:{
 ,"admin.task.edits":"Modifications proposées sur une fiche."
 ,"admin.task.refs":"PNG et objets décoratifs, liés au jeu."
 ,"admin.task.people":"Roster et fiches, par jeu."
-,"admin.task.keys":"Touches de la palette du jeu ouvert."
+,"admin.task.keys":"Choisis d’abord le jeu, puis tu vois ses commandes."
 ,"admin.keys.add":"Ajouter"
 ,"admin.keys.ph":"Nouvelle touche (ex. 5H)"
 ,"admin.keys.empty":"Aucune touche pour ce jeu."
@@ -456,7 +456,7 @@ en:{
 "admin.task.edits":"Proposed changes to a card.",
 "admin.task.refs":"PNGs and decorative objects, tied to a game.",
 "admin.task.people":"Roster and cards, per game.",
-"admin.task.keys":"Palette keys for the open game.",
+"admin.task.keys":"Pick the game first, then you see its commands.",
 "admin.keys.add":"Add",
 "admin.keys.ph":"New key (e.g. 5H)",
 "admin.keys.empty":"No keys for this game.",
@@ -900,7 +900,7 @@ es:{
 "admin.task.edits":"Cambios propuestos en una ficha.",
 "admin.task.refs":"PNG y objetos decorativos, ligados al juego.",
 "admin.task.people":"Roster y fichas, por juego.",
-"admin.task.keys":"Teclas de la paleta del juego abierto.",
+"admin.task.keys":"Elige primero el juego, luego ves sus comandos.",
 "admin.keys.add":"Añadir",
 "admin.keys.ph":"Tecla nueva (ej. 5H)",
 "admin.keys.empty":"Ninguna tecla para este juego.",

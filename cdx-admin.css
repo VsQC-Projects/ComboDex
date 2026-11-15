@@ -614,10 +614,17 @@ body.cdx-admin .admin-char .count{
   background:var(--admin-accent2);
   color:var(--admin-sel-ink);
 }
+body.cdx-admin .admin-game-row{
+  margin:0 0 16px;
+}
+body.cdx-admin .admin-game-row button{
+  min-height:40px;
+}
 body.cdx-admin .admin-keys{
   display:flex;
   flex-wrap:wrap;
   gap:8px;
+  margin-top:10px;
 }
 body.cdx-admin .admin-key{
   font-family:"Fira Code",ui-monospace,monospace;

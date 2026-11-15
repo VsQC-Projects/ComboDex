@@ -1026,9 +1026,12 @@ function atelierWorkHtml(pend,fonts){
     const game=b[o.game]?o.game:"umvc3";
     if(game!==o.game)o.game=game;
     const keys=Ae(o.game)||[];
-    const gameSel=`<label class="atelier-ref-row"><span>${l(cdxT("atelier.refs.pick"))}</span><select id="atelierPortGame">${De().map(([id,name])=>`<option value="${l(id)}"${id===o.game?" selected":""}>${l(name)}</option>`).join("")}</select></label>`;
+    const games=De().map(([id,name])=>{
+      const short=(b[id]&&b[id].short)||name;
+      return `<button type="button" data-keys-game="${l(id)}" aria-pressed="${id===o.game}" title="${l(name)}">${l(short)}</button>`;
+    }).join("");
     const chips=keys.map(k=>`<button type="button" class="chip admin-key" data-hide-key="${l(k)}" title="${l(cdxT("Retirer"))}">${l(k)}</button>`).join("");
-    return atelierTask(cdxT("atelier.tree.keys"),cdxT("admin.task.keys"),`<div class="admin-card">${gameSel}<p class="muted small">${l(b[o.game]?b[o.game].name:"")} · ${l(cdxT("pal.hide.hint"))}</p><div class="admin-keys chips" id="atelierKeys">${chips||`<p class="admin-empty">${l(cdxT("admin.keys.empty"))}</p>`}</div><div class="row" style="margin-top:14px"><input class="grow" id="atelierKeyAdd" maxlength="24" placeholder="${l(cdxT("admin.keys.ph"))}"><button type="button" class="primary" id="atelierKeyAddGo">${l(cdxT("admin.keys.add"))}</button></div></div>`);
+    return atelierTask(cdxT("atelier.tree.keys"),cdxT("admin.task.keys"),`<div class="admin-card"><p class="admin-kicker">${l(cdxT("atelier.refs.pick"))}</p><div class="home-font-row admin-game-row" id="atelierKeysGames" role="group">${games}</div><h4>${l(b[o.game]?b[o.game].name:o.game)}</h4><p class="muted small">${l(cdxT("pal.hide.hint"))}</p><div class="admin-keys chips" id="atelierKeys">${chips||`<p class="admin-empty">${l(cdxT("admin.keys.empty"))}</p>`}</div><div class="row" style="margin-top:14px"><input class="grow" id="atelierKeyAdd" maxlength="24" placeholder="${l(cdxT("admin.keys.ph"))}"><button type="button" class="primary" id="atelierKeyAddGo">${l(cdxT("admin.keys.add"))}</button></div></div>`);
   }
   if(atelierView==="replay")return atelierTask(cdxT("atelier.tree.replay"),cdxT("admin.replay.lead"),`<div class="admin-card"><a class="primary" href="${l(atelierSiteHref("#/replay"))}">${l(cdxT("admin.open.replay"))}</a></div>`);
   if(atelierView==="refs")return atelierRefsHtml();
@@ -1263,6 +1266,14 @@ function bindAtelierAssets(){
   };
   const pg=a("atelierPortGame");
   if(pg)pg.onchange=()=>{o.game=pg.value;o.char=(T(o.game)[0]||{}).name||o.char;renderAtelierDash()};
+  const gamesRow=a("atelierKeysGames");
+  if(gamesRow)gamesRow.onclick=e=>{
+    const btn=e.target.closest("[data-keys-game]");
+    if(!btn)return;
+    o.game=btn.dataset.keysGame;
+    o.char=(T(o.game)[0]||{}).name||o.char;
+    renderAtelierDash();
+  };
   const keysBox=a("atelierKeys");
   if(keysBox)keysBox.onclick=e=>{const b=e.target.closest("[data-hide-key]");if(!b)return;askHideKey(o.game,b.dataset.hideKey,()=>renderAtelierDash())};
   const addKey=()=>{
