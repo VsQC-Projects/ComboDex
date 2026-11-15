@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#0f1219" />
+    <meta name="robots" content="noindex,nofollow,noarchive" />
+    <meta name="description" content="ComboDex Console." />
+    <meta name="referrer" content="no-referrer" />
+    <title>ComboDex · Console</title>
+    <script>window.CDX_ADMIN=1;</script>
+    <script>
+(function(){var p=location.pathname;if(!p.endsWith("/")&&!/\.html$/i.test(p))history.replaceState(null,"",p+"/"+location.search+location.hash);})();
+</script>
+    <script src="cdx-i18n.js?v=20261115r5"></script>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%235b456d'/%3E%3Ctext x='16' y='22' font-size='16' font-family='sans-serif' font-weight='700' text-anchor='middle' fill='%23f5f3f8'%3ECD%3C/text%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="cdx.css?v=20261115r5" />
+    <link rel="stylesheet" href="cdx-admin.css?v=20261115r5" />
+    <script src="cdx-portraits.js"></script>
+    <script defer src="cdx-app.js?v=20261115r5"></script>
+    <script defer src="cdx-objets.js?v=20261111e13"></script>
+    <script defer src="cdx-refs.js?v=20261115r5"></script>
+  </head>
+  <body class="cdx-admin">
+    <main id="adminGate" class="admin-gate" aria-label="ComboDex Console">
+      <div class="admin-gate-card">
+        <span class="admin-mark" aria-hidden="true">CD</span>
+        <h1 data-i18n="admin.title">Console</h1>
+        <p class="lead" data-i18n="admin.gate.lead">Espace réservé à l’administrateur. Clef requise pour ouvrir la console ComboDex, importer des PNG et régler les références.</p>
+        <form id="atelierForm">
+          <input id="atelierKey" type="password" autocomplete="current-password" autofocus data-i18n-placeholder="Clef d'atelier" placeholder="Clef d'atelier">
+          <button type="submit" class="primary" data-i18n="Ouvrir">Ouvrir</button>
+        </form>
+        <a class="admin-gate-back" href="index.html" data-i18n="admin.back">Retour à ComboDex</a>
+        <p class="admin-gate-foot">CRÉÉ PAR VSQC</p>
+      </div>
+    </main>
+
+    <aside id="atelierDash" class="atelier-dash hidden" aria-label="ComboDex Console"></aside>
+
+    <nav id="nav" class="nav hidden" hidden aria-hidden="true"></nav>
+
+    <div id="toast" class="toast" aria-live="polite"></div>
+
+    <div id="modal" class="dialog hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="panel">
+        <div class="row between">
+          <h2 id="modalTitle" style="margin:0"></h2>
+          <button id="closeModal" aria-label="Fermer">Fermer ✕</button>
+        </div>
+        <hr />
+        <div id="modalBody"></div>
+      </div>
+    </div>
+  </body>
+</html>

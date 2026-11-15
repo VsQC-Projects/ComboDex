@@ -105,12 +105,29 @@ function gameQuota(cfg, g, tab, small) {
   }
   return ov.perGame != null ? ov.perGame : cfg.perGame;
 }
+function allRows() {
+  const out = {};
+  for (const [g, rows] of Object.entries(DATA)) out[g] = rows.slice();
+  let extra = {};
+  try { extra = (typeof d === "object" && d.objets) || {}; } catch {}
+  for (const [g, rows] of Object.entries(extra)) {
+    if (!Array.isArray(rows)) continue;
+    out[g] = out[g] || [];
+    for (const row of rows) {
+      if (!row || !row[0]) continue;
+      const i = out[g].findIndex(r => r[0] === row[0]);
+      if (i >= 0) out[g][i] = row; else out[g].push(row);
+    }
+  }
+  return out;
+}
 function rebuildPlan() {
   const cfg = readRefs();
   const small = innerWidth < 700;
+  const catalog = allRows();
   MODULES.forEach(m => (PLAN[m] = []));
   for (const m of MODULES)
-    for (const [g, rows] of Object.entries(DATA)) {
+    for (const [g, rows] of Object.entries(catalog)) {
       const cap = gameQuota(cfg, g, m, small);
       if (!cap || !rows || !rows.length) continue;
       const r = rng(hash(m + "/" + g));
@@ -124,7 +141,8 @@ function writeRefs(next) {
   try { if (typeof H === "object" && H) H.refs = next; } catch {}
   try { localStorage.setItem(UI_KEY, JSON.stringify(ui)); } catch {}
   rebuildPlan();
-  schedule(80);
+  if (layer) place();
+  else schedule(80);
 }
 rebuildPlan();
 window.CDX_REF_API = {
@@ -159,7 +177,15 @@ window.CDX_REF_API = {
     writeRefs(next);
     return next;
   },
-  reset() { writeRefs(window.CDX_REF_API.defaults()); return readRefs(); }
+  reset() { writeRefs(window.CDX_REF_API.defaults()); return readRefs(); },
+  catalog(g) { const rows = allRows()[g]; return (rows && rows.length) || 0; },
+  reload() { rebuildPlan(); if (layer) place(); else schedule(80); },
+  stats() {
+    const by = {};
+    placed.forEach(p => { by[p.it.g] = (by[p.it.g] || 0) + 1; });
+    const tab = activeTab();
+    return {tab, shown: placed.length, planned: (PLAN[tab] || []).length, by};
+  }
 };
 addEventListener("cdx-refs-cfg", () => { rebuildPlan(); schedule(80); });
 
@@ -286,15 +312,23 @@ function place() {
         const best = pickSpot(size, got);
         if (!best) break;
         got.push(best);
-        put(it, `objets/${it.g}/${it.id}-${p}.webp`, best[0], best[1], size);
+        put(it, (it.row && it.row[8]) || `objets/${it.g}/${it.id}-${p}.webp`, best[0], best[1], size);
       }
       continue;
     }
     const size = Math.round((small ? 30 : 40) + r() * (small ? 14 : 24));
     const spot = pickSpot(size, null);
-    if (spot) put(it, `objets/${it.g}/${it.id}.webp`, spot[0], spot[1], size);
+    if (spot) put(it, (it.row && it.row[8]) || `objets/${it.g}/${it.id}.webp`, spot[0], spot[1], size);
   }
   if (game && game.tab === tab) relink();
+  try {
+    const el = document.getElementById("atelierRefLive");
+    if (el && window.cdxT) {
+      const st = window.CDX_REF_API.stats();
+      const names = {people: "Personnages", frames: "Frames", compare: "Comparer", replay: "Replay", create: "Créer", import: "Importer", knowledge: "Knowledge", home: "Accueil"};
+      el.textContent = cdxT("atelier.refs.live").replace("{0}", st.shown).replace("{1}", names[st.tab] || st.tab);
+    }
+  } catch {}
 }
 
 let timer = 0;
@@ -429,6 +463,7 @@ function bindBrand() {
 }
 
 function init() {
+  if (window.CDX_ADMIN) return;
   setTheme(readUI().theme || document.documentElement.dataset.theme || "official");
   buildSwitch();
   layer = document.createElement("div");

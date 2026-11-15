@@ -26,7 +26,7 @@ fr:{
 ,"Vidéo importée":"Vidéo importée"
 ,"pal.hide.hint":"Atelier seulement. La touche disparaît sur cet appareil, comme les favoris."
 ,"pal.held":"Touche en main : {0}. Clique où la poser (Échap pour annuler)."
-,"atelier.body":"ComboDex ne voit pas de compte. Sept clics sur COMBODEX, puis la clef d’atelier. Seul l’administrateur peut supprimer un combo ou un contenu."
+,"atelier.body":"ComboDex ne voit pas de compte. Seul l’administrateur peut supprimer un combo ou un contenu, depuis la console."
 ,"atelier.ok":"Atelier ouvert pour cette session."
 ,"atelier.font":"Police du titre. Clique : tout le monde la voit, même après l’atelier."
 ,"atelier.font.ok":"Police gravée sur ComboDex pour tout le monde."
@@ -78,6 +78,70 @@ fr:{
 ,"atelier.refs.custom":"Ce jeu a des quantités à lui. Les autres jeux ne bougent pas."
 ,"atelier.refs.inherit":"Ce jeu suit encore les réglages communs."
 ,"atelier.refs.wait":"Le calque des références n’est pas encore chargé."
+,"atelier.refs.live":"{0} objet(s) visibles sur {1}."
+,"atelier.refs.catalog":"{0} dans le catalogue · {1} d’origine · {2} importé(s)."
+,"atelier.refs.qty":"Quantité pour ce jeu"
+,"atelier.refs.qty.hint":"Même plafond sur Personnages et les autres modules. Le catalogue du jeu reste la limite réelle."
+,"atelier.tree.edits":"Éditions"
+,"atelier.edit.ok":"Approuver"
+,"atelier.edit.no":"Refuser"
+,"atelier.edit.fields":"Champs : {0}"
+,"atelier.edit.none":"Aucune demande d’édition."
+,"admin.title":"Console"
+,"admin.only":"Administrateur uniquement"
+,"admin.badge":"Admin"
+,"admin.session":"Session administrateur"
+,"admin.gate.lead":"Espace réservé à l’administrateur. Clef requise pour ouvrir la console ComboDex, importer des PNG et régler les références."
+,"admin.back":"Retour à ComboDex"
+,"admin.site":"Ouvrir ComboDex"
+,"admin.out":"Fermer la session"
+,"admin.closed":"Console fermée."
+,"admin.overview":"Tableau de bord"
+,"admin.group.mod":"File d’attente"
+,"admin.group.mod.lead":"Signalements, publications, vidéos X, lab et éditions."
+,"admin.group.library":"Bibliothèque"
+,"admin.group.library.lead":"Images du site : références PNG par jeu et portraits des persos."
+,"admin.group.content":"Contenu"
+,"admin.group.content.lead":"Roster, palettes, import wiki et Replay Analyzer."
+,"admin.group.site":"Site"
+,"admin.group.site.lead":"Apparence publique et aperçu du wiki."
+,"admin.dash.lead":"Chaque carte est une tâche séparée. Rien n’est mélangé : tu ouvres une file, tu la traites, tu reviens ici."
+,"admin.combos":"Combos publics"
+,"admin.waiting":"En attente"
+,"admin.refs.lib":"Références"
+,"admin.refs.lead":"Importe un PNG pour un jeu, puis règle les quantités. L’objet apparaît sur ComboDex après enregistrement."
+,"admin.task.reports":"Combos signalés par les visiteurs."
+,"admin.task.review":"Imports en attente de publication."
+,"admin.task.lab":"Demandes de validation en lab."
+,"admin.task.edits":"Modifications proposées sur une fiche."
+,"admin.task.refs":"PNG et objets décoratifs, liés au jeu."
+,"admin.task.people":"Roster et fiches, par jeu."
+,"admin.task.keys":"Touches de la palette du jeu ouvert."
+,"admin.task.site":"Vue d’ensemble du wiki public."
+,"admin.import.ref":"Importer une référence"
+,"admin.import.ref.lead":"PNG, WebP ou JPEG. Toujours lié au jeu choisi ci-dessus."
+,"admin.import.file":"Fichier image"
+,"admin.import.name":"Nom"
+,"admin.import.hint":"Indice (chasse d’objet)"
+,"admin.import.save":"Enregistrer sur ComboDex"
+,"admin.import.ok":"Référence gravée : ComboDex peut l’afficher."
+,"admin.import.fail":"Enregistré ici, pas encore pour les autres."
+,"admin.import.need":"Choisis le jeu, un fichier, et un nom en français."
+,"admin.import.del":"Retirer"
+,"admin.import.del.confirm":"Retirer cette référence importée de ComboDex ?"
+,"admin.import.del.ok":"Référence retirée."
+,"admin.catalog":"Catalogue de ce jeu"
+,"admin.catalog.empty":"Aucun objet pour ce jeu pour l’instant."
+,"admin.wiki":"Importé"
+,"admin.portrait.lead":"Un PNG par personnage, pour la bibliothèque de portraits."
+,"admin.portrait.char":"Personnage"
+,"admin.portrait.save":"Enregistrer le portrait"
+,"admin.portrait.ok":"Portrait gravé pour ce personnage."
+,"admin.import.combos":"L’import de combos wiki se fait sur ComboDex, onglet Importer."
+,"admin.open.import":"Ouvrir l’import ComboDex"
+,"admin.open.replay":"Ouvrir Replay Analyzer"
+,"admin.open.people":"Ouvrir cette fiche sur ComboDex"
+,"admin.replay.lead":"Le Replay Analyzer reste sur ComboDex."
 ,"atelier.notif":"Notifications"
 ,"atelier.tree.reports":"Signalements"
 ,"atelier.tree.lab":"Demandes lab","cmp.char1":"Personnage 1","cmp.char2":"Personnage 2","atelier.tree.review":"Import à valider","review.pending":"En attente de validation","review.sent":"Envoyé. Visible pour tout le monde après validation dans l’atelier.","review.ok":"Publier","review.no":"Refuser et supprimer","review.confirmNo":"Refuser cet import ? Il sera supprimé."
@@ -275,7 +339,7 @@ en:{
 "Vidéo importée":"Video imported",
 "pal.hide.hint":"Workshop only. The key disappears on this device, like favorites.",
 "pal.held":"Holding {0}. Click where to drop it (Esc to cancel).",
-"atelier.body":"ComboDex has no accounts. Seven clicks on COMBODEX, then the workshop key. Only the administrator can delete a combo or site content.",
+"atelier.body":"ComboDex has no accounts. Only the administrator can delete a combo or site content, from the console.",
 "atelier.ok":"Workshop open for this session.",
 "atelier.font":"Title typeface. Click: everyone sees it, even after the workshop.",
 "atelier.font.ok":"Typeface saved on ComboDex for everyone.",
@@ -327,6 +391,70 @@ en:{
 "atelier.refs.custom":"This game has its own quantities. Other games are unchanged.",
 "atelier.refs.inherit":"This game still follows the shared settings.",
 "atelier.refs.wait":"The references layer is not loaded yet.",
+"atelier.refs.live":"{0} object(s) visible on {1}.",
+"atelier.refs.catalog":"{0} in the catalog · {1} built-in · {2} imported.",
+"atelier.refs.qty":"Quantity for this game",
+"atelier.refs.qty.hint":"Same cap on Characters and the other modules. The game catalog is still the real limit.",
+"atelier.tree.edits":"Edits",
+"atelier.edit.ok":"Approve",
+"atelier.edit.no":"Refuse",
+"atelier.edit.fields":"Fields: {0}",
+"atelier.edit.none":"No edit request.",
+"admin.title":"Console",
+"admin.only":"Administrator only",
+"admin.badge":"Admin",
+"admin.session":"Administrator session",
+"admin.gate.lead":"Reserved for the administrator. The key is required to open ComboDex Console, import PNGs and adjust references.",
+"admin.back":"Back to ComboDex",
+"admin.site":"Open ComboDex",
+"admin.out":"End session",
+"admin.closed":"Console closed.",
+"admin.overview":"Dashboard",
+"admin.group.mod":"Inbox",
+"admin.group.mod.lead":"Reports, publishes, X videos, lab and edits.",
+"admin.group.library":"Library",
+"admin.group.library.lead":"Site images: per-game PNG references and character portraits.",
+"admin.group.content":"Content",
+"admin.group.content.lead":"Roster, palettes, wiki import and Replay Analyzer.",
+"admin.group.site":"Site",
+"admin.group.site.lead":"Public look and wiki overview.",
+"admin.dash.lead":"Each card is a separate task. Nothing is mixed: open a queue, handle it, come back here.",
+"admin.combos":"Public combos",
+"admin.waiting":"Waiting",
+"admin.refs.lib":"References",
+"admin.refs.lead":"Import a PNG for a game, then set quantities. The object shows on ComboDex after saving.",
+"admin.task.reports":"Combos reported by visitors.",
+"admin.task.review":"Imports waiting to go public.",
+"admin.task.lab":"Lab verification requests.",
+"admin.task.edits":"Proposed changes to a card.",
+"admin.task.refs":"PNGs and decorative objects, tied to a game.",
+"admin.task.people":"Roster and cards, per game.",
+"admin.task.keys":"Palette keys for the open game.",
+"admin.task.site":"Overview of the public wiki.",
+"admin.import.ref":"Import a reference",
+"admin.import.ref.lead":"PNG, WebP or JPEG. Always tied to the game chosen above.",
+"admin.import.file":"Image file",
+"admin.import.name":"Name",
+"admin.import.hint":"Hint (object hunt)",
+"admin.import.save":"Save on ComboDex",
+"admin.import.ok":"Reference saved: ComboDex can show it.",
+"admin.import.fail":"Saved here, not yet for everyone.",
+"admin.import.need":"Pick the game, a file, and a French name.",
+"admin.import.del":"Remove",
+"admin.import.del.confirm":"Remove this imported reference from ComboDex?",
+"admin.import.del.ok":"Reference removed.",
+"admin.catalog":"Catalog for this game",
+"admin.catalog.empty":"No object for this game yet.",
+"admin.wiki":"Imported",
+"admin.portrait.lead":"One PNG per character, for the portrait library.",
+"admin.portrait.char":"Character",
+"admin.portrait.save":"Save portrait",
+"admin.portrait.ok":"Portrait saved for this character.",
+"admin.import.combos":"Wiki combo import stays on ComboDex, Import tab.",
+"admin.open.import":"Open ComboDex import",
+"admin.open.replay":"Open Replay Analyzer",
+"admin.open.people":"Open this card on ComboDex",
+"admin.replay.lead":"Replay Analyzer stays on ComboDex.",
 "atelier.notif":"Notifications",
 "atelier.tree.reports":"Reports",
 "atelier.tree.lab":"Lab requests","cmp.char1":"Character 1","cmp.char2":"Character 2","atelier.tree.review":"Import to review","review.pending":"Awaiting review","review.sent":"Sent. Visible to everyone after workshop review.","review.ok":"Publish","review.no":"Reject and delete","review.confirmNo":"Reject this import? It will be deleted.",
@@ -637,7 +765,7 @@ es:{
 "Vidéo importée":"Vídeo importado",
 "pal.hide.hint":"Solo el taller. La tecla desaparece en este aparato, como los favoritos.",
 "pal.held":"Tienes {0} en mano. Clic donde dejarlo (Esc para cancelar).",
-"atelier.body":"ComboDex no ve cuentas. Siete clics en COMBODEX y la clave de taller. Solo el administrador puede borrar un combo o un contenido.",
+"atelier.body":"ComboDex no ve cuentas. Solo el administrador puede borrar un combo o un contenido, desde la consola.",
 "atelier.ok":"Taller abierto en esta sesión.",
 "atelier.font":"Tipografía del título. Clic: todo el mundo la ve, también después del taller.",
 "atelier.font.ok":"Tipografía grabada en ComboDex para todos.",
@@ -689,6 +817,70 @@ es:{
 "atelier.refs.custom":"Este juego tiene cantidades propias. Los demás no cambian.",
 "atelier.refs.inherit":"Este juego sigue los ajustes comunes.",
 "atelier.refs.wait":"La capa de referencias aún no está cargada.",
+"atelier.refs.live":"{0} objeto(s) visibles en {1}.",
+"atelier.refs.catalog":"{0} en el catálogo · {1} de origen · {2} importado(s).",
+"atelier.refs.qty":"Cantidad para este juego",
+"atelier.refs.qty.hint":"El mismo tope en Personajes y los demás módulos. El catálogo del juego sigue siendo el límite real.",
+"atelier.tree.edits":"Ediciones",
+"atelier.edit.ok":"Aprobar",
+"atelier.edit.no":"Rechazar",
+"atelier.edit.fields":"Campos: {0}",
+"atelier.edit.none":"Ninguna petición de edición.",
+"admin.title":"Consola",
+"admin.only":"Solo el administrador",
+"admin.badge":"Admin",
+"admin.session":"Sesión de administrador",
+"admin.gate.lead":"Espacio reservado al administrador. Hace falta la clave para abrir la consola ComboDex, importar PNG y ajustar las referencias.",
+"admin.back":"Volver a ComboDex",
+"admin.site":"Abrir ComboDex",
+"admin.out":"Cerrar la sesión",
+"admin.closed":"Consola cerrada.",
+"admin.overview":"Panel",
+"admin.group.mod":"Cola",
+"admin.group.mod.lead":"Reportes, publicaciones, vídeos X, lab y ediciones.",
+"admin.group.library":"Biblioteca",
+"admin.group.library.lead":"Imágenes del sitio: referencias PNG por juego y retratos.",
+"admin.group.content":"Contenido",
+"admin.group.content.lead":"Roster, paletas, importación wiki y Replay Analyzer.",
+"admin.group.site":"Sitio",
+"admin.group.site.lead":"Apariencia pública y vista del wiki.",
+"admin.dash.lead":"Cada tarjeta es una tarea aparte. Nada se mezcla: abres una cola, la tratas, vuelves aquí.",
+"admin.combos":"Combos públicos",
+"admin.waiting":"En espera",
+"admin.refs.lib":"Referencias",
+"admin.refs.lead":"Importa un PNG para un juego, luego ajusta las cantidades. El objeto aparece en ComboDex tras guardar.",
+"admin.task.reports":"Combos reportados por los visitantes.",
+"admin.task.review":"Importaciones pendientes de publicación.",
+"admin.task.lab":"Peticiones de validación en lab.",
+"admin.task.edits":"Cambios propuestos en una ficha.",
+"admin.task.refs":"PNG y objetos decorativos, ligados al juego.",
+"admin.task.people":"Roster y fichas, por juego.",
+"admin.task.keys":"Teclas de la paleta del juego abierto.",
+"admin.task.site":"Vista general del wiki público.",
+"admin.import.ref":"Importar una referencia",
+"admin.import.ref.lead":"PNG, WebP o JPEG. Siempre ligado al juego elegido arriba.",
+"admin.import.file":"Archivo de imagen",
+"admin.import.name":"Nombre",
+"admin.import.hint":"Pista (caza de objeto)",
+"admin.import.save":"Guardar en ComboDex",
+"admin.import.ok":"Referencia grabada: ComboDex puede mostrarla.",
+"admin.import.fail":"Guardado aquí, aún no para los demás.",
+"admin.import.need":"Elige el juego, un archivo y un nombre en francés.",
+"admin.import.del":"Quitar",
+"admin.import.del.confirm":"¿Quitar esta referencia importada de ComboDex?",
+"admin.import.del.ok":"Referencia retirada.",
+"admin.catalog":"Catálogo de este juego",
+"admin.catalog.empty":"Ningún objeto para este juego de momento.",
+"admin.wiki":"Importado",
+"admin.portrait.lead":"Un PNG por personaje, para la biblioteca de retratos.",
+"admin.portrait.char":"Personaje",
+"admin.portrait.save":"Guardar el retrato",
+"admin.portrait.ok":"Retrato grabado para este personaje.",
+"admin.import.combos":"La importación de combos wiki se hace en ComboDex, pestaña Importar.",
+"admin.open.import":"Abrir la importación ComboDex",
+"admin.open.replay":"Abrir Replay Analyzer",
+"admin.open.people":"Abrir esta ficha en ComboDex",
+"admin.replay.lead":"Replay Analyzer se queda en ComboDex.",
 "atelier.notif":"Notificaciones",
 "atelier.tree.reports":"Reportes",
 "atelier.tree.lab":"Peticiones lab","cmp.char1":"Personaje 1","cmp.char2":"Personaje 2","atelier.tree.review":"Importación por validar","review.pending":"Pendiente de validación","review.sent":"Enviado. Visible para todos tras la validación en el taller.","review.ok":"Publicar","review.no":"Rechazar y borrar","review.confirmNo":"¿Rechazar esta importación? Se borrará.",

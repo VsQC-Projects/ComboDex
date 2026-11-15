@@ -1,0 +1,568 @@
+@import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Fira+Sans:wght@400;500;600;700&display=swap");
+
+body.cdx-admin{
+  margin:0;
+  min-height:100vh;
+  background:#0f1219;
+  color:#f4f1fa;
+  font-family:"Fira Sans",system-ui,sans-serif;
+  --admin-accent:#9b78c2;
+  --admin-line:#2c3144;
+  --admin-card:#171b27;
+  --admin-muted:#94a0b8;
+}
+body.cdx-admin .skip,
+body.cdx-admin .da-switch,
+body.cdx-admin .cdx-refs{display:none !important}
+body.cdx-admin .wrap{display:none}
+
+.admin-gate{
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  padding:24px;
+  background:
+    radial-gradient(900px 420px at 12% -10%,rgba(155,120,194,.22),transparent 60%),
+    radial-gradient(700px 360px at 100% 100%,rgba(91,69,109,.28),transparent 55%),
+    #0f1219;
+}
+.admin-gate-card{
+  width:min(420px,100%);
+  background:#171b27;
+  border:1px solid #2c3144;
+  border-radius:16px;
+  padding:32px 28px 24px;
+  box-shadow:0 24px 60px rgba(0,0,0,.35);
+}
+.admin-mark{
+  display:inline-grid;
+  place-items:center;
+  width:44px;height:44px;
+  border-radius:12px;
+  background:#5b456d;
+  color:#f5f3f8;
+  font-weight:700;
+  letter-spacing:.04em;
+  margin-bottom:16px;
+}
+.admin-gate-card h1{
+  margin:0 0 6px;
+  font-size:28px;
+  letter-spacing:.04em;
+}
+.admin-gate-card .lead{
+  margin:0 0 22px;
+  color:#94a0b8;
+  font-size:14px;
+  line-height:1.5;
+}
+.admin-gate-card input{
+  width:100%;
+  margin:0 0 12px;
+  padding:12px 14px;
+  border-radius:10px;
+  border:1px solid #3a4158;
+  background:#10141d;
+  color:#f4f1fa;
+  font:inherit;
+}
+.admin-gate-card input:focus{
+  outline:2px solid #9b78c2;
+  outline-offset:1px;
+  border-color:#9b78c2;
+}
+.admin-gate-card .primary{
+  width:100%;
+  cursor:pointer;
+  padding:12px 16px;
+  border:0;
+  border-radius:10px;
+  background:#9b78c2;
+  color:#120e18;
+  font-weight:700;
+  font-size:15px;
+}
+.admin-gate-card .primary:hover{filter:brightness(1.08)}
+.admin-gate-back{
+  display:block;
+  margin-top:16px;
+  text-align:center;
+  color:#94a0b8;
+  font-size:13px;
+}
+.admin-gate-foot{
+  margin:22px 0 0;
+  padding-top:16px;
+  border-top:1px solid #2c3144;
+  color:#6d7690;
+  font-size:11px;
+  letter-spacing:.08em;
+  text-align:center;
+}
+
+body.cdx-admin .atelier-dash{
+  display:none;
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  min-width:0;
+  border:0;
+  background:#0f1219;
+  z-index:24;
+  grid-template-columns:260px minmax(0,1fr);
+  grid-template-rows:64px minmax(0,1fr) 40px;
+  grid-template-areas:"head head" "nav work" "foot foot";
+}
+body.cdx-admin.is-atelier #atelierDash:not(.hidden){display:grid}
+body.cdx-admin .atelier-grip-x,
+body.cdx-admin .atelier-split,
+body.cdx-admin .atelier-crumb{display:none}
+body.cdx-admin .atelier-head{
+  grid-area:head;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  cursor:default;
+  padding:0 24px;
+  background:#141824;
+  border-bottom:1px solid #2c3144;
+  touch-action:auto;
+}
+body.cdx-admin .atelier-head b{
+  font-size:15px;
+  letter-spacing:.06em;
+}
+body.cdx-admin .atelier-head-actions{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+body.cdx-admin .admin-brandline{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
+body.cdx-admin .admin-mark-sm{
+  width:28px;height:28px;
+  margin:0;
+  font-size:11px;
+  border-radius:8px;
+}
+body.cdx-admin .admin-brand-name{
+  font-size:15px;
+  font-weight:700;
+  letter-spacing:.04em;
+}
+body.cdx-admin .admin-badge{
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:#cdb1ec;
+  border:1px solid #6b4fa3;
+  border-radius:99px;
+  padding:3px 8px;
+}
+body.cdx-admin .admin-session{
+  color:#94a0b8;
+  font-size:12px;
+  margin-right:6px;
+}
+body.cdx-admin .atelier-bell{
+  display:none;
+}
+body.cdx-admin .atelier-body{
+  display:contents;
+}
+body.cdx-admin .atelier-tree{
+  grid-area:nav;
+  display:flex;
+  flex-direction:column;
+  overflow:auto;
+  padding:18px 12px 24px;
+  border:0;
+  border-right:1px solid #2c3144;
+  background:#141824;
+  font-size:13px;
+}
+body.cdx-admin .atelier-tree .admin-nav-group{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  margin-top:8px;
+  padding-top:12px;
+  border-top:1px solid #2c3144;
+}
+body.cdx-admin .atelier-tree .admin-nav-group:first-of-type{margin-top:10px}
+body.cdx-admin .atelier-tree .admin-nav-label{
+  display:block;
+  margin:0 10px 6px;
+  padding:0;
+  border:0;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:#6d7690;
+}
+body.cdx-admin .atelier-tree button{
+  width:100%;
+  text-align:left;
+  border:1px solid transparent;
+  border-radius:10px;
+  padding:8px 10px;
+  color:#d7dce8;
+  cursor:pointer;
+  background:transparent;
+}
+body.cdx-admin .atelier-tree button:hover{background:#1d2333}
+body.cdx-admin .atelier-tree button.sel{
+  background:#2a2440;
+  border-color:#6b4fa3;
+  color:#fff;
+}
+body.cdx-admin .atelier-tree .leaf{padding-left:10px}
+body.cdx-admin .atelier-work{
+  grid-area:work;
+  overflow:auto;
+  padding:32px 40px 56px;
+  max-width:920px;
+  width:100%;
+  justify-self:start;
+}
+body.cdx-admin .atelier-work h3{
+  margin:0 0 8px;
+  font-size:26px;
+  letter-spacing:.02em;
+}
+body.cdx-admin .atelier-work h4{
+  margin:0;
+  font-size:13px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:#cdb1ec;
+}
+body.cdx-admin .admin-foot{
+  grid-area:foot;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 20px;
+  border-top:1px solid #2c3144;
+  background:#141824;
+  color:#6d7690;
+  font-size:11px;
+  letter-spacing:.08em;
+}
+body.cdx-admin .admin-task-head{margin-bottom:8px}
+body.cdx-admin .admin-section{
+  margin:0 0 18px;
+  padding:20px;
+  background:#141824;
+  border:1px solid #2c3144;
+  border-radius:16px;
+}
+body.cdx-admin .admin-section-head{
+  margin:0 0 14px;
+}
+body.cdx-admin .admin-section-head p{
+  margin:6px 0 0;
+  color:#94a0b8;
+  font-size:13px;
+  line-height:1.45;
+  text-transform:none;
+  letter-spacing:0;
+  font-weight:400;
+}
+body.cdx-admin .admin-tasks{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:12px;
+  margin:0;
+}
+body.cdx-admin .admin-task{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:6px;
+  text-align:left;
+  min-height:132px;
+  padding:16px;
+  border:1px solid #2c3144;
+  border-radius:14px;
+  background:#171b27;
+  color:inherit;
+  cursor:pointer;
+}
+body.cdx-admin .admin-task:hover{
+  border-color:#9b78c2;
+  background:#1c2233;
+}
+body.cdx-admin .admin-task b{font-size:16px}
+body.cdx-admin .admin-task span{color:#94a0b8;font-size:13px;line-height:1.4;font-weight:400}
+body.cdx-admin .admin-task-count{
+  font-family:"Fira Code",ui-monospace,monospace;
+  font-size:22px;
+  font-weight:600;
+  color:#cdb1ec;
+}
+body.cdx-admin .admin-metrics{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:12px;
+  margin:18px 0 24px;
+}
+body.cdx-admin .admin-metric{
+  background:#171b27;
+  border:1px solid #2c3144;
+  border-radius:14px;
+  padding:16px;
+}
+body.cdx-admin .admin-metric b{
+  display:block;
+  font-size:28px;
+  font-family:"Fira Code",ui-monospace,monospace;
+  font-weight:600;
+  line-height:1.1;
+}
+body.cdx-admin .admin-metric span{
+  color:#94a0b8;
+  font-size:12px;
+}
+body.cdx-admin .admin-card{
+  background:#171b27;
+  border:1px solid #2c3144;
+  border-radius:14px;
+  padding:18px;
+  margin-top:14px;
+}
+body.cdx-admin .admin-card .row{margin-top:10px}
+body.cdx-admin .admin-note{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:12px;
+  align-items:center;
+  background:#171b27;
+  border:1px solid #2c3144;
+  border-radius:14px;
+  padding:14px;
+  margin-top:10px;
+}
+body.cdx-admin .admin-note-main{
+  text-align:left;
+  background:transparent;
+  border:0;
+  color:inherit;
+  cursor:pointer;
+  padding:0;
+}
+body.cdx-admin .admin-kicker{
+  display:inline-block;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:#cdb1ec;
+  margin-bottom:4px;
+}
+body.cdx-admin .admin-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(112px,1fr));
+  gap:10px;
+  margin-top:12px;
+}
+body.cdx-admin .admin-thumb{
+  position:relative;
+  background:#10141d;
+  border:1px solid #2c3144;
+  border-radius:12px;
+  padding:8px;
+  text-align:center;
+  min-height:120px;
+}
+body.cdx-admin .admin-thumb img{
+  width:64px;height:64px;
+  object-fit:contain;
+  image-rendering:auto;
+}
+body.cdx-admin .admin-thumb .name{
+  display:block;
+  margin-top:6px;
+  font-size:11px;
+  line-height:1.3;
+  word-break:break-word;
+}
+body.cdx-admin .admin-thumb .wiki-tag{
+  display:block;
+  font-size:9px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:#22c55e;
+  margin-top:4px;
+}
+body.cdx-admin .admin-thumb .danger{
+  margin-top:6px;
+  width:100%;
+  cursor:pointer;
+}
+body.cdx-admin .atelier-ref-row{
+  display:grid;
+  gap:6px;
+  margin:12px 0;
+}
+body.cdx-admin .atelier-ref-row span{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  font-size:14px;
+}
+body.cdx-admin .atelier-ref-row b{
+  font-family:"Fira Code",ui-monospace,monospace;
+  color:#cdb1ec;
+}
+body.cdx-admin .atelier-ref-row input[type="range"]{width:100%;cursor:pointer}
+body.cdx-admin .atelier-ref-row select,
+body.cdx-admin .admin-card input[type="text"],
+body.cdx-admin .admin-card input[type="url"],
+body.cdx-admin .admin-card input[type="file"]{
+  width:100%;
+  padding:10px 12px;
+  border-radius:10px;
+  border:1px solid #3a4158;
+  background:#10141d;
+  color:#f4f1fa;
+  font:inherit;
+}
+body.cdx-admin .admin-live{
+  padding:10px 12px;
+  border-radius:10px;
+  background:#1d2a22;
+  color:#86efac;
+  font-size:13px;
+}
+body.cdx-admin .admin-help{
+  color:#94a0b8;
+  font-size:14px;
+  line-height:1.55;
+  margin:0 0 16px;
+}
+body.cdx-admin .admin-empty{
+  margin:16px 0 0;
+  padding:28px 16px;
+  text-align:center;
+  color:#94a0b8;
+  border:1px dashed #2c3144;
+  border-radius:14px;
+}
+body.cdx-admin .admin-queue{
+  margin-top:12px;
+  border:1px solid #2c3144;
+  border-radius:14px;
+  overflow:hidden;
+  background:#171b27;
+}
+body.cdx-admin .admin-q-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:12px;
+  align-items:center;
+  padding:14px 16px;
+  border-top:1px solid #2c3144;
+}
+body.cdx-admin .admin-q-row:first-child{border-top:0}
+body.cdx-admin .admin-q-row:hover{background:#1c2233}
+body.cdx-admin .admin-q-main{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:4px;
+  text-align:left;
+  background:transparent;
+  border:0;
+  color:inherit;
+  padding:0;
+  min-width:0;
+  cursor:pointer;
+}
+body.cdx-admin .admin-q-main b{
+  font-size:15px;
+  word-break:break-word;
+}
+body.cdx-admin .admin-q-meta{
+  color:#94a0b8;
+  font-size:12px;
+  font-weight:400;
+  line-height:1.4;
+}
+body.cdx-admin .admin-q-acts{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  justify-content:flex-end;
+}
+body.cdx-admin button,
+body.cdx-admin .tiny,
+body.cdx-admin a.tiny{
+  cursor:pointer;
+}
+body.cdx-admin .tiny,
+body.cdx-admin button.tiny{
+  border-radius:8px;
+  padding:6px 10px;
+}
+body.cdx-admin button:focus-visible,
+body.cdx-admin a:focus-visible,
+body.cdx-admin input:focus-visible,
+body.cdx-admin select:focus-visible{
+  outline:2px solid #9b78c2;
+  outline-offset:2px;
+}
+body.cdx-admin .home-font-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+body.cdx-admin .home-font-row button[aria-pressed="true"]{
+  background:#2a2440;
+  border-color:#9b78c2;
+}
+@media(max-width:860px){
+  body.cdx-admin.is-atelier #atelierDash:not(.hidden){
+    grid-template-columns:1fr;
+    grid-template-rows:56px auto minmax(0,1fr) 36px;
+    grid-template-areas:"head" "nav" "work" "foot";
+  }
+  body.cdx-admin .atelier-tree{
+    display:flex;
+    gap:6px;
+    overflow:auto;
+    border-right:0;
+    border-bottom:1px solid #2c3144;
+    padding:8px;
+    white-space:nowrap;
+  }
+  body.cdx-admin .atelier-tree .admin-nav-group{
+    display:contents;
+  }
+  body.cdx-admin .atelier-tree .admin-nav-label{
+    display:inline-flex;
+    align-items:center;
+    margin:0 2px 0 8px;
+    padding-left:10px;
+    border-left:1px solid #2c3144;
+    color:#6d7690;
+  }
+  body.cdx-admin .atelier-tree .admin-nav-group:first-of-type .admin-nav-label{
+    margin-left:4px;
+    padding-left:0;
+    border-left:0;
+  }
+  body.cdx-admin .atelier-tree button{width:auto;flex:none}
+  body.cdx-admin .atelier-work{padding:18px 16px 32px;max-width:none}
+}
+@media(prefers-reduced-motion:reduce){
+  body.cdx-admin *{transition:none !important}
+}
