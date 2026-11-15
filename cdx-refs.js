@@ -35,7 +35,10 @@ function setTheme(name) {
   const ui = readUI(); ui.theme = name;
   try { if (typeof H === "object" && H) H.theme = name; } catch {}
   try { localStorage.setItem(UI_KEY, JSON.stringify(ui)); } catch {}
-  document.querySelectorAll("#daSwitch button").forEach(b => b.setAttribute("aria-pressed", b.dataset.theme === name ? "true" : "false"));
+  document.querySelectorAll("#daSwitch button,[data-admin-theme]").forEach(b => {
+    const id = b.dataset.theme || b.dataset.adminTheme;
+    b.setAttribute("aria-pressed", id === name ? "true" : "false");
+  });
   schedule();
 }
 function buildSwitch() {
@@ -185,7 +188,9 @@ window.CDX_REF_API = {
     placed.forEach(p => { by[p.it.g] = (by[p.it.g] || 0) + 1; });
     const tab = activeTab();
     return {tab, shown: placed.length, planned: (PLAN[tab] || []).length, by};
-  }
+  },
+  themes: THEMES,
+  setTheme
 };
 addEventListener("cdx-refs-cfg", () => { rebuildPlan(); schedule(80); });
 
@@ -463,9 +468,9 @@ function bindBrand() {
 }
 
 function init() {
-  if (window.CDX_ADMIN) return;
   setTheme(readUI().theme || document.documentElement.dataset.theme || "official");
   buildSwitch();
+  if (window.CDX_ADMIN) return;
   layer = document.createElement("div");
   layer.id = "cdxRefs"; layer.className = "cdx-refs"; layer.setAttribute("aria-hidden", "true");
   layer.addEventListener("click", onRefClick);

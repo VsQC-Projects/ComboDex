@@ -176,6 +176,158 @@ function upsertWikiPortrait(c){
   d.portraits[c.game][c.character]=c.img;
 }
 function cdxSlug(s){return String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,40)||"ref"}
+function cdxFold(s){return String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/['’]/g," ").replace(/[^a-z0-9]+/g," ").trim()}
+function cdxCap(s){s=String(s||"").trim();return s?s.charAt(0).toUpperCase()+s.slice(1):s}
+function cdxClipHint(s){s=String(s||"").replace(/\s+/g," ").trim();const cut=s.split(/(?<=\.)\s/)[0]||s;return cut.length>140?cut.slice(0,137)+"…":cut}
+function cdxTitleEn(s){return String(s||"").split(/\s+/).filter(Boolean).map(w=>/^[A-Z0-9]/.test(w)?w:w.charAt(0).toUpperCase()+w.slice(1)).join(" ")}
+const CDX_OBJ_SKIP={le:1,la:1,les:1,un:1,une:1,des:1,du:1,de:1,d:1,l:1,au:1,aux:1,et:1,en:1,the:1,a:1,an:1,of:1};
+const CDX_OBJ_ADJ={magique:1,sacre:1,divin:1,spatial:1,eternel:1,secret:1,rouge:1,vert:1,bleu:1,noir:1,blanc:1,dore:1,doree:1,saint:1,sainte:1,special:1,speciale:1,ultime:1,legendaire:1,volant:1,volante:1,geant:1,geante:1};
+const CDX_OBJ_LEX={epee:["Sword","Espada"],epees:["Swords","Espadas"],lame:["Blade","Hoja"],lames:["Blades","Hojas"],katana:["Katana","Katana"],sabre:["Saber","Sable"],bouclier:["Shield","Escudo"],masque:["Mask","Máscara"],casque:["Helmet","Casco"],casquette:["Cap","Gorra"],chapeau:["Hat","Sombrero"],gourde:["Gourd","Calabaza"],baton:["Staff","Bastón"],marteau:["Hammer","Martillo"],lance:["Spear","Lanza"],arc:["Bow","Arco"],eventail:["Fan","Abanico"],pistolet:["Pistol","Pistola"],pistolets:["Pistols","Pistolas"],amulette:["Amulet","Amuleto"],medaillon:["Medallion","Medallón"],pendentif:["Pendant","Colgante"],fiole:["Vial","Frasco"],piece:["Coin","Moneda"],pieces:["Coins","Monedas"],logo:["Logo","Logo"],embleme:["Emblem","Emblema"],badge:["Badge","Insignia"],visiere:["Visor","Visor"],miroir:["Mirror","Espejo"],hache:["Axe","Hacha"],nuage:["Cloud","Nube"],carapace:["Shell","Caparazón"],gant:["Glove","Guante"],anneau:["Ring","Anillo"],etoile:["Star","Estrella"],champignon:["Mushroom","Champiñón"],fleur:["Flower","Flor"],balle:["Ball","Bola"],boule:["Ball","Bola"],boules:["Balls","Bolas"],bombe:["Bomb","Bomba"],donut:["Donut","Dónut"],trompette:["Trumpet","Trompeta"],poids:["Weight","Pesa"],ours:["Bear","Oso"],peluche:["Plush","Peluche"],poupee:["Doll","Muñeco"],capsule:["Capsule","Cápsula"],radar:["Radar","Radar"],detecteur:["Scouter","Rastreador"],haricot:["Bean","Semilla"],sceptre:["Scepter","Cetro"],ombrelle:["Parasol","Sombrilla"],ballon:["Balloon","Globo"],cristal:["Crystal","Cristal"],dragon:["Dragon","Dragón"],feu:["Fire","Fuego"],magique:["Magic","Mágico"],sacre:["Sacred","Sagrado"],divin:["Divine","Divino"],spatial:["Space","Espacial"],volant:["Flying","Volador"],geant:["Giant","Gigante"],geante:["Giant","Gigante"]};
+function cdxObjetGameName(id){
+  try{if(typeof b==="object"&&b[id]&&b[id].name)return b[id].name}catch{}
+  try{const hit=(window.CDX_REF_API&&window.CDX_REF_API.games&&window.CDX_REF_API.games()||[]).find(x=>x[0]===id);if(hit)return hit[1]}catch{}
+  return id||"";
+}
+function cdxTranslatePhrase(fr){
+  const words=String(fr||"").trim().split(/\s+/).filter(Boolean);
+  const mapped=[];
+  let changed=false;
+  for(const w of words){
+    const k=cdxFold(w.replace(/[.,]/g,""));
+    if(!k||CDX_OBJ_SKIP[k])continue;
+    if(/^\d+$/.test(k)){mapped.push({en:k,es:k,adj:false});continue}
+    const pair=CDX_OBJ_LEX[k];
+    if(pair){changed=true;mapped.push({en:pair[0],es:pair[1],adj:!!CDX_OBJ_ADJ[k]})}
+    else mapped.push({en:w.replace(/[.,]/g,""),es:w.replace(/[.,]/g,""),adj:false});
+  }
+  if(!mapped.length)return {en:fr,es:fr,changed:false};
+  const en=cdxTitleEn([...mapped.filter(x=>x.adj),...mapped.filter(x=>!x.adj)].map(x=>x.en).join(" "));
+  const es=cdxCap(mapped.map(x=>x.es).join(" "));
+  return {en,es,changed};
+}
+function cdxLocalObjetNames(fr){
+  const raw=String(fr||"").trim();
+  const de=raw.match(/^(.+?)\s+(?:de|du|des|d'|d’)\s+(?:la\s+|l'|l’)?(.+)$/i);
+  if(de){
+    const head=de[1].replace(/^(le|la|les|un|une|l'|l’)\s+/i,"").trim();
+    const owner=de[2].trim();
+    const headT=cdxTranslatePhrase(head);
+    const ownerT=cdxTranslatePhrase(owner);
+    const ownerName=/^[A-ZÉÈÀÙÂÊÎÔÛÄËÏÖÜ0-9]/.test(owner)||!ownerT.changed;
+    if(ownerName){
+      return {en:cdxTitleEn(owner.replace(/'s$/i,"")+"'s "+headT.en),es:cdxCap((headT.changed?headT.es:head)+" de "+owner),changed:true};
+    }
+  }
+  return cdxTranslatePhrase(raw);
+}
+function cdxInventHints(fr,en,es,gameName,wiki){
+  if(wiki&&wiki.hintFr){
+    return {
+      hintFr:cdxClipHint(cdxCap(wiki.hintFr)),
+      hintEn:cdxClipHint(cdxCap(wiki.hintEn||wiki.hintFr)),
+      hintEs:cdxClipHint(cdxCap(wiki.hintEs||wiki.hintFr))
+    };
+  }
+  const de=String(fr||"").trim().match(/^(.+?)\s+(?:de|du|des|d'|d’)\s+(?:la\s+|l'|l’)?(.+)$/i);
+  if(de&&/^[A-ZÉÈÀÙÂÊÎÔÛ0-9]/.test(de[2].trim())){
+    const owner=de[2].trim();
+    const kind=de[1].replace(/^(le|la|les|un|une|l'|l’)\s+/i,"").trim().toLowerCase();
+    return {
+      hintFr:cdxClipHint("Ça appartient à "+owner+". Un "+kind+" se cache dans la page."),
+      hintEn:cdxClipHint("It belongs to "+owner+". Look for it somewhere on the page."),
+      hintEs:cdxClipHint("Pertenece a "+owner+". Búscalo en algún rincón de la página.")
+    };
+  }
+  const g=gameName||"ComboDex";
+  return {
+    hintFr:cdxClipHint("Un objet de "+g+" est caché dans la page. Fie-toi à sa forme, pas à son nom."),
+    hintEn:cdxClipHint("A "+g+" object is hidden on the page. Trust the look, not the name."),
+    hintEs:cdxClipHint("Un objeto de "+g+" está escondido en la página. Fíjate en su forma.")
+  };
+}
+function cdxWikiScore(name,gameName,item){
+  const label=item.label||item.title||"";
+  const desc=item.description||item.snippet||"";
+  const blob=cdxFold(label+" "+desc);
+  const q=cdxFold(name);
+  let s=0;
+  if(cdxFold(label)===q)s+=8;
+  if(blob.includes(q))s+=3;
+  q.split(" ").filter(w=>w.length>2).forEach(w=>{if(blob.includes(w))s+=1});
+  if(/fictif|fiction|jeu|video game|comics|manga|anime|objet|arme|marvel|nintendo|capcom|dragon ball|street fighter|guilty gear|tekken|smash|persona|blazblue|granblue/i.test(desc+" "+label))s+=5;
+  if(gameName){const g=cdxFold(gameName).split(" ").filter(w=>w.length>3);g.forEach(w=>{if(blob.includes(w))s+=3})}
+  if(/gare|ville|prenom|nom de famille|commune|riviere|etablissement humain|famille noble/i.test(cdxFold(desc)))s-=8;
+  return s;
+}
+async function cdxWikiJson(url){
+  const ctrl=new AbortController();
+  const t=setTimeout(()=>ctrl.abort(),2800);
+  try{
+    const r=await fetch(url,{signal:ctrl.signal});
+    if(!r.ok)return null;
+    return await r.json();
+  }catch{return null}
+  finally{clearTimeout(t)}
+}
+async function cdxWikidataObjet(name,gameName){
+  const queries=[name];
+  if(gameName)queries.push(name+" "+gameName);
+  let best=null,bestS=-99;
+  for(const q of queries){
+    const j=await cdxWikiJson("https://www.wikidata.org/w/api.php?action=wbsearchentities&search="+encodeURIComponent(q)+"&language=fr&uselang=fr&type=item&limit=6&format=json&origin=*");
+    const rows=(j&&j.search)||[];
+    for(const it of rows){
+      const sc=cdxWikiScore(name,gameName,it);
+      if(sc>bestS){bestS=sc;best=it}
+    }
+    if(bestS>=8)break;
+  }
+  if(!best||bestS<5)return null;
+  const ent=await cdxWikiJson("https://www.wikidata.org/w/api.php?action=wbgetentities&ids="+encodeURIComponent(best.id)+"&props=labels|descriptions&languages=en|es|fr&format=json&origin=*");
+  const e=ent&&ent.entities&&ent.entities[best.id];
+  if(!e)return null;
+  const lab=k=>e.labels&&e.labels[k]&&e.labels[k].value||"";
+  const des=k=>e.descriptions&&e.descriptions[k]&&e.descriptions[k].value||"";
+  return {en:lab("en"),es:lab("es"),hintFr:des("fr"),hintEn:des("en"),hintEs:des("es")};
+}
+async function cdxWikipediaObjet(name,gameName){
+  const q=gameName?name+" "+gameName:name;
+  const s=await cdxWikiJson("https://fr.wikipedia.org/w/api.php?action=query&list=search&srsearch="+encodeURIComponent(q)+"&srlimit=5&format=json&formatversion=2&origin=*");
+  const hits=(s&&s.query&&s.query.search)||[];
+  let hit=null,bestS=-99;
+  for(const it of hits){
+    const sc=cdxWikiScore(name,gameName,{label:it.title,description:(it.snippet||"").replace(/<[^>]+>/g,"")});
+    if(sc>bestS){bestS=sc;hit=it}
+  }
+  if(!hit||bestS<5)return null;
+  const p=await cdxWikiJson("https://fr.wikipedia.org/w/api.php?action=query&prop=langlinks|extracts&exintro=1&explaintext=1&exchars=220&lllimit=40&titles="+encodeURIComponent(hit.title)+"&format=json&formatversion=2&origin=*");
+  const page=p&&p.query&&p.query.pages&&p.query.pages[0];
+  if(!page||page.missing)return null;
+  const links=page.langlinks||[];
+  const lang=code=>{const x=links.find(l=>l.lang===code);return x&&(x.title||x["*"])||""};
+  const extract=String(page.extract||"").replace(/\s+/g," ").trim();
+  const strip=txt=>{
+    let out=txt.replace(new RegExp(name.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"),"gi"),"cet objet");
+    if(hit.title)out=out.replace(new RegExp(hit.title.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"),"gi"),"cet objet");
+    return out;
+  };
+  return {en:lang("en"),es:lang("es"),hintFr:strip(extract),hintEn:"",hintEs:""};
+}
+async function cdxObjetMeta(fr,gameName){
+  const name=String(fr||"").trim();
+  const local=cdxLocalObjetNames(name);
+  let wiki=null;
+  try{
+    const [wd,wp]=await Promise.all([cdxWikidataObjet(name,gameName),cdxWikipediaObjet(name,gameName)]);
+    wiki=wd&&(wd.en||wd.es||wd.hintFr)?wd:wp;
+    if(wd&&wp)wiki={en:wd.en||wp.en,es:wd.es||wp.es,hintFr:wd.hintFr||wp.hintFr,hintEn:wd.hintEn||wp.hintEn,hintEs:wd.hintEs||wp.hintEs};
+  }catch{}
+  const en=(wiki&&wiki.en||local.en||name).trim();
+  const es=(wiki&&wiki.es||local.es||name).trim();
+  const hints=cdxInventHints(name,en,es,gameName,wiki);
+  return {en,es,hintFr:hints.hintFr,hintEn:hints.hintEn,hintEs:hints.hintEs};
+}
+let atelierRefMetaCache={fr:"",meta:null};
 function cdxCompressImage(file,max,q){
   max=max||256;q=q==null?.82:q;
   return new Promise((resolve,reject)=>{
@@ -689,7 +841,9 @@ function renderAtelierDash(){
         ${leaf("font",cdxT("atelier.tree.font"))}
         ${leaf("site",cdxT("atelier.tree.site"))}</div>`;
   if(window.CDX_ADMIN){
-    dash.innerHTML=`<div class="atelier-head"><div class="admin-brandline"><span class="admin-mark admin-mark-sm" aria-hidden="true">CD</span><span class="admin-brand-name">ComboDex</span><span class="admin-badge">${l(cdxT("admin.badge"))}</span></div><span class="atelier-head-actions"><span class="admin-session">${l(cdxT("admin.session"))}</span><a class="tiny" href="${l(atelierSiteHref())}">${l(cdxT("admin.site"))}</a><button type="button" class="tiny" id="atelierOut">${l(cdxT("admin.out"))}</button></span></div>
+    const themeNow=document.documentElement.dataset.theme||"official";
+    const themeBtns=["official","dojo","wood"].map(id=>`<button type="button" data-admin-theme="${id}" aria-pressed="${themeNow===id?"true":"false"}">${l(cdxT("admin.theme."+id))}</button>`).join("");
+    dash.innerHTML=`<div class="atelier-head"><div class="admin-brandline"><span class="admin-mark admin-mark-sm" aria-hidden="true">CD</span><span class="admin-brand-name">ComboDex</span><span class="admin-badge">${l(cdxT("admin.badge"))}</span></div><span class="atelier-head-actions"><div class="admin-themes" id="adminThemes" role="group" aria-label="${l(cdxT("admin.theme"))}">${themeBtns}</div><span class="admin-session">${l(cdxT("admin.session"))}</span><a class="tiny" href="${l(atelierSiteHref())}">${l(cdxT("admin.site"))}</a><button type="button" class="tiny" id="atelierOut">${l(cdxT("admin.out"))}</button></span></div>
       <nav class="atelier-tree" id="atelierTree" aria-label="${l(cdxT("admin.title"))}">${treeNav}</nav>
       <div class="atelier-work" id="atelierWork">${work}</div>
       <div class="admin-foot"><span>CRÉÉ PAR VSQC</span><span>${l(cdxT("admin.title"))}</span></div>`;
@@ -742,6 +896,17 @@ function renderAtelierDash(){
   };
   const charsRow=a("atelierChars");if(charsRow)charsRow.onclick=e=>{const b=e.target.closest("[data-atelier-char]");if(!b)return;o.char=b.dataset.atelierChar;o.selected.clear();if(!window.CDX_ADMIN)j("people");renderAtelierDash()};
   const fontsRow=a("atelierFonts");if(fontsRow)fontsRow.onclick=e=>{const b=e.target.closest("[data-home-font]");b&&saveSiteFont(b.dataset.homeFont)};
+  const themes=a("adminThemes");
+  if(themes)themes.onclick=e=>{
+    const b=e.target.closest("[data-admin-theme]");if(!b)return;
+    const name=b.dataset.adminTheme;
+    if(window.CDX_REF_API&&typeof window.CDX_REF_API.setTheme==="function")window.CDX_REF_API.setTheme(name);
+    else{
+      document.documentElement.dataset.theme=name;
+      try{const u=JSON.parse(localStorage.getItem("combo-dex-ui-v1"))||{};u.theme=name;localStorage.setItem("combo-dex-ui-v1",JSON.stringify(u))}catch{}
+      themes.querySelectorAll("[data-admin-theme]").forEach(x=>x.setAttribute("aria-pressed",x.dataset.adminTheme===name?"true":"false"));
+    }
+  };
   const go=a("atelierXGo");if(go)go.onclick=()=>saveXOk((a("atelierX")||{}).value);
   const goRefs=a("atelierGoRefs");if(goRefs)goRefs.onclick=()=>{atelierView="refs";renderAtelierDash()};
   bindAtelierRefs();
@@ -868,10 +1033,8 @@ function atelierRefsHtml(){
       <p class="muted small">${l(cdxT("admin.import.ref.lead"))}</p>
       <label class="atelier-ref-row"><span>${l(cdxT("atelier.refs.pick"))}</span><select id="atelierRefGame">${opts}</select></label>
       <label class="atelier-ref-row"><span>${l(cdxT("admin.import.file"))}</span><input id="atelierRefFile" type="file" accept="image/png,image/webp,image/jpeg"></label>
-      <label class="atelier-ref-row"><span>${l(cdxT("admin.import.name"))} FR</span><input id="atelierRefFr" type="text" maxlength="80"></label>
-      <label class="atelier-ref-row"><span>EN</span><input id="atelierRefEn" type="text" maxlength="80"></label>
-      <label class="atelier-ref-row"><span>ES</span><input id="atelierRefEs" type="text" maxlength="80"></label>
-      <label class="atelier-ref-row"><span>${l(cdxT("admin.import.hint"))} FR</span><input id="atelierRefHintFr" type="text" maxlength="140"></label>
+      <label class="atelier-ref-row"><span>${l(cdxT("admin.import.name"))} FR</span><input id="atelierRefFr" type="text" maxlength="80" autocomplete="off"></label>
+      <p class="muted small admin-ref-meta" id="atelierRefMeta">${l(cdxT("admin.import.auto"))}</p>
       <div class="row"><button type="button" class="primary" id="atelierRefSave">${l(cdxT("admin.import.save"))}</button></div>
     </div>
     <div class="admin-card">
@@ -939,7 +1102,7 @@ function atelierRefLibHtml(g){
     if(!row||!row[0]||seen.has(row[0]))return;
     seen.add(row[0]);
     const name=row[1+({fr:0,en:1,es:2}[window.cdxLang]||0)]||row[1]||row[0];
-    cards.push(`<article class="admin-thumb"><img src="${l(atelierRefSrc(g,row))}" alt=""><span class="name">${l(name)}</span><span class="wiki-tag">${l(cdxT("admin.wiki"))}</span><button type="button" class="tiny danger" data-ref-del="${l(row[0])}">${l(cdxT("admin.import.del"))}</button></article>`);
+    cards.push(`<article class="admin-thumb" title="${l(row[4]||name)}"><img src="${l(atelierRefSrc(g,row))}" alt=""><span class="name">${l(name)}</span><span class="wiki-tag">${l(cdxT("admin.wiki"))}</span><button type="button" class="tiny danger" data-ref-del="${l(row[0])}">${l(cdxT("admin.import.del"))}</button></article>`);
   });
   builtin.forEach(row=>{
     if(!row||!row[0]||seen.has(row[0]))return;
@@ -962,23 +1125,48 @@ function bindAtelierAssets(){
     };
   });
   const save=a("atelierRefSave");
+  const paintRefMeta=meta=>{
+    const el=a("atelierRefMeta");if(!el||!meta)return;
+    el.innerHTML=`${l(cdxT("admin.import.meta")).replace("{0}",l(meta.en)).replace("{1}",l(meta.es))}<br>${l(cdxT("admin.import.meta.hint")).replace("{0}",l(meta.hintFr))}`;
+  };
+  const frInp=a("atelierRefFr");
+  if(frInp){
+    let wait=0;
+    const lookup=()=>{
+      const name=frInp.value.trim();
+      const el=a("atelierRefMeta");
+      if(!name){atelierRefMetaCache={fr:"",meta:null};if(el)el.textContent=cdxT("admin.import.auto");return}
+      cdxObjetMeta(name,cdxObjetGameName(atelierRefGame||o.game)).then(meta=>{
+        if(frInp.value.trim()!==name)return;
+        atelierRefMetaCache={fr:name,meta};
+        paintRefMeta(meta);
+      });
+    };
+    frInp.addEventListener("input",()=>{clearTimeout(wait);wait=setTimeout(lookup,450)});
+    frInp.addEventListener("blur",lookup);
+  }
   if(save)save.onclick=async()=>{
     const game=atelierRefGame||o.game,file=(a("atelierRefFile")||{}).files&&a("atelierRefFile").files[0];
-    const fr=(a("atelierRefFr")||{}).value||"";
-    if(!game||!file||!fr.trim()){g(cdxT("admin.import.need"),!0);return}
+    const fr=((a("atelierRefFr")||{}).value||"").trim();
+    if(!game||!file||!fr){g(cdxT("admin.import.need"),!0);return}
+    save.disabled=true;
     try{
+      g(cdxT("admin.import.lookup"));
+      let meta=atelierRefMetaCache.fr===fr?atelierRefMetaCache.meta:null;
+      if(!meta)meta=await cdxObjetMeta(fr,cdxObjetGameName(game));
+      atelierRefMetaCache={fr,meta};
+      paintRefMeta(meta);
       const img=await cdxCompressImage(file);
       const id="cdx-obj-"+game+"-"+cdxSlug(fr);
-      const en=((a("atelierRefEn")||{}).value||fr).trim();
-      const es=((a("atelierRefEs")||{}).value||fr).trim();
-      const hintFr=((a("atelierRefHintFr")||{}).value||fr).trim();
-      const row={id,game,character:"_objet",name:fr.trim(),tokens:["objet"],origin:"objet",fr:fr.trim(),en,es,hintFr,hintEn:hintFr,hintEs:hintFr,obj:{id,fr:fr.trim(),en,es,hintFr,hintEn:hintFr,hintEs:hintFr,img,pieces:0},img,updatedAt:new Date().toISOString()};
+      const en=meta.en,es=meta.es,hintFr=meta.hintFr,hintEn=meta.hintEn,hintEs=meta.hintEs;
+      const row={id,game,character:"_objet",name:fr,tokens:["objet"],origin:"objet",fr,en,es,hintFr,hintEn,hintEs,obj:{id,fr,en,es,hintFr,hintEn,hintEs,img,pieces:0},img,updatedAt:new Date().toISOString()};
       const ok=await saveWikiAsset(row);
       if(ok)upsertWikiObjet(row);
       try{window.CDX_REF_API&&window.CDX_REF_API.reload&&window.CDX_REF_API.reload()}catch{}
       renderAtelierDash();
-      g(ok?cdxT("admin.import.ok"):cdxT("admin.import.fail"),!ok);
+      g(ok?cdxT("admin.import.ok")+" "+cdxT("admin.import.meta").replace("{0}",en).replace("{1}",es):cdxT("admin.import.fail"),!ok);
     }catch{g(cdxT("admin.import.fail"),!0)}
+    finally{save.disabled=false}
   };
   const pg=a("atelierPortGame");
   if(pg)pg.onchange=()=>{o.game=pg.value;o.char=(T(o.game)[0]||{}).name||o.char;renderAtelierDash()};

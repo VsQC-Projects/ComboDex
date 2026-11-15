@@ -12,8 +12,8 @@ body.cdx-admin{
   --admin-muted:#94a0b8;
 }
 body.cdx-admin .skip,
-body.cdx-admin .da-switch,
 body.cdx-admin .cdx-refs{display:none !important}
+body.cdx-admin .da-switch{display:none !important}
 body.cdx-admin .wrap{
   display:none;
   margin:0;
@@ -243,7 +243,7 @@ body.cdx-admin .atelier-tree .admin-nav-label{
   font-weight:700;
   letter-spacing:.14em;
   text-transform:uppercase;
-  color:#6d7690;
+  color:#e8eaef;
 }
 body.cdx-admin .atelier-tree button{
   width:100%;
@@ -251,7 +251,7 @@ body.cdx-admin .atelier-tree button{
   border:1px solid transparent;
   border-radius:10px;
   padding:8px 10px;
-  color:#d7dce8;
+  color:#eef1f6;
   cursor:pointer;
   background:transparent;
 }
@@ -265,10 +265,10 @@ body.cdx-admin .atelier-tree .leaf{padding-left:10px}
 body.cdx-admin .atelier-work{
   grid-area:work;
   overflow:auto;
-  padding:32px 40px 56px;
-  max-width:920px;
+  padding:24px 28px 48px;
+  max-width:none;
   width:100%;
-  justify-self:start;
+  justify-self:stretch;
 }
 body.cdx-admin .atelier-work h3{
   margin:0 0 8px;
@@ -598,7 +598,7 @@ body.cdx-admin .home-font-row button[aria-pressed="true"]{
     margin:0 2px 0 8px;
     padding-left:10px;
     border-left:1px solid #2c3144;
-    color:#6d7690;
+    color:#e8eaef;
   }
   body.cdx-admin .atelier-tree .admin-nav-group:first-of-type .admin-nav-label{
     margin-left:4px;
@@ -608,6 +608,57 @@ body.cdx-admin .home-font-row button[aria-pressed="true"]{
   body.cdx-admin .atelier-tree button{width:auto;flex:none}
   body.cdx-admin .atelier-work{padding:18px 16px 32px;max-width:none}
 }
+body.cdx-admin .admin-themes{
+  display:flex;
+  flex-wrap:wrap;
+  gap:4px;
+  padding:4px;
+  border-radius:10px;
+  background:#00000066;
+  border:1px solid #ffffff24;
+}
+body.cdx-admin .admin-themes button{
+  padding:6px 10px;
+  font-size:12px;
+  font-weight:700;
+  border-radius:8px;
+  border:1px solid #ffffff38;
+  background:transparent;
+  color:#eef1f6;
+}
+body.cdx-admin .admin-themes button[aria-pressed="true"]{
+  background:#fff;
+  color:#111;
+  border-color:#fff;
+}
+html[data-theme="official"] body.cdx-admin .admin-themes button[aria-pressed="true"]{
+  background:#e0c27e;
+  color:#1c1914;
+  border-color:#e0c27e;
+}
+html[data-theme="dojo"] body.cdx-admin .admin-themes button[aria-pressed="true"]{
+  background:#d9412b;
+  color:#fff;
+  border-color:#d9412b;
+}
+html[data-theme="wood"] body.cdx-admin .admin-themes button[aria-pressed="true"]{
+  background:#f6ead3;
+  color:#2a1d12;
+  border-color:#f6ead3;
+}
+html[data-theme="wood"] body.cdx-admin .atelier-tree button,
+html[data-theme="dojo"] body.cdx-admin .atelier-tree button{
+  color:#eef1f6;
+}
+html[data-theme="wood"] body.cdx-admin .atelier-tree button.sel,
+html[data-theme="dojo"] body.cdx-admin .atelier-tree button.sel{
+  color:#fff;
+}
+body.cdx-admin .admin-ref-meta{
+  margin:0 0 12px;
+  line-height:1.45;
+}
+body.cdx-admin .admin-foot{color:#c5cad6}
 @media(prefers-reduced-motion:reduce){
   body.cdx-admin *{transition:none !important}
 }
