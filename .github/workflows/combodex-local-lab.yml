@@ -1,0 +1,44 @@
+name: ComboDex LOCAL - Audit et archive de test
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'console.html'
+      - 'cdx-admin.css'
+      - 'cdx-refs.js'
+      - 'tools/local-lab/**'
+      - '.github/workflows/combodex-local-lab.yml'
+permissions:
+  contents: read
+jobs:
+  offline-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Vérifier les ressources HTML
+        run: python3 tools/local-lab/smoke.py
+      - name: Vérifier la syntaxe JavaScript des modules principaux
+        run: |
+          node --check cdx-app.js
+          node --check cdx-refs.js
+          node --check cdx-objets.js
+      - name: Préparer copie locale complète
+        run: |
+          mkdir -p /tmp/combodex-local
+          tar -cf - --exclude=.git --exclude=node_modules . | tar -xf - -C /tmp/combodex-local
+          cat > /tmp/combodex-local/DEMARRAGE-LOCAL.txt <<'EOF'
+          COMBODEX - COPIE LOCALE DE TEST
+          1. Decompresser l'archive.
+          2. Dans le dossier, executer : python -m http.server 8765
+          3. Ouvrir http://localhost:8765/index.html
+          4. Console : http://localhost:8765/console.html
+          Aucun changement n'est publie sur GitHub Pages.
+          Les fonctions connectees a un serveur distant peuvent necessiter
+          des identifiants ou des services non disponibles en local.
+          EOF
+      - name: Fournir copie locale telechargeable
+        uses: actions/upload-artifact@v4
+        with:
+          name: ComboDex-LOCAL-TEST
+          path: /tmp/combodex-local/
+          retention-days: 14
