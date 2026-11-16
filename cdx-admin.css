@@ -1104,3 +1104,41 @@ html[data-theme="capsule"] body.cdx-admin .admin-themes button[aria-pressed="tru
 @media(prefers-reduced-motion:reduce){
   body.cdx-admin *{transition:none !important}
 }
+html[data-da="studio"] body.cdx-admin{
+  --admin-bg:#0c0e14;
+  --admin-chrome:#10131c;
+  --admin-card:#151924;
+  --admin-line:#2a3144;
+  --admin-ink:#eef1f7;
+  --admin-muted:#9aa3b8;
+  --admin-accent:#8b6cc4;
+  --admin-accent2:#2b2144;
+  --admin-input:#0b0d12;
+  --admin-hover:#1b2030;
+  --admin-sel:#2a2150;
+  --admin-sel-ink:#efe8ff;
+  background:#0c0e14;
+  font-family:"Fira Sans",system-ui,sans-serif;
+}
+body.cdx-admin .atelier-tree button{
+  display:flex;align-items:center;gap:10px;text-align:left;
+}
+.admin-ico{width:16px;height:16px;flex:none}
+html[data-da="studio"] #atelierDash.nav-slim{--admin-nav:72px}
+html[data-da="studio"] #atelierDash.nav-slim .atelier-tree button{justify-content:center;padding:12px 8px}
+html[data-da="studio"] #atelierDash.nav-slim .atelier-tree button>span:not(.count),
+html[data-da="studio"] #atelierDash.nav-slim .admin-nav-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+html[data-da="studio"] .admin-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+html[data-da="studio"] .admin-metric{background:var(--admin-card);border:1px solid var(--admin-line);border-radius:12px;padding:14px 16px}
+html[data-da="studio"] .admin-metric b{display:block;font-size:28px;letter-spacing:.02em}
+html[data-da="studio"] .admin-bars{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+html[data-da="studio"] .admin-bars li{display:grid;grid-template-columns:minmax(72px,140px) 1fr 36px;gap:8px;align-items:center;font-size:12px}
+html[data-da="studio"] .admin-bar-lab{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--admin-muted)}
+html[data-da="studio"] .admin-bar-track{height:8px;border-radius:99px;background:#1b2030;overflow:hidden}
+html[data-da="studio"] .admin-bar-track i{display:block;height:100%;background:var(--admin-accent);border-radius:99px}
+.admin-da-seg{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.admin-da-seg label{display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--admin-line);border-radius:10px;cursor:pointer}
+.admin-preview-flag{color:var(--admin-accent);font-size:12px;font-weight:650}
+@media (max-width:720px){
+  html[data-da="studio"] .admin-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+}

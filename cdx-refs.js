@@ -2,6 +2,8 @@
 "use strict";
 const UI_KEY = "combo-dex-ui-v1";
 const THEMES = ["official", "wood", "dojo", "borne", "capsule"];
+const EXTRA_THEMES = ["arcade", "ink", "blueprint", "broadcast", "graphite", "manual"];
+const ALL_THEMES = THEMES.concat(EXTRA_THEMES);
 const MODULES = ["people", "frames", "compare", "replay", "create", "import", "knowledge"];
 const TXT = {
   fr: {wood: "Bois", official: "Officielle", dojo: "Dojo", borne: "Borne", capsule: "Capsule", da: "Direction artistique",
@@ -33,7 +35,7 @@ function isPreview() {
   try { return !window.CDX_ADMIN && window.self !== window.top; } catch { return true; }
 }
 function setTheme(name) {
-  if (!THEMES.includes(name)) name = "official";
+  if (!ALL_THEMES.includes(name)) name = "official";
   document.documentElement.dataset.theme = name;
   document.querySelectorAll("#daSwitch button,[data-admin-theme]").forEach(b => {
     const id = b.dataset.theme || b.dataset.adminTheme;
@@ -359,11 +361,26 @@ function place() {
   };
   const r = rng(hash(tab + W + String(view.gap)));
   const order = items.map(it => [r(), it]).sort((x, y) => x[0] - y[0]).map(x => x[1]);
+  const gapPx = g => Math.max(0, Math.round(gameGap(cfg, g)));
+  const tooClose = (x, y, size, gap) => {
+    const cx = x + size / 2, cy = y + size / 2;
+    for (const p of placed) {
+      const px = parseFloat(p.img.style.left) || 0;
+      const py = parseFloat(p.img.style.top) || 0;
+      const ps = parseFloat(p.img.style.width) || size;
+      const dx = cx - (px + ps / 2), dy = cy - (py + ps / 2);
+      const min = size / 2 + ps / 2 + gap;
+      if (dx * dx + dy * dy < min * min) return true;
+    }
+    return false;
+  };
+  const okSpot = (x, y, size, gap, want) =>
+    free(x, y, x + size, y + size) && !tooClose(x, y, size, gap) && zoneOk(x, y, size, want);
   const put = (it, src, x, y, size) => {
     const z = zoneOf(x, y, size);
     if (z === "footer") usedFooter++;
     if (z === "logo") usedLogo++;
-    const gap = Math.max(0, Math.round(gameGap(cfg, it.g) * (small ? 0.35 : 1)));
+    const gap = gapPx(it.g);
     mark(x - gap, y - gap, x + size + gap, y + size + gap);
     const img = new Image();
     img.src = src;
@@ -389,24 +406,26 @@ function place() {
   const scanBox = (size, gap, want, box) => {
     const area = box ? clipRect(box, size) : (want === "main" ? {l: 2, t: 2, r: W - 2, b: Hh - 2} : null);
     if (!area) return null;
-    const step = Math.max(CELL, Math.min(small ? 6 : 12, Math.max(4, Math.round((size + gap) / (small ? 6 : 4)))));
+    const zoneWant = want === "main" ? "" : want;
+    const step = Math.max(CELL, Math.min(small ? 8 : 14, Math.max(4, Math.round(Math.max(size, gap) / (small ? 4 : 3)))));
     for (let y = area.t; y <= area.b - size; y += step)
       for (let x = area.l; x <= area.r - size; x += step) {
-        if (!free(x, y, x + size, y + size) || !zoneOk(x, y, size, want === "main" ? "" : want)) continue;
+        if (!okSpot(x, y, size, gap, zoneWant)) continue;
         return [x, y];
       }
     return null;
   };
   const pickSpot = (it, size, want) => {
-    const gap = Math.max(0, gameGap(cfg, it.g));
+    const gap = gapPx(it.g);
     const box = want === "footer" ? zones.footer : want === "logo" ? (zones.peopleLogo || zones.logo) : null;
+    const zoneWant = want === "main" ? "" : want;
     if (small && (!want || want === "main") && gutters.length) {
       for (let k = 0; k < tries; k++) {
         const gbox = gutters[k % gutters.length];
         const spanX = Math.max(1, gbox.r - gbox.l - size);
         const spanY = Math.max(1, gbox.b - gbox.t - size);
         const x = gbox.l + r() * spanX, y = gbox.t + r() * spanY;
-        if (!free(x, y, x + size, y + size) || !zoneOk(x, y, size, "")) continue;
+        if (!okSpot(x, y, size, gap, "")) continue;
         return [x, y];
       }
       for (const gbox of gutters) {
@@ -421,7 +440,7 @@ function place() {
     const spanY = Math.max(1, bounds.b - bounds.t - size);
     for (let k = 0; k < tries; k++) {
       const x = bounds.l + r() * spanX, y = bounds.t + r() * spanY;
-      if (!free(x, y, x + size, y + size) || !zoneOk(x, y, size, want === "main" ? "" : want)) continue;
+      if (!okSpot(x, y, size, gap, zoneWant)) continue;
       return [x, y];
     }
     return scanBox(size, gap, want, box);
