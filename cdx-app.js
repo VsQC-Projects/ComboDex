@@ -466,7 +466,20 @@ function cdxApplyHash(){
   if(bits[i]&&tabs.has(bits[i]))o.tab=bits[i];
 }
 let cdxRoute="";
-function oe(){Ve(Object.assign(H,{tab:o.tab,game:o.game,char:o.char,sort:o.sort,onlyWithCombos:o.onlyWithCombos,kcView:o.kcView}));try{const hash=cdxHash(),route=o.tab+(o.tab==="knowledge"?"/"+o.kcView:"");if(location.hash!==hash){if(cdxRoute&&cdxRoute!==route)history.pushState(null,"",hash);else history.replaceState(null,"",hash)}cdxRoute=route}catch{}}const R={},V=(e,t)=>R[e]=t;function j(e){var t;if(e!=="replay")try{raPlayer&&raPlayer.pauseVideo&&raPlayer.pauseVideo()}catch{}try{a("tokFly")&&a("tokFly").classList.add("hidden")}catch{}o.tab=e,document.body.classList.toggle("on-home",e==="home"),document.querySelectorAll(".page").forEach(n=>n.classList.toggle("hidden",n.id!==e)),document.querySelectorAll(".nav .tab").forEach(n=>{const s=n.dataset.tab===e;n.classList.toggle("active",s),n.setAttribute("aria-current",s?"page":"false")}),(t=R[e])==null||t.call(R),oe();try{syncLogos()}catch{}if(e==="replay"||e==="create")setTimeout(()=>{try{padStatus();padScale()}catch{}},60)}function Qe(e,t){const n=[...t];return e.map(s=>{const r=n.indexOf(s);return r>=0&&n.splice(r,1),{t:s,diff:r<0}})}function et(){k(a("compareGame"),De(),o.game),we(o.game,o.char),a("compareChar").dataset.mode="char",Y()}const we=(e,t)=>k(a("compareChar"),T(e).map(n=>[n.name,charLabel(n.name)]),t);function cmpScope(){const s=a("compareScope");return s&&["char","game","all"].includes(s.value)?s.value:"char"}
+function cdxIsPreview(){try{return !window.CDX_ADMIN&&window.self!==window.top}catch{return!0}}
+function oe(){
+  if(!cdxIsPreview()){
+    try{
+      const u=JSON.parse(localStorage.getItem(Le))||{};
+      u.tab=o.tab;u.game=o.game;u.char=o.char;u.sort=o.sort;u.onlyWithCombos=o.onlyWithCombos;u.kcView=o.kcView;
+      if(H.hideKeys)u.hideKeys=H.hideKeys;
+      if(H.palOrder)u.palOrder=H.palOrder;
+      localStorage.setItem(Le,JSON.stringify(u));
+      Object.assign(H,u);
+    }catch{}
+  }
+  try{const hash=cdxHash(),route=o.tab+(o.tab==="knowledge"?"/"+o.kcView:"");if(location.hash!==hash){if(cdxRoute&&cdxRoute!==route)history.pushState(null,"",hash);else history.replaceState(null,"",hash)}cdxRoute=route}catch{}
+}const R={},V=(e,t)=>R[e]=t;function j(e){var t;if(e!=="replay")try{raPlayer&&raPlayer.pauseVideo&&raPlayer.pauseVideo()}catch{}try{a("tokFly")&&a("tokFly").classList.add("hidden")}catch{}o.tab=e,document.body.classList.toggle("on-home",e==="home"),document.querySelectorAll(".page").forEach(n=>n.classList.toggle("hidden",n.id!==e)),document.querySelectorAll(".nav .tab").forEach(n=>{const s=n.dataset.tab===e;n.classList.toggle("active",s),n.setAttribute("aria-current",s?"page":"false")}),(t=R[e])==null||t.call(R),oe();try{syncLogos()}catch{}if(e==="replay"||e==="create")setTimeout(()=>{try{padStatus();padScale()}catch{}},60)}function Qe(e,t){const n=[...t];return e.map(s=>{const r=n.indexOf(s);return r>=0&&n.splice(r,1),{t:s,diff:r<0}})}function et(){k(a("compareGame"),De(),o.game),we(o.game,o.char),a("compareChar").dataset.mode="char",Y()}const we=(e,t)=>k(a("compareChar"),T(e).map(n=>[n.name,charLabel(n.name)]),t);function cmpScope(){const s=a("compareScope");return s&&["char","game","all"].includes(s.value)?s.value:"char"}
 function cmpCharOpts(sc,gm){const m=new Map();for(const c of d.combos||[]){if(!c||!c.game||!c.character||(sc==="game"&&c.game!==gm))continue;const v=sc==="all"?c.game+"|"+c.character:c.character;if(!m.has(v))m.set(v,[v,charLabel(c.character)+(sc==="all"?" · "+(b[c.game]?b[c.game].name:c.game):"")])}return[...m.values()].sort((x,z)=>x[1].localeCompare(z[1]))}
 function cmpPick(sc,gm,v){if(!v)return[];if(sc!=="all")return q(gm,v);const i=v.indexOf("|");return q(v.slice(0,i),v.slice(i+1))}
 function Y(){const sc=cmpScope(),gm=a("compareGame").value,c1=a("compareChar"),c2=a("compareChar2"),two=sc!=="char";a("compareGame").disabled=sc==="all";c2.closest(".field").classList.toggle("hidden",!two);a("cmpChars").classList.toggle("one",!two);a("compareCharLbl").textContent=cdxT(two?"cmp.char1":"Personnage");let A,B;if(!two){if(c1.dataset.mode!=="char"){we(gm,o.char);c1.dataset.mode="char"}A=B=q(gm,c1.value)}else{const opts=cmpCharOpts(sc,gm),mode=sc+":"+gm,p1=c1.dataset.mode===mode?c1.value:(sc==="all"?o.game+"|"+o.char:o.char),p2=c2.dataset.mode===mode?c2.value:"";k(c1,opts,p1);k(c2,opts,p2);c1.dataset.mode=c2.dataset.mode=mode;if(!opts.some(x=>x[0]===p2)){const o2=opts.find(x=>x[0]!==c1.value)||opts[0];if(o2)c2.value=o2[0]}A=cmpPick(sc,gm,c1.value);B=cmpPick(sc,gm,c2.value)}const lab=r=>two?r.name+" — "+charLabel(r.character)+(sc==="all"?" · "+(b[r.game]?b[r.game].name:r.game):""):r.name,t=a("compareA").value,n=a("compareB").value;k(a("compareA"),[["",cdxT("Choisir le combo A")],...A.map(r=>[r.id,lab(r)])],t);k(a("compareB"),[["",cdxT("Choisir le combo B")],...B.map(r=>[r.id,lab(r)])],n);!a("compareA").value&&A[0]&&(a("compareA").value=A[0].id);if(!a("compareB").value){const nb=B.find(r=>r.id!==a("compareA").value);if(nb)a("compareB").value=nb.id}_(two?(A.length&&B.length?2:0):A.length)}function _(e=1/0){
@@ -1496,7 +1509,7 @@ async function saveSiteRow(){
 }
 async function saveSiteFont(id){
   const f=siteFontId(id)||"stencil";
-  applyHomeFont(f);
+  applyHomeFont(f,!0);
   d.siteFont=f;
   if(!isAtelier())return;
   const ok=await saveSiteRow();
@@ -3440,7 +3453,7 @@ function raBindFloat(el){
 }
 try{V("replay",raRender);raBind()}catch(err){console.warn("Replay Analyzer",err)}
 let homeFontId="stencil";
-function applyHomeFont(id){
+function applyHomeFont(id,persist){
   const x=HOME_FONTS[id]||HOME_FONTS.stencil;
   homeFontId=HOME_FONTS[id]?id:"stencil";
   const root=document.body.style;
@@ -3449,6 +3462,7 @@ function applyHomeFont(id){
   root.setProperty("--cdx-brand-weight",x.w);
   root.setProperty("--cdx-brand-size",x.s);
   document.querySelectorAll("[data-home-font]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.homeFont===homeFontId?"true":"false"));
+  if(!persist||cdxIsPreview())return;
   try{
     const u=JSON.parse(localStorage.getItem(Le))||{};
     if(u.homeFont!==homeFontId){u.homeFont=homeFontId;localStorage.setItem(Le,JSON.stringify(u))}
@@ -3470,7 +3484,7 @@ window.addEventListener("message",e=>{
     if(u.homeFont)applyHomeFont(u.homeFont);
   }catch{}
 });
-try{if(window.CDX_ADMIN){try{atelierLive=localStorage.getItem(ATELIER_K)===ATELIER_S}catch{}atelierMark();if(!atelierLive)bindAtelierLogin()}else{atelierLive=!1;atelierMark()}const hb=a("homeBrand");if(hb)hb.onclick=()=>j("home");const hg=a("homeGrid");if(hg)hg.addEventListener("click",e=>{const v=e.target.closest("[data-kc-view]"),t=e.target.closest("[data-tab]");if(t&&t.dataset.tab==="knowledge")o.kcView=v?v.dataset.kcView:"hub";t&&j(t.dataset.tab)});applyHomeFont(d.siteFont||"stencil")}catch{}
+try{if(window.CDX_ADMIN){try{atelierLive=localStorage.getItem(ATELIER_K)===ATELIER_S}catch{}atelierMark();if(!atelierLive)bindAtelierLogin()}else{atelierLive=!1;atelierMark()}const hb=a("homeBrand");if(hb)hb.onclick=()=>j("home");const hg=a("homeGrid");if(hg)hg.addEventListener("click",e=>{const v=e.target.closest("[data-kc-view]"),t=e.target.closest("[data-tab]");if(t&&t.dataset.tab==="knowledge")o.kcView=v?v.dataset.kcView:"hub";t&&j(t.dataset.tab)});const storedFont=(()=>{try{return siteFontId((JSON.parse(localStorage.getItem(Le))||{}).homeFont)}catch{return null}})();applyHomeFont(d.siteFont||storedFont||"stencil")}catch{}
 function homeFaces(){
   const faces=[["bbcf","Ragna the Bloodedge"],["mvc2","Shuma-Gorath"],["tokon","Captain America"],["sf6","Ryu"],["ggst","Sol"],["2xko","Ahri"],["al","Aang"],["umvc3","Dante"],["dbfz","Krillin"],["gbvsr","Avatar Belial"]];
   const people=a("hvPeople");

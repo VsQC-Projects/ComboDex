@@ -29,16 +29,20 @@ const LI = {fr: 0, en: 1, es: 2};
 
 /* ---------- themes ---------- */
 function readUI() { try { return JSON.parse(localStorage.getItem(UI_KEY)) || {}; } catch { return {}; } }
+function isPreview() {
+  try { return !window.CDX_ADMIN && window.self !== window.top; } catch { return true; }
+}
 function setTheme(name) {
   if (!THEMES.includes(name)) name = "official";
   document.documentElement.dataset.theme = name;
+  document.querySelectorAll("#daSwitch button,[data-admin-theme]").forEach(b => {
+    const id = b.dataset.theme || b.dataset.adminTheme;
+    if (id) b.setAttribute("aria-pressed", id === name ? "true" : "false");
+  });
+  if (isPreview()) return;
   const ui = readUI(); ui.theme = name;
   try { if (typeof H === "object" && H) H.theme = name; } catch {}
   try { localStorage.setItem(UI_KEY, JSON.stringify(ui)); } catch {}
-  document.querySelectorAll("#daSwitch button,[data-admin-theme]").forEach(b => {
-    const id = b.dataset.theme || b.dataset.adminTheme;
-    b.setAttribute("aria-pressed", id === name ? "true" : "false");
-  });
   schedule();
 }
 function buildSwitch() {
@@ -627,12 +631,18 @@ function init() {
   }).observe(main, {subtree: true, childList: true, attributes: true, attributeFilter: ["class"]});
   addEventListener("resize", () => schedule(300));
   addEventListener("hashchange", () => schedule(120));
+  let lastRefsJson = "";
+  try { lastRefsJson = JSON.stringify(readUI().refs || {}); } catch {}
   addEventListener("storage", e => {
     if (e.key !== UI_KEY) return;
     const u = readUI();
     if (u.theme && THEMES.includes(u.theme) && document.documentElement.dataset.theme !== u.theme) {
       document.documentElement.dataset.theme = u.theme;
     }
+    let refsJson = "";
+    try { refsJson = JSON.stringify(u.refs || {}); } catch {}
+    if (refsJson === lastRefsJson) return;
+    lastRefsJson = refsJson;
     rebuildPlan();
     schedule(80);
   });
