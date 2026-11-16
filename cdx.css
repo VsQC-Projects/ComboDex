@@ -254,9 +254,9 @@ body.on-home .brand-mark{font-size:.52em}
 }
 @media (max-width:360px){.home-tile:not(.home-kc){padding:7px}.home-tile-name{font-size:12px}}
 .person-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,280px);gap:14px;align-items:stretch}
-.person-dock{display:flex;flex-direction:column;gap:8px;padding:12px;border:1px solid var(--line);border-radius:14px;background:var(--panel2);min-width:0;min-height:0;max-height:220px;overflow:hidden}
-.person-dock-actions{display:flex;flex-wrap:wrap;gap:8px;flex:none}
-.person-dock-actions button{flex:1 1 110px;padding:8px 10px;font-size:13px}
+.person-dock{display:flex;flex-direction:column;gap:8px;padding:12px;border:1px solid var(--line);border-radius:14px;background:var(--panel2);min-width:0;min-height:0;max-height:280px;overflow:auto}
+.person-dock-actions,.person-dock-mods{display:flex;flex-wrap:wrap;gap:8px;flex:none}
+.person-dock-actions button,.person-dock-mods button{flex:1 1 110px;padding:8px 10px;font-size:13px}
 .person-dock-video{flex:1 1 auto;display:flex;flex-direction:column;gap:6px;min-height:0;overflow:hidden}
 .person-dock-slot{flex:1 1 auto;min-height:72px;border-radius:10px;border:1px dashed var(--line)}
 .person-dock .video-frame,.person-dock-video iframe.video-frame,.person-dock-video video.video-frame{width:100%;max-height:132px;aspect-ratio:16/9;height:auto;min-height:0;border:0;border-radius:10px;background:#0e0e14;pointer-events:auto}

@@ -229,6 +229,8 @@ def main():
             fail("search B() missing")
     if "CDX_KC.search" not in app:
         fail("B() must call CDX_KC.search")
+    if 'data-dock="frames"' not in app or 'data-dock="compare"' not in app:
+        fail("person dock module links missing")
     for m in re.finditer(r'localStorage\.setItem\((["\'])([^"\']+)\1', app + i18n + extra_js):
         key = m.group(2)
         if key in allowed or key.startswith("cdx-ft:") or key.startswith("cdx-kc-v1"):
