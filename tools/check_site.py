@@ -167,17 +167,16 @@ def main():
         if not set(core_themes).issubset(found_themes):
             fail(f"core themes must remain {core_themes}, got {found_themes}")
         extra_themes = ["arcade", "ink", "blueprint", "broadcast", "graphite", "manual"]
-        for t in extra_themes:
-            if t not in found_themes:
-                fail(f"extra theme missing: {t}")
-        theme_css = (ROOT / "cdx-theme.css").read_text(encoding="utf-8")
-        for t in extra_themes:
-            if f'html[data-theme="{t}"]' not in theme_css:
-                fail(f"extra theme CSS missing: {t}")
-        if 'html[data-da="studio"]' not in theme_css:
-            fail("studio DA CSS missing")
-        if 'dataset.da=d' not in html and "dataset.da = d" not in html:
-            fail("FOUC must persist data-da")
+        extra_found = [t for t in extra_themes if t in found_themes]
+        if extra_found:
+            fail(f"extra themes must not be selectable: {extra_found}")
+        if found_themes != core_themes:
+            fail(f"theme picker must be exactly {core_themes}, got {found_themes}")
+        refs = (ROOT / "cdx-refs.js").read_text(encoding="utf-8")
+        if "da-extra" in refs or "data-da=" in refs:
+            fail("theme switch must not expose Classique/Studio or extra palettes")
+        if "adminDa" in app or "data-admin-da" in app:
+            fail("admin header must not expose Classique/Studio")
 
     if "function ytIframe" not in app:
         fail("ytIframe missing — Replay player must stay")

@@ -145,7 +145,7 @@ function wikiHeaders(extra){
 }
 function wikiApi(){return WIKI_URL}
 const SITE_ID="cdx-site";
-const CDX_THEMES=["official","wood","dojo","borne","capsule","arcade","ink","blueprint","broadcast","graphite","manual"];
+const CDX_THEMES=["official","wood","dojo","borne","capsule"];
 const HOME_FONTS={
   now:{f:"system-ui,-apple-system,\"Segoe UI\",sans-serif",l:".1em",w:"850",s:"clamp(52px,8.8vw,96px)"},
   pixel:{f:'"Press Start 2P",cursive',l:".06em",w:"400",s:"clamp(22px,4.8vw,44px)"},
@@ -944,11 +944,9 @@ function renderAtelierDashBody(){
         <div class="admin-nav-group"><span class="admin-nav-label">${l(cdxT("admin.group.site"))}</span>
         ${leaf("font",cdxT("atelier.tree.font"))}</div>`;
   if(window.CDX_ADMIN){
-    const themeNow=document.documentElement.dataset.theme||"official";
-    const daNow=document.documentElement.dataset.da==="studio"?"studio":"legacy";
+    const themeNow=CDX_THEMES.includes(document.documentElement.dataset.theme)?document.documentElement.dataset.theme:"official";
     const themeBtns=CDX_THEMES.map(id=>`<button type="button" data-admin-theme="${id}" aria-pressed="${themeNow===id?"true":"false"}">${l(cdxT("admin.theme."+id))}</button>`).join("");
-    const daBtns=`<button type="button" data-admin-da="legacy" aria-pressed="${daNow==="legacy"?"true":"false"}">${l(cdxT("admin.da.legacy"))}</button><button type="button" data-admin-da="studio" aria-pressed="${daNow==="studio"?"true":"false"}">${l(cdxT("admin.da.studio"))}</button>`;
-    const head=`<div class="admin-brandline"><span class="admin-mark admin-mark-sm" aria-hidden="true">CD</span><span class="admin-brand-name">ComboDex</span><span class="admin-badge">${l(cdxT("admin.badge"))}</span></div><span class="atelier-head-actions"><div class="admin-da" id="adminDa" role="group">${daBtns}</div><div class="admin-themes" id="adminThemes" role="group" aria-label="${l(cdxT("admin.theme"))}">${themeBtns}</div><button type="button" class="tiny" id="adminPreviewToggle" onclick="window.cdxTogglePreview&&window.cdxTogglePreview(event)">${l(cdxT("admin.preview.hide"))}</button><span class="admin-session">${l(cdxT("admin.session"))}</span><a class="tiny" href="${l(atelierSiteHref())}">${l(cdxT("admin.site"))}</a><button type="button" class="tiny" id="atelierOut">${l(cdxT("admin.out"))}</button></span>`;
+    const head=`<div class="admin-brandline"><span class="admin-mark admin-mark-sm" aria-hidden="true">CD</span><span class="admin-brand-name">ComboDex</span><span class="admin-badge">${l(cdxT("admin.badge"))}</span></div><span class="atelier-head-actions"><div class="admin-themes" id="adminThemes" role="group" aria-label="${l(cdxT("admin.theme"))}">${themeBtns}</div><button type="button" class="tiny" id="adminPreviewToggle" onclick="window.cdxTogglePreview&&window.cdxTogglePreview(event)">${l(cdxT("admin.preview.hide"))}</button><span class="admin-session">${l(cdxT("admin.session"))}</span><a class="tiny" href="${l(atelierSiteHref())}">${l(cdxT("admin.site"))}</a><button type="button" class="tiny" id="atelierOut">${l(cdxT("admin.out"))}</button></span>`;
     if(!dash.dataset.shell){
       dash.dataset.shell="1";
       dash.innerHTML=`<div class="atelier-head" id="adminHead"></div>
@@ -1048,18 +1046,6 @@ function renderAtelierDashBody(){
       try{const u=JSON.parse(localStorage.getItem("combo-dex-ui-v1"))||{};u.theme=name;localStorage.setItem("combo-dex-ui-v1",JSON.stringify(u))}catch{}
       themes.querySelectorAll("[data-admin-theme]").forEach(x=>x.setAttribute("aria-pressed",x.dataset.adminTheme===name?"true":"false"));
     }
-    atelierPreviewPing();
-  };
-  const das=a("adminDa");
-  if(das)das.onclick=e=>{
-    const b=e.target.closest("[data-admin-da]");if(!b)return;
-    const name=b.dataset.adminDa==="studio"?"studio":"legacy";
-    if(window.CDX_REF_API&&typeof window.CDX_REF_API.setDa==="function")window.CDX_REF_API.setDa(name);
-    else{
-      document.documentElement.dataset.da=name;
-      try{const u=JSON.parse(localStorage.getItem("combo-dex-ui-v1"))||{};u.da=name;localStorage.setItem("combo-dex-ui-v1",JSON.stringify(u))}catch{}
-    }
-    das.querySelectorAll("[data-admin-da]").forEach(x=>x.setAttribute("aria-pressed",x.dataset.adminDa===name?"true":"false"));
     atelierPreviewPing();
   };
   const go=a("atelierXGo");if(go)go.onclick=()=>saveXOk((a("atelierX")||{}).value);

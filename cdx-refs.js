@@ -2,9 +2,7 @@
 "use strict";
 const UI_KEY = "combo-dex-ui-v1";
 const THEMES = ["official", "wood", "dojo", "borne", "capsule"];
-const EXTRA_THEMES = ["arcade", "ink", "blueprint", "broadcast", "graphite", "manual"];
-const ALL_THEMES = THEMES.concat(EXTRA_THEMES);
-const DAS = ["legacy", "studio"];
+const ALL_THEMES = THEMES.slice();
 const MODULES = ["people", "frames", "compare", "replay", "create", "import", "knowledge"];
 const TXT = {
   fr: {wood: "Bois", official: "Officielle", dojo: "Dojo", borne: "Borne", capsule: "Capsule",
@@ -44,22 +42,8 @@ function readUI() { try { return JSON.parse(localStorage.getItem(UI_KEY)) || {};
 function isPreview() {
   try { return !window.CDX_ADMIN && window.self !== window.top; } catch { return true; }
 }
-function currentDa() {
-  const v = document.documentElement.dataset.da;
-  return DAS.includes(v) ? v : "legacy";
-}
-function setDa(name) {
-  if (!DAS.includes(name)) name = "legacy";
-  document.documentElement.dataset.da = name;
-  document.querySelectorAll("#daSwitch [data-da],[data-admin-da]").forEach(b => {
-    b.setAttribute("aria-pressed", b.dataset.da === name || b.dataset.adminDa === name ? "true" : "false");
-  });
-  if (isPreview()) return;
-  const ui = readUI(); ui.da = name;
-  try { localStorage.setItem(UI_KEY, JSON.stringify(ui)); } catch {}
-}
 function setTheme(name) {
-  if (!ALL_THEMES.includes(name)) name = "official";
+  if (!THEMES.includes(name)) name = "official";
   document.documentElement.dataset.theme = name;
   document.querySelectorAll("#daSwitch [data-theme],[data-admin-theme]").forEach(b => {
     const id = b.dataset.theme || b.dataset.adminTheme;
@@ -74,15 +58,13 @@ function setTheme(name) {
 function buildSwitch() {
   const box = document.createElement("div");
   box.id = "daSwitch"; box.className = "da-switch"; box.setAttribute("role", "group");
-  box.innerHTML = `<div class="da-row da-da" role="group">${DAS.map(n => `<button type="button" data-da="${n}"></button>`).join("")}</div>
-    <div class="da-row da-core" role="group">${THEMES.map(n => `<button type="button" data-theme="${n}"></button>`).join("")}</div>
-    <div class="da-row da-extra" role="group">${EXTRA_THEMES.map(n => `<button type="button" data-theme="${n}"></button>`).join("")}</div>`;
+  box.innerHTML = THEMES.map(n => `<button type="button" data-theme="${n}"></button>`).join("");
   box.addEventListener("click", e => {
-    const da = e.target.closest("button[data-da]"); if (da) { setDa(da.dataset.da); return; }
     const th = e.target.closest("button[data-theme]"); if (th) setTheme(th.dataset.theme);
   });
   document.body.appendChild(box);
-  setDa(DAS.includes(readUI().da) ? readUI().da : "legacy");
+  const saved = readUI().theme;
+  if (saved && !THEMES.includes(saved)) setTheme("official");
   labelSwitch();
   const lift = () => {
     const f = document.querySelector(".studio-footer");
@@ -100,10 +82,6 @@ function labelSwitch() {
   box.querySelectorAll("button[data-theme]").forEach(b => {
     b.textContent = t(b.dataset.theme);
     b.setAttribute("aria-pressed", document.documentElement.dataset.theme === b.dataset.theme ? "true" : "false");
-  });
-  box.querySelectorAll("button[data-da]").forEach(b => {
-    b.textContent = t(b.dataset.da);
-    b.setAttribute("aria-pressed", currentDa() === b.dataset.da ? "true" : "false");
   });
 }
 
@@ -280,9 +258,8 @@ window.CDX_REF_API = {
       by
     };
   },
-  themes: ALL_THEMES,
-  setTheme,
-  setDa
+  themes: THEMES,
+  setTheme
 };
 addEventListener("cdx-refs-cfg", () => { rebuildPlan(); schedule(80); });
 

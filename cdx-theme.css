@@ -558,9 +558,7 @@ html[data-theme="dojo"] :is(select,input,textarea,summary):hover{border-color:#d
 html[data-theme="wood"] :is(select,input,textarea,summary):hover{border-color:#120c07}
 html[data-theme="dojo"] button:hover,html[data-theme="dojo"] .tab:hover{border-color:#d9412b}
 html[data-theme="wood"] button:hover,html[data-theme="wood"] .tab:hover{border-color:#120c07}
-.da-switch{position:fixed;right:12px;bottom:12px;z-index:30;display:flex;flex-direction:column;flex-wrap:nowrap;align-items:flex-end;justify-content:flex-end;gap:5px;padding:6px;width:max-content;max-width:min(420px,calc(100vw - 24px));border:1px solid transparent;border-radius:11px;background:#000000b3;backdrop-filter:blur(4px);box-sizing:border-box}
-.da-switch .da-row{display:flex;flex-wrap:nowrap;align-items:center;justify-content:flex-end;gap:4px;width:max-content;max-width:100%}
-.da-switch .da-extra{flex-wrap:wrap}
+.da-switch{position:fixed;right:12px;bottom:12px;z-index:30;display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:4px;padding:6px;width:max-content;max-width:min(420px,calc(100vw - 24px));border:1px solid transparent;border-radius:11px;background:#000000b3;backdrop-filter:blur(4px);box-sizing:border-box}
 .da-switch button{padding:5px 8px;font:700 11px system-ui,sans-serif;border-radius:8px;border:1px solid #ffffff38;background:transparent;color:#fff;flex:none;white-space:nowrap;box-sizing:border-box}
 .da-switch button[aria-pressed="true"]{background:#fff;color:#111;border-color:#fff}
 html[data-theme="dojo"] .da-switch{background:#1d1d22}

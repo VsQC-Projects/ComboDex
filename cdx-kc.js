@@ -957,5 +957,5 @@ function bind(r){
   });
 }
 
-window.CDX_KC={render:render,mastery:mastery,views:VIEWS,names:VIEW_NAME,patchFlags:patchFlags,go:go,search:searchHits,open:openHit,globalResults:globalResults};
+window.CDX_KC={render:render,mastery:mastery,views:VIEWS,names:VIEW_NAME,patchFlags:patchFlags,go:go,search:searchHits};
 })();
