@@ -286,8 +286,8 @@ body.cdx-admin .atelier-tree button{
   width:100%;
   display:flex;
   align-items:center;
-  justify-content:space-between;
-  gap:6px;
+  justify-content:flex-start;
+  gap:8px;
   text-align:left;
   border:1px solid transparent;
   border-radius:8px;
@@ -297,14 +297,35 @@ body.cdx-admin .atelier-tree button{
   background:transparent;
   font-size:12px;
   line-height:1.25;
+  min-height:32px;
 }
+body.cdx-admin .atelier-tree .admin-ico{flex:none;display:block}
+body.cdx-admin .atelier-tree .admin-nav-txt{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+body.cdx-admin .atelier-tree .count{margin-left:auto;flex:none}
+body.cdx-admin .atelier-tree .admin-nav-top{display:flex;flex-direction:column;gap:2px}
+body.cdx-admin .atelier-tree .admin-nav-toggle{color:var(--admin-muted)}
 body.cdx-admin .atelier-tree button:hover{background:var(--admin-hover)}
 body.cdx-admin .atelier-tree button.sel{
   background:var(--admin-sel);
   border-color:var(--admin-accent);
   color:var(--admin-sel-ink);
 }
-body.cdx-admin .atelier-tree .leaf{padding-left:10px}
+body.cdx-admin .atelier-tree .leaf{padding-left:8px}
+body.cdx-admin.is-atelier #atelierDash:not(.hidden).nav-collapsed{
+  --admin-nav:56px;
+  grid-template-columns:var(--admin-nav,56px) 0 minmax(200px,1fr) 16px var(--admin-preview,40vw);
+}
+body.cdx-admin.is-atelier #atelierDash:not(.hidden).nav-collapsed.preview-off{
+  grid-template-columns:var(--admin-nav,56px) 0 minmax(200px,1fr) 0 0 !important;
+}
+body.cdx-admin #atelierDash.nav-collapsed .admin-nav-txt,
+body.cdx-admin #atelierDash.nav-collapsed .admin-nav-label,
+body.cdx-admin #atelierDash.nav-collapsed .count{display:none}
+body.cdx-admin #atelierDash.nav-collapsed .atelier-tree button{
+  justify-content:center;
+  padding:8px 4px;
+}
+body.cdx-admin #atelierDash.nav-collapsed .atelier-tree .leaf{padding-left:4px}
 body.cdx-admin .admin-grip{
   grid-area:g1;
   width:16px;
@@ -863,6 +884,14 @@ body.cdx-admin .admin-key{
     border-left:0;
   }
   body.cdx-admin .atelier-tree button{width:auto;flex:none}
+  body.cdx-admin.is-atelier #atelierDash:not(.hidden).nav-collapsed{
+    grid-template-columns:1fr;
+  }
+  body.cdx-admin #atelierDash.nav-collapsed .admin-nav-txt,
+  body.cdx-admin #atelierDash.nav-collapsed .count{display:inline}
+  body.cdx-admin #atelierDash.nav-collapsed .admin-nav-label{display:inline-flex}
+  body.cdx-admin #atelierDash.nav-collapsed .atelier-tree button{justify-content:flex-start;padding:6px 8px}
+  body.cdx-admin .admin-nav-toggle{display:none}
   body.cdx-admin .atelier-work{padding:18px 16px 32px;max-width:none}
 }
 body.cdx-admin .admin-themes{

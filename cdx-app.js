@@ -898,7 +898,8 @@ function renderAtelierDashBody(){
   const dash=a("atelierDash");if(!dash)return;
   if(atelierView==="site")atelierView="home";
   const pend=pendingXRows(),reps=reportedCombos(),labs=labRequests();
-  const leaf=(v,label,n)=>`<button type="button" class="leaf${atelierView===v?" sel":""}" data-av="${v}">${l(label)}${n?`<span class="count">${n}</span>`:""}</button>`;
+  const ico=id=>adminNavIco(id);
+  const leaf=(v,label,n)=>`<button type="button" class="leaf${atelierView===v?" sel":""}" data-av="${v}" title="${l(label)}">${ico(v)}<span class="admin-nav-txt">${l(label)}</span>${n?`<span class="count">${n}</span>`:""}</button>`;
   const where=c=>`${b[c.game]?b[c.game].name:c.game} · ${charLabel(c.character)}`;
   const notif=(ico,kind,c,text,acts)=>`<div class="atelier-notif"><button type="button" class="atelier-notif-main" data-go-combo="${l(c.id)}"><span aria-hidden="true">${ico}</span><span><b>${l(cdxT(kind))}</b> · ${l(c.name||"")} <span class="muted">(${l(where(c))})</span>${text?`<br><span class="small">${l(text)}</span>`:""}</span></button><span class="atelier-notif-acts">${acts}</span></div>`;
   const items=[
@@ -915,7 +916,11 @@ function renderAtelierDashBody(){
   }).join("");
   const fonts=Object.keys(HOME_FONTS).map(id=>`<button type="button" data-home-font="${id}" aria-pressed="${homeFontId===id}" style="font-family:${HOME_FONTS[id].f}">${l(cdxT("home.font."+id))}</button>`).join("");
   const work=atelierWorkHtml(pend,fonts);
-  const treeNav=`<button type="button" data-av="home" class="${atelierView==="home"?"sel":""}">${l(cdxT("admin.overview"))}</button>
+  const collapsed=!!adminLayout().navCollapsed;
+  const treeNav=`<div class="admin-nav-top">
+        <button type="button" class="admin-nav-toggle" id="adminNavToggle" aria-pressed="${collapsed?"true":"false"}" title="${l(cdxT(collapsed?"admin.nav.expand":"admin.nav.collapse"))}" aria-label="${l(cdxT(collapsed?"admin.nav.expand":"admin.nav.collapse"))}">${ico("menu")}<span class="admin-nav-txt">${l(cdxT(collapsed?"admin.nav.expand":"admin.nav.collapse"))}</span></button>
+        <button type="button" data-av="home" class="${atelierView==="home"?"sel":""}" title="${l(cdxT("admin.overview"))}">${ico("home")}<span class="admin-nav-txt">${l(cdxT("admin.overview"))}</span></button>
+        </div>
         <div class="admin-nav-group"><span class="admin-nav-label">${l(cdxT("admin.group.mod"))}</span>
         ${leaf("reports",cdxT("atelier.tree.reports"),reps.length)}
         ${leaf("review",cdxT("atelier.tree.review"),reviewRows().length)}
@@ -970,6 +975,8 @@ function renderAtelierDashBody(){
     bindPreviewToggle();
     applyAdminLayout();
     const treeEl=a("atelierTree");if(treeEl)treeEl.innerHTML=treeNav;
+    const nt=a("adminNavToggle");
+    if(nt)nt.onclick=e=>{e.preventDefault();e.stopPropagation();const next=!adminLayout().navCollapsed;saveAdminLayout({navCollapsed:next});applyAdminLayout({navCollapsed:next});};
     const workEl=a("atelierWork");if(workEl)workEl.innerHTML=work;
   }else{
     dash.innerHTML=`<div class="atelier-grip-x" id="atelierGripX" role="separator" aria-orientation="vertical"></div><div class="atelier-head"><b>${l(cdxT("atelier.dash"))}</b><button type="button" class="tiny" id="atelierOut">${l(cdxT("Fermer l’atelier"))}</button></div>
@@ -1061,13 +1068,34 @@ function saveAdminLayout(patch){
     localStorage.setItem(Le,JSON.stringify(u));
   }catch{}
 }
+function adminNavIco(id){
+  const p={
+    menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',
+    home:'<path d="M4 10.5 12 4l8 6.5V20H4z"/><path d="M9 20v-7h6v7"/>',
+    reports:'<path d="M8 4h7l5 5v11H8z"/><path d="M15 4v5h5"/><path d="M11 12h6M11 16h4"/>',
+    review:'<path d="M5 6h14v12H5z"/><path d="M8 10h8M8 14h5"/>',
+    x:'<path d="M8 7h8v10H8z"/><path d="M11 10.5 15 12l-4 1.5z"/>',
+    lab:'<path d="M9 4h6M10 4v5l-5 8h14l-5-8V4"/>',
+    edits:'<path d="M5 19h14"/><path d="M7 16 16.5 6.5a2 2 0 0 1 2.8 2.8L9.8 19H7z"/>',
+    refs:'<path d="M5 7h14v12H5z"/><path d="M5 15l4-3 3 2 4-4 3 3"/>',
+    portraits:'<circle cx="12" cy="9" r="3"/><path d="M6 19c1.5-3 8.5-3 12 0"/>',
+    people:'<circle cx="9" cy="9" r="2.4"/><circle cx="16" cy="10" r="2"/><path d="M4.5 19c.8-2.8 4.2-4 7-3.2M13 16.2c2.2-.6 5.2.4 6.5 2.8"/>',
+    keys:'<path d="M8 16h8M7 8h10v5H7z"/>',
+    import:'<path d="M12 4v10"/><path d="M8 10l4 4 4-4"/><path d="M5 19h14"/>',
+    replay:'<path d="M5 7h14v10H5z"/><path d="M10 10.5 15 12l-5 1.5z"/>',
+    font:'<path d="M6 18V7h5M6 12h4M14 18V9h5"/>'
+  };
+  return `<svg class="admin-ico" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${p[id]||p.home}</svg>`;
+}
 function applyAdminLayout(live){
   const dash=a("atelierDash");if(!dash||!window.CDX_ADMIN)return;
   const L={...adminLayout(),...live||{}};
-  const nav=Math.max(148,Math.min(220,L.nav||168));
+  const collapsed=!!L.navCollapsed;
+  const nav=collapsed?56:Math.max(148,Math.min(220,L.nav||168));
   const off=!!L.previewOff;
   const prev=off?0:Math.max(220,Math.min(Math.round(innerWidth*.72),L.preview||Math.round(innerWidth*.4)));
   dash.classList.remove("nav-slim");
+  dash.classList.toggle("nav-collapsed",collapsed);
   dash.style.setProperty("--admin-nav",nav+"px");
   dash.style.setProperty("--admin-preview",off?"0px":prev+"px");
   dash.classList.toggle("preview-off",off);
@@ -1088,6 +1116,17 @@ function applyAdminLayout(live){
   if(tog){
     tog.setAttribute("aria-pressed",off?"false":"true");
     tog.textContent=l(cdxT(off?"admin.preview.show":"admin.preview.hide"));
+  }
+  const navG=a("adminGripNav");
+  if(navG){navG.hidden=collapsed;navG.style.display=collapsed?"none":""}
+  const nt=a("adminNavToggle");
+  if(nt){
+    nt.setAttribute("aria-pressed",collapsed?"true":"false");
+    const lab=l(cdxT(collapsed?"admin.nav.expand":"admin.nav.collapse"));
+    nt.setAttribute("title",lab);
+    nt.setAttribute("aria-label",lab);
+    const txt=nt.querySelector(".admin-nav-txt");
+    if(txt)txt.textContent=lab;
   }
 }
 function toggleAdminPreview(force){
@@ -1117,14 +1156,15 @@ function bindAdminLayout(){
   dash.dataset.layoutBound="1";
   applyAdminLayout();
   const navG=a("adminGripNav"),prevG=a("adminGripPreview");
-  if(navG){
+    if(navG){
     navG.addEventListener("pointerdown",e=>{
+      if(adminLayout().navCollapsed)return;
       atelierDrag(e,navG,ev=>{
         const r=dash.getBoundingClientRect();
-        applyAdminLayout({nav:Math.round(Math.max(148,Math.min(188,ev.clientX-r.left)))});
+        applyAdminLayout({nav:Math.round(Math.max(148,Math.min(220,ev.clientX-r.left))),navCollapsed:!1});
       },()=>{
         const n=parseInt(dash.style.getPropertyValue("--admin-nav"),10);
-        if(n)saveAdminLayout({nav:n});
+        if(n)saveAdminLayout({nav:n,navCollapsed:!1});
       });
     });
     navG.addEventListener("keydown",e=>{

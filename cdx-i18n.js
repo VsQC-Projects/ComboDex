@@ -131,6 +131,8 @@ fr:{
 ,"admin.infra.note":"GitHub Pages sert l’interface. Rôles, journal d’audit et statistiques de matchs partagées exigent un backend. ComboDex partage déjà les combos via le wiki."
 ,"admin.closed":"Console fermée."
 ,"admin.overview":"Tableau de bord"
+,"admin.nav.collapse":"Réduire le menu"
+,"admin.nav.expand":"Déplier le menu"
 ,"admin.group.mod":"File d’attente"
 ,"admin.group.mod.lead":"Signalements, publications, vidéos X, lab et éditions."
 ,"admin.group.library":"Bibliothèque"
@@ -521,6 +523,8 @@ en:{
 "admin.infra.note":"GitHub Pages serves the UI. Roles, audit logs and shared match stats need a backend. Combos are already shared through the wiki.",
 "admin.closed":"Console closed.",
 "admin.overview":"Dashboard",
+"admin.nav.collapse":"Collapse menu",
+"admin.nav.expand":"Expand menu",
 "admin.group.mod":"Inbox",
 "admin.group.mod.lead":"Reports, publishes, X videos, lab and edits.",
 "admin.group.library":"Library",
@@ -1014,6 +1018,8 @@ es:{
 "admin.infra.note":"GitHub Pages sirve la interfaz. Roles, auditoría y estadísticas de partidas compartidas requieren un backend. Los combos ya se comparten por el wiki.",
 "admin.closed":"Consola cerrada.",
 "admin.overview":"Panel",
+"admin.nav.collapse":"Reducir el menú",
+"admin.nav.expand":"Desplegar el menú",
 "admin.group.mod":"Cola",
 "admin.group.mod.lead":"Reportes, publicaciones, vídeos X, lab y ediciones.",
 "admin.group.library":"Biblioteca",
