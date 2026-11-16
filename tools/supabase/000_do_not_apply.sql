@@ -1,0 +1,31 @@
+-- ComboDex S1 — DO NOT APPLY without an explicit authorization from the owner.
+-- These files are a reviewable schema. They are not a migration to run from the app,
+-- from GitHub Actions, or from any agent session by default.
+--
+-- Current live REST (keep as-is until S2 is authorized):
+--   GET/POST  /rest/v1/combos   columns: id, game, character, payload, updated_at
+--   POST      /rest/v1/reports  columns used by the client: combo_id, game, character, combo_name, note
+--
+-- Target after apply (S2):
+--   anon        SELECT combos whose payload.review is missing or 'ok'
+--   anon        INSERT reports only
+--   anon        no DELETE, no UPDATE on combos
+--   atelier JWT INSERT/UPDATE combos, INSERT case_events, SELECT audit_log
+--   service_role never in frontend JS
+--
+-- GRANT matrix (desired, not live until this file is applied):
+--   table          anon SELECT   anon INSERT   anon UPDATE   anon DELETE   atelier (JWT)
+--   combos         approved*     no            no            no            all
+--   reports        no            yes           no            no            all
+--   profiles       own row       no            own row       no            all
+--   cases          no            no            no            no            all
+--   case_events    no            no            no            no            all
+--   audit_log      no            no            no            no            select
+--   reviews        no            no            no            no            all
+--   collections    public read   own           own           own           all
+--   follows        own           own           no            own           all
+--   * approved = payload->>'review' is null or 'ok' (lab is independent: payload.lab)
+--
+-- Lab vs review:
+--   payload.review = publication queue (soumis / validé)
+--   payload.lab    = lab test (demandé / testé) — not feasibility

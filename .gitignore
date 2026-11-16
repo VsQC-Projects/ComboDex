@@ -23,6 +23,9 @@
 !.nojekyll
 !tools/
 !tools/check_site.py
+!tools/supabase/
+!tools/supabase/*.sql
+!tools/supabase/*.py
 !.github/
 !.github/workflows/
 !.github/workflows/check.yml
