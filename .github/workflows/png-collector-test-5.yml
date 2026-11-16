@@ -1,0 +1,25 @@
+name: PNG Collector TEST (5 per game)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  collect-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies
+        run: npm install --prefix tools/png-collector --no-audit --no-fund
+      - name: Run separate 5-per-game test
+        run: node tools/png-collector/collect-test-5.mjs
+      - name: Upload test archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: combodex-png-test-5-par-jeu
+          path: combodex-png-candidats-v2/
+          if-no-files-found: error
+          retention-days: 14
