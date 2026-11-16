@@ -1277,7 +1277,13 @@ function atelierPreviewPing(){
     if(win&&win.location&&String(win.location.href).indexOf("index.html")>=0&&(win.location.hash||"")!=="#/home")win.location.hash="#/home";
   }catch{}
   try{paint(frame.contentDocument)}catch{}
-  try{frame.contentWindow&&frame.contentWindow.postMessage({cdx:"preview",theme,da,homeFont:id},location.origin)}catch{}
+  let refs=null;
+  try{if(window.CDX_REF_API&&typeof window.CDX_REF_API.get==="function")refs=window.CDX_REF_API.get()}catch{}
+  try{frame.contentWindow&&frame.contentWindow.postMessage({cdx:"preview",theme,da,homeFont:id,refs},location.origin)}catch{}
+  try{
+    const api=frame.contentWindow&&frame.contentWindow.CDX_REF_API;
+    if(api&&typeof api.preview==="function"&&refs)api.preview(refs);
+  }catch{}
 }
 function atelierEmbed(){
   if(!window.CDX_ADMIN)return;
@@ -1408,6 +1414,7 @@ function atelierRefLiveText(st){
   const names={people:"Personnages",frames:"Frames",compare:"Comparer",replay:"Replay",create:"Créer",import:"Importer",knowledge:"Knowledge",home:"Accueil"};
   let msg=cdxT("atelier.refs.live").replace("{0}",String(st.shown||0)).replace("{1}",String(st.planned||0)).replace("{2}",names[st.tab]||st.tab||"—").replace("{3}",String(st.catalog||0));
   if(st.missed)msg+=" "+cdxT("atelier.refs.miss").replace("{0}",String(st.missed));
+  if(st.gap!=null)msg+=" · "+(st.measured!=null?String(st.measured)+" / ":"")+String(st.gap)+" px";
   if(!st.layer)msg+=" "+cdxT("atelier.refs.console");
   return msg;
 }

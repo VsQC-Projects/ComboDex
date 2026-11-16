@@ -131,18 +131,24 @@ function clampRow(src, fb) {
   }
   return row;
 }
-function readRefs() {
-  const raw = (readUI().refs && typeof readUI().refs === "object") ? readUI().refs : {};
+let previewRefs = null;
+function parseRefs(raw) {
+  const src = raw && typeof raw === "object" ? raw : {};
   const out = {...REF_DEFAULTS, games: {}};
-  Object.assign(out, clampRow(raw, REF_DEFAULTS));
-  if (raw.games && typeof raw.games === "object") {
-    for (const [g, v] of Object.entries(raw.games)) {
+  Object.assign(out, clampRow(src, REF_DEFAULTS));
+  if (src.games && typeof src.games === "object") {
+    for (const [g, v] of Object.entries(src.games)) {
       if (!v || typeof v !== "object") continue;
       const row = clampRow(v, out);
       if (Object.keys(row).length) out.games[g] = row;
     }
   }
   return out;
+}
+function readRefs() {
+  if (isPreview() && previewRefs) return parseRefs(previewRefs);
+  const raw = (readUI().refs && typeof readUI().refs === "object") ? readUI().refs : {};
+  return parseRefs(raw);
 }
 function gameQuota(cfg, g, tab, small) {
   const ov = cfg.games[g] || {};
@@ -239,6 +245,14 @@ window.CDX_REF_API = {
   reset() { writeRefs(window.CDX_REF_API.defaults()); return readRefs(); },
   catalog(g) { const rows = allRows()[g]; return (rows && rows.length) || 0; },
   reload() { rebuildPlan(); if (layer) place(); else schedule(80); },
+  preview(raw) {
+    if (!isPreview()) return readRefs();
+    previewRefs = raw && typeof raw === "object" ? raw : null;
+    rebuildPlan();
+    if (layer) place();
+    else schedule(40);
+    return readRefs();
+  },
   stats() {
     const by = {};
     placed.forEach(p => { by[p.it.g] = (by[p.it.g] || 0) + 1; });
@@ -255,6 +269,7 @@ window.CDX_REF_API = {
       wanted: lastWanted,
       catalog: catN,
       gap: cfg.gap,
+      measured: measuredEdge(),
       perGame: cfg.perGame,
       peopleDesktop: cfg.peopleDesktop,
       peopleMobile: cfg.peopleMobile,
@@ -272,6 +287,24 @@ window.CDX_REF_API = {
 addEventListener("cdx-refs-cfg", () => { rebuildPlan(); schedule(80); });
 
 let layer, placed = [], lastMissed = 0, lastWanted = 0;
+function measuredEdge() {
+  let min = Infinity;
+  for (let i = 0; i < placed.length; i++) {
+    const a = placed[i].img;
+    const as = parseFloat(a.style.width) || 0;
+    const ax = (parseFloat(a.style.left) || 0) + as / 2;
+    const ay = (parseFloat(a.style.top) || 0) + as / 2;
+    for (let j = i + 1; j < placed.length; j++) {
+      const b = placed[j].img;
+      const bs = parseFloat(b.style.width) || 0;
+      const bx = (parseFloat(b.style.left) || 0) + bs / 2;
+      const by = (parseFloat(b.style.top) || 0) + bs / 2;
+      const edge = Math.hypot(ax - bx, ay - by) - as / 2 - bs / 2;
+      if (edge < min) min = edge;
+    }
+  }
+  return Number.isFinite(min) ? Math.round(min) : null;
+}
 function activeTab() { const s = [...document.querySelectorAll("main > .page")].find(p => !p.classList.contains("hidden")); return s ? s.id : "home"; }
 
 const SOLID = new Set(["IMG", "INPUT", "SELECT", "TEXTAREA", "BUTTON", "CANVAS", "VIDEO", "IFRAME", "SVG", "svg", "TABLE", "LABEL", "SUMMARY", "A"]);
@@ -411,6 +444,30 @@ function place() {
   };
   const okSpot = (x, y, size, gap, want) =>
     free(x, y, x + size, y + size) && !tooClose(x, y, size, gap) && zoneOk(x, y, size, want);
+  const pickNear = (size, gap, zoneWant) => {
+    if (!placed.length) return null;
+    const rings = [0, Math.max(6, Math.round(gap / 2)), Math.max(12, gap)];
+    const nAng = gap >= 24 ? 20 : 16;
+    for (let i = placed.length - 1; i >= 0; i--) {
+      const p = placed[i];
+      const px = parseFloat(p.img.style.left) || 0;
+      const py = parseFloat(p.img.style.top) || 0;
+      const ps = parseFloat(p.img.style.width) || size;
+      const base = size / 2 + ps / 2 + gap;
+      const rot = r() * Math.PI * 2;
+      for (const extra of rings) {
+        const rad = base + extra;
+        for (let k = 0; k < nAng; k++) {
+          const a = rot + (k * Math.PI * 2) / nAng;
+          const x = px + ps / 2 + Math.cos(a) * rad - size / 2;
+          const y = py + ps / 2 + Math.sin(a) * rad - size / 2;
+          if (!okSpot(x, y, size, gap, zoneWant)) continue;
+          return [x, y];
+        }
+      }
+    }
+    return null;
+  };
   const put = (it, src, x, y, size) => {
     const z = zoneOf(x, y, size);
     if (z === "footer") usedFooter++;
@@ -442,7 +499,7 @@ function place() {
     const area = box ? clipRect(box, size) : (want === "main" ? {l: 2, t: 2, r: W - 2, b: Hh - 2} : null);
     if (!area) return null;
     const zoneWant = want === "main" ? "" : want;
-    const step = Math.max(CELL, Math.min(small ? 8 : 14, Math.max(4, Math.round(Math.max(size, gap) / (small ? 4 : 3)))));
+    const step = Math.max(CELL, Math.min(small ? 8 : 14, Math.max(4, Math.round((size + gap) / (small ? 6 : 4)))));
     for (let y = area.t; y <= area.b - size; y += step)
       for (let x = area.l; x <= area.r - size; x += step) {
         if (!okSpot(x, y, size, gap, zoneWant)) continue;
@@ -454,6 +511,8 @@ function place() {
     const gap = gapPx(it.g);
     const box = want === "footer" ? zones.footer : want === "logo" ? (zones.peopleLogo || zones.logo) : null;
     const zoneWant = want === "main" ? "" : want;
+    const near = pickNear(size, gap, zoneWant);
+    if (near) return near;
     if (small && (!want || want === "main") && gutters.length) {
       for (let k = 0; k < tries; k++) {
         const gbox = gutters[k % gutters.length];
@@ -801,6 +860,7 @@ function init() {
   });
   addEventListener("message", e => {
     if (e.origin !== location.origin || !e.data || e.data.cdx !== "preview") return;
+    if (e.data.refs && typeof e.data.refs === "object") previewRefs = e.data.refs;
     rebuildPlan();
     schedule(40);
   });

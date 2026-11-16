@@ -216,6 +216,10 @@ def main():
     extra_js = ""
     if refs_p.exists():
         extra_js += refs_p.read_text(encoding="utf-8")
+        if "function measuredEdge" not in extra_js or "pickNear" not in extra_js:
+            fail("refs gap placement (pickNear / measuredEdge) missing")
+        if "preview(raw)" not in extra_js:
+            fail("CDX_REF_API.preview missing — atelier iframe must receive gap")
     if kc_p.exists():
         extra_js += kc_p.read_text(encoding="utf-8")
     for m in re.finditer(r'localStorage\.setItem\((["\'])([^"\']+)\1', app + i18n + extra_js):
