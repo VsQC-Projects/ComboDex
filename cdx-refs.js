@@ -2,9 +2,14 @@
 "use strict";
 const UI_KEY = "combo-dex-ui-v1";
 const THEMES = ["official", "wood", "dojo", "borne", "capsule"];
+const EXTRA_THEMES = ["arcade", "ink", "blueprint", "broadcast", "graphite", "manual"];
+const ALL_THEMES = THEMES.concat(EXTRA_THEMES);
+const DAS = ["legacy", "studio"];
 const MODULES = ["people", "frames", "compare", "replay", "create", "import", "knowledge"];
 const TXT = {
   fr: {wood: "Bois", official: "Officielle", dojo: "Dojo", borne: "Borne", capsule: "Capsule",
+    arcade: "Arcade CRT", ink: "Encre", blueprint: "Blueprint", broadcast: "Tournoi", graphite: "Graphite", manual: "Manuel",
+    da: "Apparence", legacy: "Classique", studio: "Studio",
     title: "Mini-jeu : trouve l'objet !", find: "Trouve cet objet caché dans la page :", from: "Jeu",
     quit: "Abandonner", again: "Rejouer", found: "Trouvé !", miss: "Ce n'est pas celui-là…",
     min: "Réduire", max: "Déplier", drag: "Déplacer la fenêtre",
@@ -12,6 +17,8 @@ const TXT = {
     all: "Elles sont dispersées dans la page : trouve-les toutes.", got: "Trouvées",
     gave: "Tu as abandonné… il était là !", gaveN: "Tu as abandonné… elles étaient là !", close: "Fermer"},
   en: {wood: "Wood", official: "Official", dojo: "Dojo", borne: "Cabinet", capsule: "Capsule",
+    arcade: "Arcade CRT", ink: "Ink", blueprint: "Blueprint", broadcast: "Broadcast", graphite: "Graphite", manual: "Manual",
+    da: "Look", legacy: "Classic", studio: "Studio",
     title: "Mini-game: find the object!", find: "Find this object hidden on the page:", from: "Game",
     quit: "Give up", again: "Play again", found: "Found it!", miss: "Not that one…",
     min: "Minimize", max: "Expand", drag: "Move the window",
@@ -19,6 +26,8 @@ const TXT = {
     all: "They are scattered across the page: find them all.", got: "Found",
     gave: "You gave up… it was right here!", gaveN: "You gave up… they were right here!", close: "Close"},
   es: {wood: "Madera", official: "Oficial", dojo: "Dojo", borne: "Recreativa", capsule: "Cápsula",
+    arcade: "Arcade CRT", ink: "Tinta", blueprint: "Blueprint", broadcast: "Torneo", graphite: "Grafito", manual: "Manual",
+    da: "Apariencia", legacy: "Clásica", studio: "Studio",
     title: "Minijuego: ¡encuentra el objeto!", find: "Encuentra este objeto escondido en la página:", from: "Juego",
     quit: "Rendirse", again: "Jugar otra vez", found: "¡Encontrado!", miss: "Ese no es…",
     min: "Reducir", max: "Desplegar", drag: "Mover la ventana",
@@ -35,10 +44,24 @@ function readUI() { try { return JSON.parse(localStorage.getItem(UI_KEY)) || {};
 function isPreview() {
   try { return !window.CDX_ADMIN && window.self !== window.top; } catch { return true; }
 }
+function currentDa() {
+  const v = document.documentElement.dataset.da;
+  return DAS.includes(v) ? v : "legacy";
+}
+function setDa(name) {
+  if (!DAS.includes(name)) name = "legacy";
+  document.documentElement.dataset.da = name;
+  document.querySelectorAll("#daSwitch [data-da],[data-admin-da]").forEach(b => {
+    b.setAttribute("aria-pressed", b.dataset.da === name || b.dataset.adminDa === name ? "true" : "false");
+  });
+  if (isPreview()) return;
+  const ui = readUI(); ui.da = name;
+  try { localStorage.setItem(UI_KEY, JSON.stringify(ui)); } catch {}
+}
 function setTheme(name) {
-  if (!THEMES.includes(name)) name = "official";
+  if (!ALL_THEMES.includes(name)) name = "official";
   document.documentElement.dataset.theme = name;
-  document.querySelectorAll("#daSwitch button,[data-admin-theme]").forEach(b => {
+  document.querySelectorAll("#daSwitch [data-theme],[data-admin-theme]").forEach(b => {
     const id = b.dataset.theme || b.dataset.adminTheme;
     if (id) b.setAttribute("aria-pressed", id === name ? "true" : "false");
   });
@@ -51,9 +74,15 @@ function setTheme(name) {
 function buildSwitch() {
   const box = document.createElement("div");
   box.id = "daSwitch"; box.className = "da-switch"; box.setAttribute("role", "group");
-  box.innerHTML = THEMES.map(n => `<button type="button" data-theme="${n}"></button>`).join("");
-  box.addEventListener("click", e => { const b = e.target.closest("button[data-theme]"); if (b) setTheme(b.dataset.theme); });
+  box.innerHTML = `<div class="da-row da-da" role="group">${DAS.map(n => `<button type="button" data-da="${n}"></button>`).join("")}</div>
+    <div class="da-row da-core" role="group">${THEMES.map(n => `<button type="button" data-theme="${n}"></button>`).join("")}</div>
+    <div class="da-row da-extra" role="group">${EXTRA_THEMES.map(n => `<button type="button" data-theme="${n}"></button>`).join("")}</div>`;
+  box.addEventListener("click", e => {
+    const da = e.target.closest("button[data-da]"); if (da) { setDa(da.dataset.da); return; }
+    const th = e.target.closest("button[data-theme]"); if (th) setTheme(th.dataset.theme);
+  });
   document.body.appendChild(box);
+  setDa(DAS.includes(readUI().da) ? readUI().da : "legacy");
   labelSwitch();
   const lift = () => {
     const f = document.querySelector(".studio-footer");
@@ -68,9 +97,13 @@ function buildSwitch() {
 function labelSwitch() {
   const box = document.getElementById("daSwitch"); if (!box) return;
   box.setAttribute("aria-label", t("da"));
-  box.querySelectorAll("button").forEach(b => {
+  box.querySelectorAll("button[data-theme]").forEach(b => {
     b.textContent = t(b.dataset.theme);
     b.setAttribute("aria-pressed", document.documentElement.dataset.theme === b.dataset.theme ? "true" : "false");
+  });
+  box.querySelectorAll("button[data-da]").forEach(b => {
+    b.textContent = t(b.dataset.da);
+    b.setAttribute("aria-pressed", currentDa() === b.dataset.da ? "true" : "false");
   });
 }
 
@@ -232,8 +265,9 @@ window.CDX_REF_API = {
       by
     };
   },
-  themes: THEMES,
-  setTheme
+  themes: ALL_THEMES,
+  setTheme,
+  setDa
 };
 addEventListener("cdx-refs-cfg", () => { rebuildPlan(); schedule(80); });
 
@@ -752,8 +786,11 @@ function init() {
   addEventListener("storage", e => {
     if (e.key !== UI_KEY) return;
     const u = readUI();
-    if (u.theme && THEMES.includes(u.theme) && document.documentElement.dataset.theme !== u.theme) {
+    if (u.theme && ALL_THEMES.includes(u.theme) && document.documentElement.dataset.theme !== u.theme) {
       document.documentElement.dataset.theme = u.theme;
+    }
+    if ((u.da === "studio" || u.da === "legacy") && document.documentElement.dataset.da !== u.da) {
+      document.documentElement.dataset.da = u.da;
     }
     let refsJson = "";
     try { refsJson = JSON.stringify(u.refs || {}); } catch {}

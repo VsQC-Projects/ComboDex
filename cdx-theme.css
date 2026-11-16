@@ -558,7 +558,9 @@ html[data-theme="dojo"] :is(select,input,textarea,summary):hover{border-color:#d
 html[data-theme="wood"] :is(select,input,textarea,summary):hover{border-color:#120c07}
 html[data-theme="dojo"] button:hover,html[data-theme="dojo"] .tab:hover{border-color:#d9412b}
 html[data-theme="wood"] button:hover,html[data-theme="wood"] .tab:hover{border-color:#120c07}
-.da-switch{position:fixed;right:12px;bottom:12px;z-index:30;display:flex;flex-wrap:nowrap;align-items:center;justify-content:flex-end;gap:4px;padding:5px;width:max-content;max-width:none;border:1px solid transparent;border-radius:11px;background:#000000b3;backdrop-filter:blur(4px);box-sizing:border-box}
+.da-switch{position:fixed;right:12px;bottom:12px;z-index:30;display:flex;flex-direction:column;flex-wrap:nowrap;align-items:flex-end;justify-content:flex-end;gap:5px;padding:6px;width:max-content;max-width:min(420px,calc(100vw - 24px));border:1px solid transparent;border-radius:11px;background:#000000b3;backdrop-filter:blur(4px);box-sizing:border-box}
+.da-switch .da-row{display:flex;flex-wrap:nowrap;align-items:center;justify-content:flex-end;gap:4px;width:max-content;max-width:100%}
+.da-switch .da-extra{flex-wrap:wrap}
 .da-switch button{padding:5px 8px;font:700 11px system-ui,sans-serif;border-radius:8px;border:1px solid #ffffff38;background:transparent;color:#fff;flex:none;white-space:nowrap;box-sizing:border-box}
 .da-switch button[aria-pressed="true"]{background:#fff;color:#111;border-color:#fff}
 html[data-theme="dojo"] .da-switch{background:#1d1d22}
@@ -688,3 +690,45 @@ html[data-theme] .brand-mark,html[data-theme] .brand-mark-end{
   background:none !important;
   font-family:var(--cdx-brand-font,inherit);
 }
+html[data-theme="arcade"]{color-scheme:dark;--bg:#07140c;--panel:#102016;--panel2:#17301f;--line:#2a5a38;--ink:#d7f5d8;--muted:#8cba90;--purple:#3dcf6a;--purple2:#1b5c32;--good:#3dcf6a;--bad:#ef9a9a;--warn:#e8c77a;--accent:#3dcf6a}
+html[data-theme="arcade"] body{background:#07140c;background-image:repeating-linear-gradient(0deg,transparent,transparent 3px,#04100814 3px,#04100814 4px);background-attachment:fixed}
+html[data-theme="arcade"] a{color:#8dffb0}
+html[data-theme="arcade"] .da-switch{background:#041008d9;border:1px solid #2a5a38}
+html[data-theme="arcade"] .da-switch button[aria-pressed="true"]{background:#3dcf6a;border-color:#3dcf6a;color:#07140c}
+html[data-theme="ink"]{color-scheme:dark;--bg:#12110f;--panel:#1c1b18;--panel2:#26251f;--line:#4a463c;--ink:#f4efe4;--muted:#b7b09f;--purple:#c4b08a;--purple2:#3f3a30;--good:#77d9ae;--bad:#ef9a9a;--warn:#e8c77a;--accent:#c4b08a}
+html[data-theme="ink"] body{background:#12110f;background-attachment:fixed}
+html[data-theme="ink"] a{color:#e8d9b8}
+html[data-theme="ink"] .da-switch{background:#12110fd9;border:1px solid #4a463c}
+html[data-theme="ink"] .da-switch button[aria-pressed="true"]{background:#c4b08a;border-color:#c4b08a;color:#12110f}
+html[data-theme="blueprint"]{color-scheme:dark;--bg:#0b1c33;--panel:#102744;--panel2:#163454;--line:#2d6aa3;--ink:#e6f3ff;--muted:#8fb4d4;--purple:#5ec8ff;--purple2:#1a4a73;--good:#77d9ae;--bad:#ef9a9a;--warn:#e8c77a;--accent:#5ec8ff}
+html[data-theme="blueprint"] body{background:#0b1c33;background-image:linear-gradient(#1a4a7322 1px,transparent 1px),linear-gradient(90deg,#1a4a7322 1px,transparent 1px);background-size:24px 24px;background-attachment:fixed}
+html[data-theme="blueprint"] a{color:#8fd4ff}
+html[data-theme="blueprint"] .da-switch{background:#0b1c33d9;border:1px solid #2d6aa3}
+html[data-theme="blueprint"] .da-switch button[aria-pressed="true"]{background:#5ec8ff;border-color:#5ec8ff;color:#0b1c33}
+html[data-theme="broadcast"]{color-scheme:dark;--bg:#0e1016;--panel:#171a22;--panel2:#20242e;--line:#3a4154;--ink:#f5f6fa;--muted:#a8adc0;--purple:#e8c77a;--purple2:#3a3420;--good:#77d9ae;--bad:#ef9a9a;--warn:#e8c77a;--accent:#e8c77a}
+html[data-theme="broadcast"] body{background:#0e1016;background-attachment:fixed}
+html[data-theme="broadcast"] a{color:#f0d89a}
+html[data-theme="broadcast"] .da-switch{background:#0e1016d9;border:1px solid #3a4154}
+html[data-theme="broadcast"] .da-switch button[aria-pressed="true"]{background:#e8c77a;border-color:#e8c77a;color:#0e1016}
+html[data-theme="graphite"]{color-scheme:dark;--bg:#16171a;--panel:#1e1f23;--panel2:#27282d;--line:#3c3e46;--ink:#ececef;--muted:#a6a8b0;--purple:#8d9099;--purple2:#2c2e34;--good:#77d9ae;--bad:#ef9a9a;--warn:#e8c77a;--accent:#8d9099}
+html[data-theme="graphite"] body{background:#16171a;background-attachment:fixed}
+html[data-theme="graphite"] a{color:#c8cad0}
+html[data-theme="graphite"] .da-switch{background:#16171ad9;border:1px solid #3c3e46}
+html[data-theme="graphite"] .da-switch button[aria-pressed="true"]{background:#ececef;border-color:#ececef;color:#16171a}
+html[data-theme="manual"]{color-scheme:light;--bg:#e8dcc4;--panel:#f3ead6;--panel2:#efe4cc;--line:#b59a6b;--ink:#2b2216;--muted:#6b5a3e;--purple:#8a4b2a;--purple2:#d9c5a0;--good:#2f7a4f;--bad:#a8322a;--warn:#8a5a00;--accent:#8a4b2a}
+html[data-theme="manual"] body{background:#e8dcc4;background-attachment:fixed}
+html[data-theme="manual"] a{color:#8a4b2a}
+html[data-theme="manual"] .da-switch{background:#2b2216d9;border:1px solid #b59a6b}
+html[data-theme="manual"] .da-switch button[aria-pressed="true"]{background:#8a4b2a;border-color:#8a4b2a;color:#f3ead6}
+html[data-da="studio"]{--radius:8px}
+html[data-da="studio"] body{background:var(--bg)!important;background-image:none!important}
+html[data-da="studio"] .wrap{padding:16px 16px 8px}
+html[data-da="studio"] .brand-word{background:none!important;-webkit-background-clip:unset;background-clip:unset;color:var(--ink)!important;-webkit-text-fill-color:var(--ink)!important}
+html[data-da="studio"] .nav{border-radius:6px;backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--panel);padding:4px;gap:4px;margin:10px 0 14px}
+html[data-da="studio"] .tab{min-height:36px;border-radius:6px;font-size:13px}
+html[data-da="studio"] .tab.active{background:var(--purple2)!important;box-shadow:none!important}
+html[data-da="studio"] .panel,html[data-da="studio"] .subpanel,html[data-da="studio"] .combo,html[data-da="studio"] .empty,html[data-da="studio"] .cookie-bar{border-radius:8px;box-shadow:none}
+html[data-da="studio"] button,html[data-da="studio"] input,html[data-da="studio"] select,html[data-da="studio"] textarea{border-radius:6px}
+html[data-da="studio"] .portrait.lg{border-radius:8px}
+html[data-da="studio"] .portrait.sm,html[data-da="studio"] .tile{border-radius:6px}
+html[data-da="studio"] .da-switch{border-radius:6px}

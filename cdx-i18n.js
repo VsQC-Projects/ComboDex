@@ -120,6 +120,14 @@ fr:{
 ,"admin.theme.wood":"Bois"
 ,"admin.theme.borne":"Borne"
 ,"admin.theme.capsule":"Capsule"
+,"admin.theme.arcade":"Arcade CRT"
+,"admin.theme.ink":"Encre"
+,"admin.theme.blueprint":"Blueprint"
+,"admin.theme.broadcast":"Tournoi"
+,"admin.theme.graphite":"Graphite"
+,"admin.theme.manual":"Manuel"
+,"admin.da.legacy":"Classique"
+,"admin.da.studio":"Studio"
 ,"admin.stats.source":"Source : combos publics ComboDex (wiki). Ce n’est pas un win rate de matchs."
 ,"admin.stats.empty":"Aucun combo public pour tracer un graphique."
 ,"admin.stats.total":"Combos publics"
@@ -512,6 +520,14 @@ en:{
 "admin.theme.wood":"Wood",
 "admin.theme.borne":"Cabinet",
 "admin.theme.capsule":"Capsule",
+"admin.theme.arcade":"Arcade CRT",
+"admin.theme.ink":"Ink",
+"admin.theme.blueprint":"Blueprint",
+"admin.theme.broadcast":"Broadcast",
+"admin.theme.graphite":"Graphite",
+"admin.theme.manual":"Manual",
+"admin.da.legacy":"Classic",
+"admin.da.studio":"Studio",
 "admin.stats.source":"Source: ComboDex public combos (wiki). Not a match win rate.",
 "admin.stats.empty":"No public combos to chart.",
 "admin.stats.total":"Public combos",
@@ -1007,6 +1023,14 @@ es:{
 "admin.theme.wood":"Madera",
 "admin.theme.borne":"Recreativa",
 "admin.theme.capsule":"Cápsula",
+"admin.theme.arcade":"Arcade CRT",
+"admin.theme.ink":"Tinta",
+"admin.theme.blueprint":"Blueprint",
+"admin.theme.broadcast":"Torneo",
+"admin.theme.graphite":"Grafito",
+"admin.theme.manual":"Manual",
+"admin.da.legacy":"Clásica",
+"admin.da.studio":"Studio",
 "admin.stats.source":"Fuente: combos públicos de ComboDex (wiki). No es un win rate de partidas.",
 "admin.stats.empty":"No hay combos públicos para graficar.",
 "admin.stats.total":"Combos públicos",

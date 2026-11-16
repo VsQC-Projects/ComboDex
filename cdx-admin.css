@@ -894,6 +894,7 @@ body.cdx-admin .admin-key{
   body.cdx-admin .admin-nav-toggle{display:none}
   body.cdx-admin .atelier-work{padding:18px 16px 32px;max-width:none}
 }
+body.cdx-admin .admin-da,
 body.cdx-admin .admin-themes{
   display:flex;
   flex-wrap:wrap;
@@ -902,6 +903,20 @@ body.cdx-admin .admin-themes{
   border-radius:10px;
   background:var(--admin-input);
   border:1px solid var(--admin-line);
+}
+body.cdx-admin .admin-da button{
+  padding:6px 10px;
+  font-size:12px;
+  font-weight:700;
+  border-radius:8px;
+  border:1px solid var(--admin-line);
+  background:transparent;
+  color:var(--admin-ink);
+}
+body.cdx-admin .admin-da button[aria-pressed="true"]{
+  background:var(--admin-accent);
+  color:var(--admin-sel);
+  border-color:var(--admin-accent);
 }
 body.cdx-admin .admin-themes button{
   padding:6px 10px;

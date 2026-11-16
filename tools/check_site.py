@@ -166,6 +166,18 @@ def main():
                 fail(f"core theme missing: {t}")
         if not set(core_themes).issubset(found_themes):
             fail(f"core themes must remain {core_themes}, got {found_themes}")
+        extra_themes = ["arcade", "ink", "blueprint", "broadcast", "graphite", "manual"]
+        for t in extra_themes:
+            if t not in found_themes:
+                fail(f"extra theme missing: {t}")
+        theme_css = (ROOT / "cdx-theme.css").read_text(encoding="utf-8")
+        for t in extra_themes:
+            if f'html[data-theme="{t}"]' not in theme_css:
+                fail(f"extra theme CSS missing: {t}")
+        if 'html[data-da="studio"]' not in theme_css:
+            fail("studio DA CSS missing")
+        if 'dataset.da=d' not in html and "dataset.da = d" not in html:
+            fail("FOUC must persist data-da")
 
     if "function ytIframe" not in app:
         fail("ytIframe missing — Replay player must stay")

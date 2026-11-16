@@ -145,7 +145,7 @@ function wikiHeaders(extra){
 }
 function wikiApi(){return WIKI_URL}
 const SITE_ID="cdx-site";
-const CDX_THEMES=["official","wood","dojo","borne","capsule"];
+const CDX_THEMES=["official","wood","dojo","borne","capsule","arcade","ink","blueprint","broadcast","graphite","manual"];
 const HOME_FONTS={
   now:{f:"system-ui,-apple-system,\"Segoe UI\",sans-serif",l:".1em",w:"850",s:"clamp(52px,8.8vw,96px)"},
   pixel:{f:'"Press Start 2P",cursive',l:".06em",w:"400",s:"clamp(22px,4.8vw,44px)"},
@@ -939,8 +939,10 @@ function renderAtelierDashBody(){
         ${leaf("font",cdxT("atelier.tree.font"))}</div>`;
   if(window.CDX_ADMIN){
     const themeNow=document.documentElement.dataset.theme||"official";
+    const daNow=document.documentElement.dataset.da==="studio"?"studio":"legacy";
     const themeBtns=CDX_THEMES.map(id=>`<button type="button" data-admin-theme="${id}" aria-pressed="${themeNow===id?"true":"false"}">${l(cdxT("admin.theme."+id))}</button>`).join("");
-    const head=`<div class="admin-brandline"><span class="admin-mark admin-mark-sm" aria-hidden="true">CD</span><span class="admin-brand-name">ComboDex</span><span class="admin-badge">${l(cdxT("admin.badge"))}</span></div><span class="atelier-head-actions"><div class="admin-themes" id="adminThemes" role="group" aria-label="${l(cdxT("admin.theme"))}">${themeBtns}</div><button type="button" class="tiny" id="adminPreviewToggle" onclick="window.cdxTogglePreview&&window.cdxTogglePreview(event)">${l(cdxT("admin.preview.hide"))}</button><span class="admin-session">${l(cdxT("admin.session"))}</span><a class="tiny" href="${l(atelierSiteHref())}">${l(cdxT("admin.site"))}</a><button type="button" class="tiny" id="atelierOut">${l(cdxT("admin.out"))}</button></span>`;
+    const daBtns=`<button type="button" data-admin-da="legacy" aria-pressed="${daNow==="legacy"?"true":"false"}">${l(cdxT("admin.da.legacy"))}</button><button type="button" data-admin-da="studio" aria-pressed="${daNow==="studio"?"true":"false"}">${l(cdxT("admin.da.studio"))}</button>`;
+    const head=`<div class="admin-brandline"><span class="admin-mark admin-mark-sm" aria-hidden="true">CD</span><span class="admin-brand-name">ComboDex</span><span class="admin-badge">${l(cdxT("admin.badge"))}</span></div><span class="atelier-head-actions"><div class="admin-da" id="adminDa" role="group">${daBtns}</div><div class="admin-themes" id="adminThemes" role="group" aria-label="${l(cdxT("admin.theme"))}">${themeBtns}</div><button type="button" class="tiny" id="adminPreviewToggle" onclick="window.cdxTogglePreview&&window.cdxTogglePreview(event)">${l(cdxT("admin.preview.hide"))}</button><span class="admin-session">${l(cdxT("admin.session"))}</span><a class="tiny" href="${l(atelierSiteHref())}">${l(cdxT("admin.site"))}</a><button type="button" class="tiny" id="atelierOut">${l(cdxT("admin.out"))}</button></span>`;
     if(!dash.dataset.shell){
       dash.dataset.shell="1";
       dash.innerHTML=`<div class="atelier-head" id="adminHead"></div>
@@ -1038,6 +1040,18 @@ function renderAtelierDashBody(){
       try{const u=JSON.parse(localStorage.getItem("combo-dex-ui-v1"))||{};u.theme=name;localStorage.setItem("combo-dex-ui-v1",JSON.stringify(u))}catch{}
       themes.querySelectorAll("[data-admin-theme]").forEach(x=>x.setAttribute("aria-pressed",x.dataset.adminTheme===name?"true":"false"));
     }
+    atelierPreviewPing();
+  };
+  const das=a("adminDa");
+  if(das)das.onclick=e=>{
+    const b=e.target.closest("[data-admin-da]");if(!b)return;
+    const name=b.dataset.adminDa==="studio"?"studio":"legacy";
+    if(window.CDX_REF_API&&typeof window.CDX_REF_API.setDa==="function")window.CDX_REF_API.setDa(name);
+    else{
+      document.documentElement.dataset.da=name;
+      try{const u=JSON.parse(localStorage.getItem("combo-dex-ui-v1"))||{};u.da=name;localStorage.setItem("combo-dex-ui-v1",JSON.stringify(u))}catch{}
+    }
+    das.querySelectorAll("[data-admin-da]").forEach(x=>x.setAttribute("aria-pressed",x.dataset.adminDa===name?"true":"false"));
     atelierPreviewPing();
   };
   const go=a("atelierXGo");if(go)go.onclick=()=>saveXOk((a("atelierX")||{}).value);
@@ -1243,9 +1257,11 @@ function atelierPreviewPing(){
   const id=siteFontId(homeFontId)||siteFontId(d&&d.siteFont)||"stencil";
   const x=HOME_FONTS[id]||HOME_FONTS.stencil;
   const theme=document.documentElement.dataset.theme||"official";
+  const da=document.documentElement.dataset.da==="studio"?"studio":"legacy";
   const paint=doc=>{
     if(!doc||!doc.documentElement)return;
     doc.documentElement.dataset.theme=theme;
+    doc.documentElement.dataset.da=da;
     doc.documentElement.dataset.homeFont=id;
     const set=el=>{if(!el||!el.style)return;el.style.setProperty("--cdx-brand-font",x.f);el.style.setProperty("--cdx-brand-track",x.l);el.style.setProperty("--cdx-brand-weight",x.w);el.style.setProperty("--cdx-brand-size",x.s)};
     set(doc.documentElement);if(doc.body)set(doc.body);
@@ -1261,7 +1277,7 @@ function atelierPreviewPing(){
     if(win&&win.location&&String(win.location.href).indexOf("index.html")>=0&&(win.location.hash||"")!=="#/home")win.location.hash="#/home";
   }catch{}
   try{paint(frame.contentDocument)}catch{}
-  try{frame.contentWindow&&frame.contentWindow.postMessage({cdx:"preview",theme,homeFont:id},location.origin)}catch{}
+  try{frame.contentWindow&&frame.contentWindow.postMessage({cdx:"preview",theme,da,homeFont:id},location.origin)}catch{}
 }
 function atelierEmbed(){
   if(!window.CDX_ADMIN)return;
@@ -3654,6 +3670,7 @@ window.addEventListener("storage",e=>{
     const u=JSON.parse(e.newValue||"{}");
     const old=JSON.parse(e.oldValue||"{}");
     if(isCdxTheme(u.theme))document.documentElement.dataset.theme=u.theme;
+    if(u.da==="studio"||u.da==="legacy")document.documentElement.dataset.da=u.da;
     const incoming=siteFontId(u.homeFont);
     if(!incoming||incoming===homeFontId)return;
     if(cdxIsPreview()){applyHomeFont(incoming,!1);return}
@@ -3667,6 +3684,7 @@ window.addEventListener("message",e=>{
   if(!cdxIsPreview())return;
   try{
     if(isCdxTheme(e.data.theme))document.documentElement.dataset.theme=e.data.theme;
+    if(e.data.da==="studio"||e.data.da==="legacy")document.documentElement.dataset.da=e.data.da;
     const f=siteFontId(e.data.homeFont);
     if(f){d.siteFont=f;applyHomeFont(f,!1)}
   }catch{}
