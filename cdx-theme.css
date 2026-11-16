@@ -558,8 +558,8 @@ html[data-theme="dojo"] :is(select,input,textarea,summary):hover{border-color:#d
 html[data-theme="wood"] :is(select,input,textarea,summary):hover{border-color:#120c07}
 html[data-theme="dojo"] button:hover,html[data-theme="dojo"] .tab:hover{border-color:#d9412b}
 html[data-theme="wood"] button:hover,html[data-theme="wood"] .tab:hover{border-color:#120c07}
-.da-switch{position:fixed;right:12px;bottom:12px;z-index:30;display:flex;flex-wrap:wrap;justify-content:flex-end;gap:4px;padding:5px;max-width:min(280px,calc(100vw - 24px));border-radius:11px;background:#000000b3;backdrop-filter:blur(4px)}
-.da-switch button{padding:5px 8px;font:700 11px system-ui,sans-serif;border-radius:8px;border:1px solid #ffffff38;background:transparent;color:#fff}
+.da-switch{position:fixed;right:12px;bottom:12px;z-index:30;display:flex;flex-wrap:nowrap;align-items:center;justify-content:flex-end;gap:4px;padding:5px;width:max-content;max-width:none;border:1px solid transparent;border-radius:11px;background:#000000b3;backdrop-filter:blur(4px);box-sizing:border-box}
+.da-switch button{padding:5px 8px;font:700 11px system-ui,sans-serif;border-radius:8px;border:1px solid #ffffff38;background:transparent;color:#fff;flex:none;white-space:nowrap;box-sizing:border-box}
 .da-switch button[aria-pressed="true"]{background:#fff;color:#111;border-color:#fff}
 html[data-theme="dojo"] .da-switch{background:#1d1d22}
 html[data-theme="dojo"] .da-switch button[aria-pressed="true"]{background:#d9412b;border-color:#d9412b;color:#fff}
@@ -646,7 +646,8 @@ html[data-theme="capsule"] .home-kc-icon{color:#d91f6a}
 html[data-theme="capsule"] .home-kc-views span{background:#fffdf4;border:2px solid #1a1a1a;color:#1a1a1a;border-radius:4px}
 html[data-theme="capsule"] .token{color:#fffdf4}
 html[data-theme="capsule"] :is(select,input,textarea,summary):hover,html[data-theme="capsule"] button:hover,html[data-theme="capsule"] .tab:hover{border-color:#d91f6a}
-html[data-theme="capsule"] .da-switch{background:#1a1a1ae6;border:2px solid #d91f6a;border-radius:4px}
+html[data-theme="capsule"] .da-switch{background:#1a1a1ae6;border:1px solid #d91f6a;border-radius:11px}
+html[data-theme="capsule"] .da-switch button{border-width:1px;border-radius:8px}
 html[data-theme="capsule"] .da-switch button[aria-pressed="true"]{background:#d91f6a;border-color:#fff;color:#fff}
 html[data-theme="capsule"] .cdx-ref{filter:drop-shadow(3px 3px 0 #d91f6a55)}
 body{position:relative}
