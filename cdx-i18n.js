@@ -51,8 +51,14 @@ fr:{
 ,"atelier.tree.refs":"Références"
 ,"atelier.refs.lead":"Les jauges commandent vraiment le calque ComboDex. 0 au pied ou au logo = aucun objet dans cette zone. Un nombre = essayer d’y placer autant d’objets. L’espacement est la distance supplémentaire entre deux objets, de 0 à 100 px."
 ,"atelier.refs.global":"Réglages communs"
+,"atelier.refs.global.hint":"Valeurs par défaut pour tous les jeux. Un jeu avec ses propres jauges ignore ces valeurs."
 ,"atelier.refs.game":"Par jeu"
-,"atelier.refs.game.hint":"Chaque jeu a ses propres quantités, zones et espacement. Un nouveau jeu reprend d’abord les réglages communs."
+,"atelier.refs.game.hint":"Ces jauges ne concernent que le jeu choisi en haut. Les autres jeux restent sur les réglages communs, ou sur les leurs."
+,"atelier.refs.game.title":"{0} — réglages de ce jeu"
+,"atelier.refs.bar.hint":"Le jeu choisi pilote la carte du bas. Les réglages communs servent de base tant qu’un jeu n’a pas ses propres jauges."
+,"atelier.refs.qty.group":"Quantités"
+,"atelier.refs.zones.group":"Zones"
+,"atelier.refs.space.group":"Espacement"
 ,"atelier.refs.pick":"Jeu"
 ,"atelier.refs.perGame":"Par jeu (hors Personnages)"
 ,"atelier.refs.perGame.hint":"Nombre max d’objets de ce jeu sur Frames, Comparer, Replay, Créer, Importer, Knowledge."
@@ -104,6 +110,9 @@ fr:{
 ,"admin.preview.pc":"PC"
 ,"admin.preview.phone":"Mobile"
 ,"admin.preview.open":"Nouvel onglet"
+,"admin.preview.toggle":"Aperçu"
+,"admin.preview.hide":"Masquer l’aperçu"
+,"admin.preview.show":"Afficher l’aperçu"
 ,"admin.out":"Fermer la session"
 ,"admin.theme":"Thème"
 ,"admin.theme.official":"Officielle"
@@ -411,8 +420,14 @@ en:{
 "atelier.tree.refs":"References",
 "atelier.refs.lead":"These sliders drive the ComboDex layer. 0 in the footer or logo zone = no objects there. A number tries to place that many objects in the zone. Spacing is extra distance between objects, from 0 to 100 px.",
 "atelier.refs.global":"Shared settings",
+"atelier.refs.global.hint":"Defaults for every game. A game with its own sliders ignores these values.",
 "atelier.refs.game":"Per game",
-"atelier.refs.game.hint":"Each game has its own quantities, zones and spacing. A new game starts from the shared defaults.",
+"atelier.refs.game.hint":"These sliders apply only to the game chosen above. Other games keep the shared settings, or their own.",
+"atelier.refs.game.title":"{0} — settings for this game",
+"atelier.refs.bar.hint":"The selected game drives the card below. Shared settings apply until a game has its own sliders.",
+"atelier.refs.qty.group":"Quantities",
+"atelier.refs.zones.group":"Zones",
+"atelier.refs.space.group":"Spacing",
 "atelier.refs.pick":"Game",
 "atelier.refs.perGame":"Per game (except Characters)",
 "atelier.refs.perGame.hint":"Max objects from this game on Frames, Compare, Replay, Create, Import, Knowledge.",
@@ -464,6 +479,9 @@ en:{
 "admin.preview.pc":"Desktop",
 "admin.preview.phone":"Mobile",
 "admin.preview.open":"New tab",
+"admin.preview.toggle":"Preview",
+"admin.preview.hide":"Hide preview",
+"admin.preview.show":"Show preview",
 "admin.out":"End session",
 "admin.theme":"Theme",
 "admin.theme.official":"Official",
@@ -879,8 +897,14 @@ es:{
 "atelier.tree.refs":"Referencias",
 "atelier.refs.lead":"Estos controles mueven de verdad la capa de ComboDex. 0 en el pie o el logo = ningún objeto ahí. Un número intenta colocar tantos objetos en la zona. El espaciado es la distancia extra entre objetos, de 0 a 100 px.",
 "atelier.refs.global":"Ajustes comunes",
+"atelier.refs.global.hint":"Valores por defecto para todos los juegos. Un juego con sus propias barras ignora estos valores.",
 "atelier.refs.game":"Por juego",
-"atelier.refs.game.hint":"Cada juego tiene sus propias cantidades, zonas y espaciado. Un juego nuevo parte de los ajustes comunes.",
+"atelier.refs.game.hint":"Estas barras solo afectan al juego elegido arriba. Los demás siguen los ajustes comunes, o los suyos.",
+"atelier.refs.game.title":"{0} — ajustes de este juego",
+"atelier.refs.bar.hint":"El juego elegido controla la tarjeta de abajo. Los ajustes comunes sirven de base hasta que un juego tenga los suyos.",
+"atelier.refs.qty.group":"Cantidades",
+"atelier.refs.zones.group":"Zonas",
+"atelier.refs.space.group":"Espaciado",
 "atelier.refs.pick":"Juego",
 "atelier.refs.perGame":"Por juego (salvo Personajes)",
 "atelier.refs.perGame.hint":"Máximo de objetos de este juego en Frames, Comparar, Replay, Crear, Importar, Knowledge.",
@@ -932,6 +956,9 @@ es:{
 "admin.preview.pc":"PC",
 "admin.preview.phone":"Móvil",
 "admin.preview.open":"Nueva pestaña",
+"admin.preview.toggle":"Vista previa",
+"admin.preview.hide":"Ocultar vista previa",
+"admin.preview.show":"Mostrar vista previa",
 "admin.out":"Cerrar la sesión",
 "admin.theme":"Tema",
 "admin.theme.official":"Oficial",

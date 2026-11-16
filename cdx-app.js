@@ -892,12 +892,14 @@ function renderAtelierDashBody(){
   if(window.CDX_ADMIN){
     const themeNow=document.documentElement.dataset.theme||"official";
     const themeBtns=["official","dojo","wood"].map(id=>`<button type="button" data-admin-theme="${id}" aria-pressed="${themeNow===id?"true":"false"}">${l(cdxT("admin.theme."+id))}</button>`).join("");
-    const head=`<div class="admin-brandline"><span class="admin-mark admin-mark-sm" aria-hidden="true">CD</span><span class="admin-brand-name">ComboDex</span><span class="admin-badge">${l(cdxT("admin.badge"))}</span></div><span class="atelier-head-actions"><div class="admin-themes" id="adminThemes" role="group" aria-label="${l(cdxT("admin.theme"))}">${themeBtns}</div><span class="admin-session">${l(cdxT("admin.session"))}</span><a class="tiny" href="${l(atelierSiteHref())}">${l(cdxT("admin.site"))}</a><button type="button" class="tiny" id="atelierOut">${l(cdxT("admin.out"))}</button></span>`;
+    const head=`<div class="admin-brandline"><span class="admin-mark admin-mark-sm" aria-hidden="true">CD</span><span class="admin-brand-name">ComboDex</span><span class="admin-badge">${l(cdxT("admin.badge"))}</span></div><span class="atelier-head-actions"><div class="admin-themes" id="adminThemes" role="group" aria-label="${l(cdxT("admin.theme"))}">${themeBtns}</div><button type="button" class="tiny" id="adminPreviewToggle" aria-pressed="true">${l(cdxT("admin.preview.toggle"))}</button><span class="admin-session">${l(cdxT("admin.session"))}</span><a class="tiny" href="${l(atelierSiteHref())}">${l(cdxT("admin.site"))}</a><button type="button" class="tiny" id="atelierOut">${l(cdxT("admin.out"))}</button></span>`;
     if(!dash.dataset.shell){
       dash.dataset.shell="1";
       dash.innerHTML=`<div class="atelier-head" id="adminHead"></div>
         <nav class="atelier-tree" id="atelierTree" aria-label="${l(cdxT("admin.title"))}"></nav>
+        <div class="admin-grip" id="adminGripNav" role="separator" aria-orientation="vertical" tabindex="0"></div>
         <div class="atelier-work" id="atelierWork"></div>
+        <div class="admin-grip" id="adminGripPreview" role="separator" aria-orientation="vertical" tabindex="0"></div>
         <aside class="admin-preview" id="adminPreviewPane">
           <header class="admin-preview-h">
             <div>
@@ -918,8 +920,10 @@ function renderAtelierDashBody(){
         </aside>
         <div class="admin-foot"><span>CRÉÉ PAR VSQC</span><span>${l(cdxT("admin.title"))}</span></div>`;
       bindAdminPreview();
+      bindAdminLayout();
     }
     const hd=a("adminHead");if(hd)hd.innerHTML=head;
+    applyAdminLayout();
     const treeEl=a("atelierTree");if(treeEl)treeEl.innerHTML=treeNav;
     const workEl=a("atelierWork");if(workEl)workEl.innerHTML=work;
   }else{
@@ -985,6 +989,13 @@ function renderAtelierDashBody(){
     }
     atelierPreviewPing();
   };
+  const tog=a("adminPreviewToggle");
+  if(tog)tog.onclick=()=>{
+    const off=!adminLayout().previewOff;
+    saveAdminLayout({previewOff:off});
+    applyAdminLayout();
+    if(!off)atelierPreviewSync();
+  };
   const go=a("atelierXGo");if(go)go.onclick=()=>saveXOk((a("atelierX")||{}).value);
   const goRefs=a("atelierGoRefs");if(goRefs)goRefs.onclick=()=>{atelierView="refs";renderAtelierDash()};
   bindAtelierRefs();
@@ -1000,9 +1011,71 @@ function adminPreviewHash(){
   const g=atelierView==="refs"?(atelierRefGame||o.game):o.game;
   if((atelierView==="refs"||atelierView==="people"||atelierView==="portraits"||atelierView==="keys")&&g){
     const ch=o.char||((T(g)[0]||{}).name)||"";
-    return"#/"+encodeURIComponent(g)+(ch?"/"+encodeURIComponent(ch):"");
+    const extra=atelierView==="refs"?"/frames":"";
+    return"#/"+encodeURIComponent(g)+(ch?"/"+encodeURIComponent(ch):"")+extra;
   }
   return"#/home";
+}
+function adminLayout(){try{return (JSON.parse(localStorage.getItem(Le))||{}).admin||{}}catch{return {}}}
+function saveAdminLayout(patch){
+  try{
+    const u=JSON.parse(localStorage.getItem(Le))||{};
+    u.admin={...(u.admin||{}),...patch};
+    localStorage.setItem(Le,JSON.stringify(u));
+  }catch{}
+}
+function applyAdminLayout(){
+  const dash=a("atelierDash");if(!dash||!window.CDX_ADMIN)return;
+  const L=adminLayout();
+  const nav=Math.max(148,Math.min(420,L.nav||220));
+  const off=!!L.previewOff;
+  const prev=off?0:Math.max(200,Math.min(Math.round(innerWidth*.72),L.preview||Math.round(innerWidth*.4)));
+  dash.style.setProperty("--admin-nav",nav+"px");
+  dash.style.setProperty("--admin-preview",prev+"px");
+  dash.classList.toggle("preview-off",off);
+  const tog=a("adminPreviewToggle");
+  if(tog){
+    tog.setAttribute("aria-pressed",off?"false":"true");
+    tog.textContent=l(cdxT(off?"admin.preview.show":"admin.preview.hide"));
+  }
+}
+function bindAdminLayout(){
+  const dash=a("atelierDash");if(!dash||dash.dataset.layoutBound)return;
+  dash.dataset.layoutBound="1";
+  applyAdminLayout();
+  const navG=a("adminGripNav"),prevG=a("adminGripPreview");
+  if(navG){
+    navG.addEventListener("pointerdown",e=>{
+      atelierDrag(e,navG,ev=>{
+        const r=dash.getBoundingClientRect();
+        saveAdminLayout({nav:Math.round(Math.max(148,Math.min(420,ev.clientX-r.left)))});
+        applyAdminLayout();
+      });
+    });
+    navG.addEventListener("keydown",e=>{
+      if(e.key!=="ArrowLeft"&&e.key!=="ArrowRight")return;
+      e.preventDefault();
+      saveAdminLayout({nav:Math.round(Math.max(148,Math.min(420,(adminLayout().nav||220)+(e.key==="ArrowRight"?16:-16))))});
+      applyAdminLayout();
+    });
+  }
+  if(prevG){
+    prevG.addEventListener("pointerdown",e=>{
+      atelierDrag(e,prevG,ev=>{
+        const r=dash.getBoundingClientRect();
+        saveAdminLayout({preview:Math.round(Math.max(200,Math.min(r.width*.72,r.right-ev.clientX))),previewOff:!1});
+        applyAdminLayout();
+      });
+    });
+    prevG.addEventListener("keydown",e=>{
+      if(e.key!=="ArrowLeft"&&e.key!=="ArrowRight")return;
+      e.preventDefault();
+      const cur=adminLayout().preview||Math.round(innerWidth*.4);
+      saveAdminLayout({preview:Math.round(Math.max(200,Math.min(innerWidth*.72,cur+(e.key==="ArrowLeft"?16:-16)))),previewOff:!1});
+      applyAdminLayout();
+    });
+  }
+  addEventListener("resize",()=>{if(window.CDX_ADMIN)applyAdminLayout()});
 }
 function bindAdminPreview(){
   const pane=a("adminPreviewPane");if(!pane||pane.dataset.bound)return;
@@ -1039,7 +1112,8 @@ function atelierPreviewPing(){
 function atelierEmbed(){
   if(!window.CDX_ADMIN)return;
   document.body.classList.remove("admin-embed");
-  atelierPreviewSync();
+  applyAdminLayout();
+  if(!adminLayout().previewOff)atelierPreviewSync();
 }
 function atelierTask(title,lead,body){
   return `<header class="admin-task-head"><p class="admin-kicker">${l(cdxT("admin.title"))}</p><h3>${l(title)}</h3><p class="admin-help">${l(lead)}</p></header>${body}`;
@@ -1165,13 +1239,17 @@ function atelierRefsHtml(){
   const builtin=Math.max(0,cat-wikiN);
   const st=api.stats?api.stats():{shown:0,planned:0,tab:"people",catalog:0,layer:!1};
   const lib=atelierRefLibHtml(atelierRefGame);
+  const gameNameSel=l((games.find(([id])=>id===atelierRefGame)||[])[1]||atelierRefGame||"");
   return `${atelierTask(cdxT("admin.refs.lib"),cdxT("admin.refs.lead"),"")}
     <p class="muted small">${l(cdxT("atelier.refs.lead"))}</p>
     <p class="admin-live" id="atelierRefLive">${l(atelierRefLiveText(st))}</p>
+    <div class="admin-ref-bar admin-card">
+      <label class="atelier-ref-row"><span>${l(cdxT("atelier.refs.pick"))}</span><select id="atelierRefGame">${opts}</select></label>
+      <p class="muted small">${l(cdxT("atelier.refs.bar.hint"))}</p>
+    </div>
     <div class="admin-card">
       <h4>${l(cdxT("admin.import.ref"))}</h4>
       <p class="muted small">${l(cdxT("admin.import.ref.lead"))}</p>
-      <label class="atelier-ref-row"><span>${l(cdxT("atelier.refs.pick"))}</span><select id="atelierRefGame">${opts}</select></label>
       <label class="atelier-ref-row"><span>${l(cdxT("admin.import.file"))}</span><input id="atelierRefFile" type="file" accept="image/png,image/webp,image/jpeg"></label>
       <label class="atelier-ref-row"><span>${l(cdxT("admin.import.name"))} FR</span><input id="atelierRefFr" type="text" maxlength="80" autocomplete="off"></label>
       <p class="muted small admin-ref-meta" id="atelierRefMeta">${l(cdxT("admin.import.auto"))}</p>
@@ -1190,34 +1268,47 @@ function atelierRefsHtml(){
       <p class="muted small">${l(cdxT("atelier.refs.catalog")).replace("{0}",cat).replace("{1}",builtin).replace("{2}",wikiN)}</p>
       ${lib}
     </div>
-    <div class="admin-card">
-    <h4>${l(cdxT("atelier.refs.global"))}</h4>
-    <div class="admin-ref-gauges">
-    ${atelierRefRow("perGame",cfg.perGame,0,mx.perGame)}
-    ${atelierRefRow("peopleDesktop",cfg.peopleDesktop,0,mx.peopleDesktop)}
-    ${atelierRefRow("peopleMobile",cfg.peopleMobile,0,mx.peopleMobile)}
-    ${atelierRefRow("footerPc",cfg.footerPc,0,mx.footerPc)}
-    ${atelierRefRow("footerMobile",cfg.footerMobile,0,mx.footerMobile)}
-    ${atelierRefRow("logoPc",cfg.logoPc,0,mx.logoPc)}
-    ${atelierRefRow("gap",cfg.gap,0,mx.gap)}
-    ${atelierRefRow("tries",cfg.tries,80,mx.tries)}
+    <div class="admin-card admin-ref-common">
+      <header class="admin-ref-head">
+        <h4>${l(cdxT("atelier.refs.global"))}</h4>
+        <p class="muted small">${l(cdxT("atelier.refs.global.hint"))}</p>
+      </header>
+      <div class="admin-ref-block"><h5>${l(cdxT("atelier.refs.qty.group"))}</h5><div class="admin-ref-gauges">
+        ${atelierRefRow("perGame",cfg.perGame,0,mx.perGame)}
+        ${atelierRefRow("peopleDesktop",cfg.peopleDesktop,0,mx.peopleDesktop)}
+        ${atelierRefRow("peopleMobile",cfg.peopleMobile,0,mx.peopleMobile)}
+      </div></div>
+      <div class="admin-ref-block"><h5>${l(cdxT("atelier.refs.zones.group"))}</h5><div class="admin-ref-gauges">
+        ${atelierRefRow("footerPc",cfg.footerPc,0,mx.footerPc)}
+        ${atelierRefRow("footerMobile",cfg.footerMobile,0,mx.footerMobile)}
+        ${atelierRefRow("logoPc",cfg.logoPc,0,mx.logoPc)}
+      </div></div>
+      <div class="admin-ref-block"><h5>${l(cdxT("atelier.refs.space.group"))}</h5><div class="admin-ref-gauges">
+        ${atelierRefRow("gap",cfg.gap,0,mx.gap)}
+        ${atelierRefRow("tries",cfg.tries,80,mx.tries)}
+      </div></div>
+      <div class="atelier-ref-actions"><button type="button" class="primary tiny" id="atelierRefsApply">${l(cdxT("atelier.refs.apply"))}</button><button type="button" class="tiny" id="atelierRefsReset">${l(cdxT("atelier.refs.reset"))}</button></div>
     </div>
-    <div class="atelier-ref-actions"><button type="button" class="primary tiny" id="atelierRefsApply">${l(cdxT("atelier.refs.apply"))}</button><button type="button" class="tiny" id="atelierRefsReset">${l(cdxT("atelier.refs.reset"))}</button></div>
-    </div>
-    <div class="admin-card">
-    <h4>${l(cdxT("atelier.refs.game"))}</h4>
-    <p class="muted small">${l(cdxT("atelier.refs.game.hint"))}</p>
-    <div class="admin-ref-gauges">
-    ${atelierRefRow("perGame",gVal("perGame"),0,mx.perGame,`data-ref-game="perGame"`,"g.perGame")}
-    ${atelierRefRow("peopleDesktop",gVal("peopleDesktop"),0,mx.peopleDesktop,`data-ref-game="peopleDesktop"`,"g.peopleDesktop")}
-    ${atelierRefRow("peopleMobile",gVal("peopleMobile"),0,mx.peopleMobile,`data-ref-game="peopleMobile"`,"g.peopleMobile")}
-    ${atelierRefRow("footerPc",gVal("footerPc"),0,mx.footerPc,`data-ref-game="footerPc"`,"g.footerPc")}
-    ${atelierRefRow("footerMobile",gVal("footerMobile"),0,mx.footerMobile,`data-ref-game="footerMobile"`,"g.footerMobile")}
-    ${atelierRefRow("logoPc",gVal("logoPc"),0,mx.logoPc,`data-ref-game="logoPc"`,"g.logoPc")}
-    ${atelierRefRow("gap",gVal("gap"),0,mx.gap,`data-ref-game="gap"`,"g.gap")}
-    </div>
-    <p class="muted small">${custom?l(cdxT("atelier.refs.custom")):l(cdxT("atelier.refs.inherit"))}</p>
-    <div class="atelier-ref-actions"><button type="button" class="tiny" id="atelierRefsResetGame">${l(cdxT("atelier.refs.resetGame"))}</button></div>
+    <div class="admin-card admin-ref-game">
+      <header class="admin-ref-head">
+        <h4>${l(cdxT("atelier.refs.game.title")).replace("{0}",gameNameSel)}</h4>
+        <p class="muted small">${l(cdxT("atelier.refs.game.hint"))}</p>
+      </header>
+      <div class="admin-ref-block"><h5>${l(cdxT("atelier.refs.qty.group"))}</h5><div class="admin-ref-gauges">
+        ${atelierRefRow("perGame",gVal("perGame"),0,mx.perGame,`data-ref-game="perGame"`,"g.perGame")}
+        ${atelierRefRow("peopleDesktop",gVal("peopleDesktop"),0,mx.peopleDesktop,`data-ref-game="peopleDesktop"`,"g.peopleDesktop")}
+        ${atelierRefRow("peopleMobile",gVal("peopleMobile"),0,mx.peopleMobile,`data-ref-game="peopleMobile"`,"g.peopleMobile")}
+      </div></div>
+      <div class="admin-ref-block"><h5>${l(cdxT("atelier.refs.zones.group"))}</h5><div class="admin-ref-gauges">
+        ${atelierRefRow("footerPc",gVal("footerPc"),0,mx.footerPc,`data-ref-game="footerPc"`,"g.footerPc")}
+        ${atelierRefRow("footerMobile",gVal("footerMobile"),0,mx.footerMobile,`data-ref-game="footerMobile"`,"g.footerMobile")}
+        ${atelierRefRow("logoPc",gVal("logoPc"),0,mx.logoPc,`data-ref-game="logoPc"`,"g.logoPc")}
+      </div></div>
+      <div class="admin-ref-block"><h5>${l(cdxT("atelier.refs.space.group"))}</h5><div class="admin-ref-gauges">
+        ${atelierRefRow("gap",gVal("gap"),0,mx.gap,`data-ref-game="gap"`,"g.gap")}
+      </div></div>
+      <p class="muted small">${custom?l(cdxT("atelier.refs.custom")):l(cdxT("atelier.refs.inherit"))}</p>
+      <div class="atelier-ref-actions"><button type="button" class="tiny" id="atelierRefsResetGame">${l(cdxT("atelier.refs.resetGame"))}</button></div>
     </div>`;
 }
 function bindAtelierRefs(){

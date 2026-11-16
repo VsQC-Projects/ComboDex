@@ -297,7 +297,7 @@ function place() {
   };
   const small = innerWidth < 700;
   const tries = view.tries;
-  const UI_PAD = 6;
+  const UI_PAD = small ? 2 : 6;
   boxes.forEach(([a, b2, c, d]) => mark(a - UI_PAD, b2 - UI_PAD, c + UI_PAD, d + UI_PAD));
   const rectOf = sel => {
     const e = document.querySelector(sel);
@@ -324,8 +324,19 @@ function place() {
       mark(r.left + scrollX - UI_PAD, r.top + scrollY - UI_PAD, r.right + scrollX + UI_PAD, r.bottom + scrollY + UI_PAD);
     });
   }
+  const navEl = document.querySelector(".nav");
+  const navB = navEl ? navEl.getBoundingClientRect().bottom + scrollY : 52;
+  const footEl = document.querySelector(".studio-footer");
+  const footT = footEl ? footEl.getBoundingClientRect().top + scrollY : Hh;
+  const gw = small ? Math.max(44, Math.min(64, Math.round(W * 0.18))) : 0;
+  if (small && gw) {
+    unmark(0, navB + 2, gw, Math.max(navB + 40, footT - 4));
+    unmark(W - gw, navB + 2, W, Math.max(navB + 40, footT - 4));
+  }
   const inRect = (box, x, y, size) => box && x + size / 2 >= box.l && x + size / 2 <= box.r && y + size / 2 >= box.t && y + size / 2 <= box.b;
+  const inGutter = (x, y, size) => small && gw && (x + size / 2 < gw || x + size / 2 > W - gw);
   const zoneOf = (x, y, size) => {
+    if (inGutter(x, y, size)) return "main";
     if (inRect(zones.footer, x, y, size)) return "footer";
     if (inRect(zones.logo, x, y, size) || inRect(zones.peopleLogo, x, y, size)) return "logo";
     return "main";
@@ -348,7 +359,7 @@ function place() {
     const z = zoneOf(x, y, size);
     if (z === "footer") usedFooter++;
     if (z === "logo") usedLogo++;
-    const gap = Math.max(0, gameGap(cfg, it.g));
+    const gap = Math.max(0, Math.round(gameGap(cfg, it.g) * (small ? 0.35 : 1)));
     mark(x - gap, y - gap, x + size + gap, y + size + gap);
     const img = new Image();
     img.src = src;
@@ -367,10 +378,14 @@ function place() {
     if (rr - l < size || bb - t < size) return null;
     return {l, t, r: rr, b: bb};
   };
+  const gutters = small && gw ? [
+    {l: 1, t: navB + 2, r: gw, b: Math.max(navB + 48, footT - 2)},
+    {l: W - gw, t: navB + 2, r: W - 1, b: Math.max(navB + 48, footT - 2)}
+  ] : [];
   const scanBox = (size, gap, want, box) => {
-    const area = want === "main" ? {l: 2, t: 2, r: W - 2, b: Hh - 2} : clipRect(box, size);
+    const area = box ? clipRect(box, size) : (want === "main" ? {l: 2, t: 2, r: W - 2, b: Hh - 2} : null);
     if (!area) return null;
-    const step = Math.max(CELL, Math.min(12, Math.max(4, Math.round((size + gap) / 4))));
+    const step = Math.max(CELL, Math.min(small ? 6 : 12, Math.max(4, Math.round((size + gap) / (small ? 6 : 4)))));
     for (let y = area.t; y <= area.b - size; y += step)
       for (let x = area.l; x <= area.r - size; x += step) {
         if (!free(x, y, x + size, y + size) || !zoneOk(x, y, size, want === "main" ? "" : want)) continue;
@@ -381,6 +396,20 @@ function place() {
   const pickSpot = (it, size, want) => {
     const gap = Math.max(0, gameGap(cfg, it.g));
     const box = want === "footer" ? zones.footer : want === "logo" ? (zones.peopleLogo || zones.logo) : null;
+    if (small && (!want || want === "main") && gutters.length) {
+      for (let k = 0; k < tries; k++) {
+        const gbox = gutters[k % gutters.length];
+        const spanX = Math.max(1, gbox.r - gbox.l - size);
+        const spanY = Math.max(1, gbox.b - gbox.t - size);
+        const x = gbox.l + r() * spanX, y = gbox.t + r() * spanY;
+        if (!free(x, y, x + size, y + size) || !zoneOk(x, y, size, "")) continue;
+        return [x, y];
+      }
+      for (const gbox of gutters) {
+        const hit = scanBox(size, gap, "main", gbox);
+        if (hit) return hit;
+      }
+    }
     const area = want === "main" ? {l: 2, t: 2, r: W - 2, b: Hh - 2} : clipRect(box, size);
     if (want !== "main" && !area) return null;
     const bounds = area || {l: 2, t: 2, r: W - 2, b: Hh - 2};
@@ -394,13 +423,13 @@ function place() {
     return scanBox(size, gap, want, box);
   };
   const srcOf = (it, p) => (it.row && it.row[8]) || (p ? `objets/${it.g}/${it.id}-${p}.webp` : `objets/${it.g}/${it.id}.webp`);
-  const sizeOf = it => pieces(it) ? (small ? 26 : 34) : Math.round((small ? 30 : 40) + r() * (small ? 14 : 24));
+  const sizeOf = it => pieces(it) ? (small ? 22 : 34) : Math.round((small ? 20 : 40) + r() * (small ? 8 : 24));
   const tryPlace = (it, want) => {
     const n = pieces(it);
     if (n) {
       let got = 0;
       for (let p = 1; p <= n; p++) {
-        const size = small ? 26 : 34;
+        const size = small ? 22 : 34;
         const spot = pickSpot(it, size, want);
         if (!spot) break;
         put(it, srcOf(it, p), spot[0], spot[1], size);
