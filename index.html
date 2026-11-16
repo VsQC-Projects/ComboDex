@@ -16,8 +16,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Audiowide&family=Black+Ops+One&family=Bungee&family=Press+Start+2P&family=Orbitron:wght@700&family=Russo+One&family=Monoton&family=Silkscreen&family=Teko:wght@600&display=swap" />
-    <link rel="stylesheet" href="cdx.css?v=20261115r6" />
-    <link rel="stylesheet" href="cdx-theme.css?v=20261115r6" />
+    <link rel="stylesheet" href="cdx.css?v=20261115r7" />
+    <link rel="stylesheet" href="cdx-theme.css?v=20261115r7" />
     <script>
 (function(){var t="official";try{var u=JSON.parse(localStorage.getItem("combo-dex-ui-v1"))||{};if(u.theme==="wood"||u.theme==="dojo"||u.theme==="official")t=u.theme}catch(e){}document.documentElement.dataset.theme=t;})();
 </script>
@@ -269,46 +269,48 @@
                 <div id="raGhosts" class="ra-ghosts" aria-hidden="true"></div>
                 <div id="raLive" class="ra-live" aria-hidden="true"></div>
                 <div id="raEmpty" class="empty ra-empty" data-i18n="x.need">Colle un lien YouTube ou X.</div>
-                <div id="raHud" class="ra-hud">
-                  <div class="ra-hud-bottom">
-                    <div class="ra-hotkeys" data-i18n="ra.keys">ESPACE : lecture — ← → : image — R : replay — H : HUD — M : marquer</div>
-                    <div class="ra-bars">
-                      <div class="ra-bar-side">
-                        <b id="raHudChar">—</b>
-                        <span id="raHudGame" class="muted small">—</span>
+                <input id="raText" class="ra-text hidden" maxlength="80" autocomplete="off" data-i18n-placeholder="Clique pour écrire…" placeholder="Clique pour écrire…" />
+              </div>
+              <div id="raTransport" class="ra-transport">
+                <div class="ra-labbar">
+                  <div class="ra-lab-row ra-lab-mark">
+                    <button type="button" id="raMark" class="primary tiny" data-i18n="Marquer ici">Marquer ici</button>
+                    <button type="button" id="raSaveEdit" class="primary tiny" data-i18n="Enregistrer">Enregistrer</button>
+                    <div class="ra-ruler">
+                      <button type="button" id="raPlayMini" class="ra-play-mini" aria-label="Lecture">▶</button>
+                      <span id="raTime" class="ra-clock">0:00.0</span>
+                      <span id="raFrame" class="ra-clock ra-frame">F —</span>
+                      <div class="ra-seek-wrap">
+                        <div class="ra-seek-track" aria-hidden="true"><i id="raSeekFill"></i></div>
+                        <div id="raTicks" class="ra-ticks"></div>
+                        <input id="raSeek" type="range" min="0" max="1000" value="0" step="1" aria-label="Timeline" />
                       </div>
-                      <div class="ra-bar-side ra-bar-right">
-                        <b id="raHudCombo">—</b>
-                      </div>
-                    </div>
-                    <div id="raAnalyze" class="ra-analyze" hidden>
-                      <span id="raAnaFrame">F —</span>
-                      <span id="raAnaTime">0:00.0</span>
-                      <span id="raAnaRate">1×</span>
-                      <span id="raAnaInk">0</span>
-                    </div>
-                    <div id="raSeq" class="seq ra-hud-seq"></div>
-                    <div class="ra-labbar">
-                      <div class="ra-lab-row ra-lab-mark">
-                        <button type="button" id="raMark" class="primary tiny" data-i18n="Marquer ici">Marquer ici</button>
-                        <button type="button" id="raSaveEdit" class="primary tiny" data-i18n="Enregistrer">Enregistrer</button>
-                        <div class="ra-ruler">
-                          <button type="button" id="raPlayMini" class="ra-play-mini" aria-label="Lecture">▶</button>
-                          <span id="raTime" class="ra-clock">0:00.0</span>
-                          <span id="raFrame" class="ra-clock ra-frame">F —</span>
-                          <div class="ra-seek-wrap">
-                            <div class="ra-seek-track" aria-hidden="true"><i id="raSeekFill"></i></div>
-                            <div id="raTicks" class="ra-ticks"></div>
-                            <input id="raSeek" type="range" min="0" max="1000" value="0" step="1" aria-label="Timeline" />
-                          </div>
-                          <span id="raDur" class="ra-clock">0:00.0</span>
-                          <button type="button" id="raFull" class="ra-full" data-i18n-tip="ra.full" aria-label="Plein écran">⛶</button>
-                        </div>
-                      </div>
+                      <span id="raDur" class="ra-clock">0:00.0</span>
+                      <button type="button" id="raFull" class="ra-full" data-i18n-tip="ra.full" aria-label="Plein écran">⛶</button>
                     </div>
                   </div>
                 </div>
-                <input id="raText" class="ra-text hidden" maxlength="80" autocomplete="off" data-i18n-placeholder="Clique pour écrire…" placeholder="Clique pour écrire…" />
+              </div>
+              <div id="raHud" class="ra-hud">
+                <div class="ra-hud-bottom">
+                  <div class="ra-hotkeys" data-i18n="ra.keys">ESPACE : lecture — ← → : image — R : replay — H : HUD — M : marquer</div>
+                  <div class="ra-bars">
+                    <div class="ra-bar-side">
+                      <b id="raHudChar">—</b>
+                      <span id="raHudGame" class="muted small">—</span>
+                    </div>
+                    <div class="ra-bar-side ra-bar-right">
+                      <b id="raHudCombo">—</b>
+                    </div>
+                  </div>
+                  <div id="raAnalyze" class="ra-analyze" hidden>
+                    <span id="raAnaFrame">F —</span>
+                    <span id="raAnaTime">0:00.0</span>
+                    <span id="raAnaRate">1×</span>
+                    <span id="raAnaInk">0</span>
+                  </div>
+                  <div id="raSeq" class="seq ra-hud-seq"></div>
+                </div>
               </div>
             </div>
             <div id="raDockPlay" class="ra-float" data-dock="play">
