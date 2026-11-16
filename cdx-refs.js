@@ -7,18 +7,21 @@ const TXT = {
   fr: {wood: "Bois", official: "Officielle", dojo: "Dojo", borne: "Borne", capsule: "Capsule",
     title: "Mini-jeu : trouve l'objet !", find: "Trouve cet objet caché dans la page :", from: "Jeu",
     quit: "Abandonner", again: "Rejouer", found: "Trouvé !", miss: "Ce n'est pas celui-là…",
+    min: "Réduire", max: "Déplier", drag: "Déplacer la fenêtre",
     time: "Temps", scroll: "Il peut être n'importe où dans la page, fais défiler.",
     all: "Elles sont dispersées dans la page : trouve-les toutes.", got: "Trouvées",
     gave: "Tu as abandonné… il était là !", gaveN: "Tu as abandonné… elles étaient là !", close: "Fermer"},
   en: {wood: "Wood", official: "Official", dojo: "Dojo", borne: "Cabinet", capsule: "Capsule",
     title: "Mini-game: find the object!", find: "Find this object hidden on the page:", from: "Game",
     quit: "Give up", again: "Play again", found: "Found it!", miss: "Not that one…",
+    min: "Minimize", max: "Expand", drag: "Move the window",
     time: "Time", scroll: "It can be anywhere on the page, scroll around.",
     all: "They are scattered across the page: find them all.", got: "Found",
     gave: "You gave up… it was right here!", gaveN: "You gave up… they were right here!", close: "Close"},
   es: {wood: "Madera", official: "Oficial", dojo: "Dojo", borne: "Recreativa", capsule: "Cápsula",
     title: "Minijuego: ¡encuentra el objeto!", find: "Encuentra este objeto escondido en la página:", from: "Juego",
     quit: "Rendirse", again: "Jugar otra vez", found: "¡Encontrado!", miss: "Ese no es…",
+    min: "Reducir", max: "Desplegar", drag: "Mover la ventana",
     time: "Tiempo", scroll: "Puede estar en cualquier parte de la página, desplázate.",
     all: "Están repartidas por la página: encuéntralas todas.", got: "Encontradas",
     gave: "Te rendiste… ¡estaba aquí!", gaveN: "Te rendiste… ¡estaban aquí!", close: "Cerrar"},
@@ -527,12 +530,89 @@ function jingle(ok) {
   (ok ? [784, 988, 1175, 1568] : [330, 262]).forEach((f, i) => tone(ac, f, n + i * 0.09, ok ? 0.16 : 0.2, ok ? "square" : "sawtooth", 0.05));
 }
 
+function huntRead() {
+  const raw = readUI().hunt;
+  return raw && typeof raw === "object" ? raw : {};
+}
+function huntClamp(el) {
+  if (!el) return;
+  const r = el.getBoundingClientRect();
+  let x = parseFloat(el.style.left); if (!isFinite(x)) x = r.left;
+  let y = parseFloat(el.style.top); if (!isFinite(y)) y = r.top;
+  const minVis = 48;
+  x = Math.min(Math.max(8 - Math.max(0, r.width - minVis), x), innerWidth - minVis);
+  y = Math.min(Math.max(8, y), Math.max(8, innerHeight - 32));
+  el.style.left = Math.round(x) + "px";
+  el.style.top = Math.round(y) + "px";
+  el.style.right = "auto";
+  el.style.bottom = "auto";
+  el.style.transform = "none";
+}
+function huntPlace(el) {
+  const st = huntRead();
+  if (st.x != null && st.y != null) {
+    el.style.left = Number(st.x) + "px";
+    el.style.top = Number(st.y) + "px";
+  } else {
+    el.style.left = "16px";
+    el.style.top = "120px";
+  }
+  el.classList.toggle("is-min", !!st.min);
+  huntClamp(el);
+}
+function huntPersist(el) {
+  if (!el) return;
+  const ui = readUI();
+  ui.hunt = {
+    x: parseFloat(el.style.left) || 0,
+    y: parseFloat(el.style.top) || 0,
+    min: el.classList.contains("is-min")
+  };
+  try { localStorage.setItem(UI_KEY, JSON.stringify(ui)); } catch {}
+}
+function bindHuntFloat(el) {
+  const head = el && el.querySelector("[data-hunt-drag]");
+  if (!head) return;
+  let sx = 0, sy = 0, ox = 0, oy = 0, drag = false;
+  const down = e => {
+    if (e.target.closest("button")) return;
+    e.preventDefault();
+    drag = true;
+    const r = el.getBoundingClientRect();
+    ox = r.left; oy = r.top; sx = e.clientX; sy = e.clientY;
+    try { head.setPointerCapture(e.pointerId); } catch {}
+  };
+  const move = e => {
+    if (!drag) return;
+    el.style.left = Math.round(ox + (e.clientX - sx)) + "px";
+    el.style.top = Math.round(oy + (e.clientY - sy)) + "px";
+    huntClamp(el);
+  };
+  const up = () => { if (!drag) return; drag = false; huntPersist(el); };
+  head.addEventListener("pointerdown", down);
+  head.addEventListener("pointermove", move);
+  head.addEventListener("pointerup", up);
+  head.addEventListener("pointercancel", up);
+}
 function panel() {
   let p = document.getElementById("cdxHunt");
   if (!p) {
     p = document.createElement("div");
-    p.id = "cdxHunt"; p.className = "cdx-hunt"; p.setAttribute("role", "dialog"); p.setAttribute("aria-live", "polite");
+    p.id = "cdxHunt";
+    p.className = "ra-float cdx-hunt";
+    p.setAttribute("role", "dialog");
+    p.setAttribute("aria-live", "polite");
     document.body.appendChild(p);
+    huntPlace(p);
+    if (!window.__cdxHuntResize) {
+      window.__cdxHuntResize = 1;
+      addEventListener("resize", () => {
+        const el = document.getElementById("cdxHunt");
+        if (!el) return;
+        huntClamp(el);
+        huntPersist(el);
+      });
+    }
   }
   return p;
 }
@@ -542,12 +622,31 @@ function renderPanel(state) {
   const done = state === "found" || state === "gave", need = game.need, src = `objets/${it.g}/${it.id}${pieces(it) ? "-1" : ""}.webp`;
   const prog = need > 1 ? `<div class="hunt-prog"><b>${t("got")} : ${game.got.size}/${need}</b> · ${t("all")}</div>` : "";
   const head = state === "gave" ? t(need > 1 ? "gaveN" : "gave") : t("found");
-  p.innerHTML = `<div class="hunt-top"><b>${t("title")}</b><span class="hunt-time">${t("time")} ${secs}s</span></div>
-    ${done ? `<div class="hunt-found"><img src="${src}" alt=""><div><b>${head}</b><div>${label(it)}</div><div class="muted small">${gameName(it.g)}</div></div></div>`
-      : `<div class="small muted">${t("find")}</div><div class="hunt-hint">« ${hint(it)} »</div>${prog}<div class="small muted">${t("from")} : ${gameName(it.g)} · ${t("scroll")}</div>`}
-    ${state === "miss" ? `<div class="hunt-miss">${t("miss")}</div>` : ""}
-    <div class="hunt-btns"><button type="button" class="tiny" data-h="${done ? "close" : "quit"}">${done ? t("close") : t("quit")}</button><button type="button" class="tiny primary" data-h="again">${t("again")}</button></div>`;
+  const minOn = p.classList.contains("is-min");
+  p.innerHTML = `<div class="ra-float-h" data-hunt-drag title="${t("drag")}">
+      <b>${t("title")}</b>
+      <span class="hunt-time">${t("time")} ${secs}s</span>
+      <span class="ra-float-acts">
+        <button type="button" class="tiny" data-h-min title="${minOn ? t("max") : t("min")}" aria-label="${minOn ? t("max") : t("min")}">–</button>
+        <button type="button" class="tiny" data-h="${done ? "close" : "quit"}" title="${done ? t("close") : t("quit")}" aria-label="${done ? t("close") : t("quit")}">×</button>
+      </span>
+    </div>
+    <div class="ra-float-body">
+      ${done ? `<div class="hunt-found"><img src="${src}" alt=""><div><b>${head}</b><div>${label(it)}</div><div class="muted small">${gameName(it.g)}</div></div></div>`
+        : `<div class="small muted">${t("find")}</div><div class="hunt-hint">« ${hint(it)} »</div>${prog}<div class="small muted">${t("from")} : ${gameName(it.g)} · ${t("scroll")}</div>`}
+      ${state === "miss" ? `<div class="hunt-miss">${t("miss")}</div>` : ""}
+      <div class="hunt-btns"><button type="button" class="tiny" data-h="${done ? "close" : "quit"}">${done ? t("close") : t("quit")}</button><button type="button" class="tiny primary" data-h="again">${t("again")}</button></div>
+    </div>`;
+  bindHuntFloat(p);
   p.onclick = e => {
+    const min = e.target.closest("[data-h-min]");
+    if (min) {
+      p.classList.toggle("is-min");
+      huntPersist(p);
+      min.setAttribute("title", p.classList.contains("is-min") ? t("max") : t("min"));
+      min.setAttribute("aria-label", p.classList.contains("is-min") ? t("max") : t("min"));
+      return;
+    }
     const b = e.target.closest("[data-h]"); if (!b) return;
     if (b.dataset.h === "quit") giveUp(); else if (b.dataset.h === "close") stop(); else start();
   };

@@ -670,15 +670,16 @@ html[data-theme="dojo"] .cdx-ref{filter:drop-shadow(3px 3px 0 #1d1d2240)}
 .brand-btn{-webkit-touch-callout:none;user-select:none;position:relative}
 .brand-btn.brand-charging::after{content:"";position:absolute;left:0;bottom:-3px;height:3px;width:100%;background:var(--accent,#e8c77a);transform-origin:left;animation:brandCharge 5s linear forwards;border-radius:2px}
 @keyframes brandCharge{from{transform:scaleX(0)}to{transform:scaleX(1)}}
-.cdx-hunt{position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:45;width:min(460px,calc(100% - 24px));padding:12px 14px;border-radius:14px;background:var(--panel);color:var(--ink);border:2px solid var(--accent,#e8c77a);box-shadow:0 12px 30px #0008;display:grid;gap:6px;animation:huntIn .35s ease-out}
-.cdx-hunt .hunt-top{display:flex;justify-content:space-between;gap:10px;align-items:center}
-.cdx-hunt .hunt-time{font-variant-numeric:tabular-nums;font-size:12px;color:var(--muted)}
-.cdx-hunt .hunt-hint{font-size:16px;font-weight:700;line-height:1.3}
+.cdx-hunt.ra-float{z-index:80;width:min(300px,calc(100vw - 16px));animation:huntIn .25s ease-out}
+.cdx-hunt .ra-float-h{cursor:move}
+.cdx-hunt .ra-float-h b{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cdx-hunt .hunt-time{flex:none;margin-left:auto;font-variant-numeric:tabular-nums;font-size:11px;font-weight:650;letter-spacing:0;text-transform:none;color:#d8d4e2}
+.cdx-hunt .hunt-hint{font-size:15px;font-weight:700;line-height:1.3}
 .cdx-hunt .hunt-miss{color:var(--bad);font-weight:650;font-size:13px}
 .cdx-hunt .hunt-found{display:flex;gap:12px;align-items:center}
-.cdx-hunt .hunt-found img{width:64px;height:64px;object-fit:contain}
+.cdx-hunt .hunt-found img{width:56px;height:56px;object-fit:contain}
 .cdx-hunt .hunt-btns{display:flex;justify-content:flex-end;gap:6px}
-@keyframes huntIn{from{opacity:0;transform:translate(-50%,-16px)}}
+@keyframes huntIn{from{opacity:0}to{opacity:1}}
 @media (prefers-reduced-motion:reduce){.cdx-ref,.cdx-hunt,.cdx-ref.hunt-win{animation:none;transition:none}}
 .brand-mark,.brand-mark-end,
 html[data-theme] .brand-mark,html[data-theme] .brand-mark-end{
