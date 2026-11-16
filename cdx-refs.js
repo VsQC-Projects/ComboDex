@@ -2,23 +2,21 @@
 "use strict";
 const UI_KEY = "combo-dex-ui-v1";
 const THEMES = ["official", "wood", "dojo", "borne", "capsule"];
-const EXTRA_THEMES = ["arcade", "ink", "blueprint", "broadcast", "graphite", "manual"];
-const ALL_THEMES = THEMES.concat(EXTRA_THEMES);
 const MODULES = ["people", "frames", "compare", "replay", "create", "import", "knowledge"];
 const TXT = {
-  fr: {wood: "Bois", official: "Officielle", dojo: "Dojo", borne: "Borne", capsule: "Capsule", da: "Direction artistique",
+  fr: {wood: "Bois", official: "Officielle", dojo: "Dojo", borne: "Borne", capsule: "Capsule",
     title: "Mini-jeu : trouve l'objet !", find: "Trouve cet objet caché dans la page :", from: "Jeu",
     quit: "Abandonner", again: "Rejouer", found: "Trouvé !", miss: "Ce n'est pas celui-là…",
     time: "Temps", scroll: "Il peut être n'importe où dans la page, fais défiler.",
     all: "Elles sont dispersées dans la page : trouve-les toutes.", got: "Trouvées",
     gave: "Tu as abandonné… il était là !", gaveN: "Tu as abandonné… elles étaient là !", close: "Fermer"},
-  en: {wood: "Wood", official: "Official", dojo: "Dojo", borne: "Cabinet", capsule: "Capsule", da: "Art direction",
+  en: {wood: "Wood", official: "Official", dojo: "Dojo", borne: "Cabinet", capsule: "Capsule",
     title: "Mini-game: find the object!", find: "Find this object hidden on the page:", from: "Game",
     quit: "Give up", again: "Play again", found: "Found it!", miss: "Not that one…",
     time: "Time", scroll: "It can be anywhere on the page, scroll around.",
     all: "They are scattered across the page: find them all.", got: "Found",
     gave: "You gave up… it was right here!", gaveN: "You gave up… they were right here!", close: "Close"},
-  es: {wood: "Madera", official: "Oficial", dojo: "Dojo", borne: "Recreativa", capsule: "Cápsula", da: "Dirección artística",
+  es: {wood: "Madera", official: "Oficial", dojo: "Dojo", borne: "Recreativa", capsule: "Cápsula",
     title: "Minijuego: ¡encuentra el objeto!", find: "Encuentra este objeto escondido en la página:", from: "Juego",
     quit: "Rendirse", again: "Jugar otra vez", found: "¡Encontrado!", miss: "Ese no es…",
     time: "Tiempo", scroll: "Puede estar en cualquier parte de la página, desplázate.",
@@ -35,7 +33,7 @@ function isPreview() {
   try { return !window.CDX_ADMIN && window.self !== window.top; } catch { return true; }
 }
 function setTheme(name) {
-  if (!ALL_THEMES.includes(name)) name = "official";
+  if (!THEMES.includes(name)) name = "official";
   document.documentElement.dataset.theme = name;
   document.querySelectorAll("#daSwitch button,[data-admin-theme]").forEach(b => {
     const id = b.dataset.theme || b.dataset.adminTheme;

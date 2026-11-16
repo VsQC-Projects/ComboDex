@@ -42,15 +42,15 @@ body.cdx-admin.is-atelier #atelierDash:not(.hidden){
   min-width:0;
   border:0;
   background:transparent;
-  --admin-nav:220px;
+  --admin-nav:168px;
   --admin-preview:40vw;
-  grid-template-columns:var(--admin-nav,220px) 16px minmax(200px,1fr) 16px var(--admin-preview,40vw);
+  grid-template-columns:var(--admin-nav,168px) 16px minmax(200px,1fr) 16px var(--admin-preview,40vw);
   grid-template-rows:auto minmax(0,1fr) 40px;
   grid-template-areas:"head head head head head" "nav g1 work g2 preview" "foot foot foot foot foot";
 }
 body.cdx-admin.is-atelier #atelierDash:not(.hidden).preview-off,
 body.cdx-admin.cdx-preview-off.is-atelier #atelierDash:not(.hidden){
-  grid-template-columns:var(--admin-nav,220px) 16px minmax(200px,1fr) 0 0 !important;
+  grid-template-columns:var(--admin-nav,168px) 16px minmax(200px,1fr) 0 0 !important;
 }
 body.cdx-admin.is-atelier #atelierDash:not(.hidden).preview-off .admin-preview,
 body.cdx-admin.is-atelier #atelierDash:not(.hidden).preview-off #adminGripPreview,
@@ -178,9 +178,9 @@ body.cdx-admin .atelier-dash{
   border:0;
   background:transparent;
   z-index:24;
-  --admin-nav:220px;
+  --admin-nav:168px;
   --admin-preview:40vw;
-  grid-template-columns:var(--admin-nav,220px) 16px minmax(200px,1fr) 16px var(--admin-preview,40vw);
+  grid-template-columns:var(--admin-nav,168px) 16px minmax(200px,1fr) 16px var(--admin-preview,40vw);
   grid-template-rows:auto minmax(0,1fr) 40px;
   grid-template-areas:"head head head head head" "nav g1 work g2 preview" "foot foot foot foot foot";
 }
@@ -256,11 +256,11 @@ body.cdx-admin .atelier-tree{
   display:flex;
   flex-direction:column;
   overflow:auto;
-  padding:18px 12px 24px;
+  padding:10px 8px 16px;
   border:0;
   border-right:1px solid var(--admin-line);
   background:var(--admin-chrome);
-  font-size:13px;
+  font-size:12px;
 }
 body.cdx-admin .atelier-tree .admin-nav-group{
   display:flex;
@@ -284,13 +284,19 @@ body.cdx-admin .atelier-tree .admin-nav-label{
 }
 body.cdx-admin .atelier-tree button{
   width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:6px;
   text-align:left;
   border:1px solid transparent;
-  border-radius:10px;
-  padding:8px 10px;
+  border-radius:8px;
+  padding:6px 8px;
   color:var(--admin-ink);
   cursor:pointer;
   background:transparent;
+  font-size:12px;
+  line-height:1.25;
 }
 body.cdx-admin .atelier-tree button:hover{background:var(--admin-hover)}
 body.cdx-admin .atelier-tree button.sel{
@@ -1092,7 +1098,7 @@ html[data-theme="capsule"] body.cdx-admin .admin-themes button[aria-pressed="tru
 @media (max-width:1100px) and (min-width:641px){
   body.cdx-admin.is-atelier #atelierDash:not(.hidden),
   body.cdx-admin .atelier-dash{
-    grid-template-columns:var(--admin-nav,200px) 16px minmax(160px,1fr) 16px var(--admin-preview,34vw);
+    grid-template-columns:var(--admin-nav,168px) 16px minmax(160px,1fr) 16px var(--admin-preview,34vw);
     grid-template-rows:auto minmax(0,1fr) 40px;
     grid-template-areas:"head head head head head" "nav g1 work g2 preview" "foot foot foot foot foot";
   }
@@ -1104,41 +1110,8 @@ html[data-theme="capsule"] body.cdx-admin .admin-themes button[aria-pressed="tru
 @media(prefers-reduced-motion:reduce){
   body.cdx-admin *{transition:none !important}
 }
-html[data-da="studio"] body.cdx-admin{
-  --admin-bg:#0c0e14;
-  --admin-chrome:#10131c;
-  --admin-card:#151924;
-  --admin-line:#2a3144;
-  --admin-ink:#eef1f7;
-  --admin-muted:#9aa3b8;
-  --admin-accent:#8b6cc4;
-  --admin-accent2:#2b2144;
-  --admin-input:#0b0d12;
-  --admin-hover:#1b2030;
-  --admin-sel:#2a2150;
-  --admin-sel-ink:#efe8ff;
-  background:#0c0e14;
-  font-family:"Fira Sans",system-ui,sans-serif;
-}
-body.cdx-admin .atelier-tree button{
-  display:flex;align-items:center;gap:10px;text-align:left;
-}
-.admin-ico{width:16px;height:16px;flex:none}
-html[data-da="studio"] #atelierDash.nav-slim{--admin-nav:72px}
-html[data-da="studio"] #atelierDash.nav-slim .atelier-tree button{justify-content:center;padding:12px 8px}
-html[data-da="studio"] #atelierDash.nav-slim .atelier-tree button>span:not(.count),
-html[data-da="studio"] #atelierDash.nav-slim .admin-nav-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
-html[data-da="studio"] .admin-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
-html[data-da="studio"] .admin-metric{background:var(--admin-card);border:1px solid var(--admin-line);border-radius:12px;padding:14px 16px}
-html[data-da="studio"] .admin-metric b{display:block;font-size:28px;letter-spacing:.02em}
-html[data-da="studio"] .admin-bars{list-style:none;margin:0;padding:0;display:grid;gap:8px}
-html[data-da="studio"] .admin-bars li{display:grid;grid-template-columns:minmax(72px,140px) 1fr 36px;gap:8px;align-items:center;font-size:12px}
-html[data-da="studio"] .admin-bar-lab{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--admin-muted)}
-html[data-da="studio"] .admin-bar-track{height:8px;border-radius:99px;background:#1b2030;overflow:hidden}
-html[data-da="studio"] .admin-bar-track i{display:block;height:100%;background:var(--admin-accent);border-radius:99px}
-.admin-da-seg{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
-.admin-da-seg label{display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--admin-line);border-radius:10px;cursor:pointer}
-.admin-preview-flag{color:var(--admin-accent);font-size:12px;font-weight:650}
-@media (max-width:720px){
-  html[data-da="studio"] .admin-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
-}
+body.cdx-admin .admin-bars{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+body.cdx-admin .admin-bars li{display:grid;grid-template-columns:minmax(72px,140px) 1fr 36px;gap:8px;align-items:center;font-size:12px}
+body.cdx-admin .admin-bar-lab{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--admin-muted)}
+body.cdx-admin .admin-bar-track{height:8px;border-radius:99px;background:var(--admin-hover);overflow:hidden}
+body.cdx-admin .admin-bar-track i{display:block;height:100%;background:var(--admin-accent);border-radius:99px}

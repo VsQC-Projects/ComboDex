@@ -120,27 +120,6 @@ fr:{
 ,"admin.theme.wood":"Bois"
 ,"admin.theme.borne":"Borne"
 ,"admin.theme.capsule":"Capsule"
-,"admin.theme.arcade":"Arcade CRT"
-,"admin.theme.ink":"Editorial Ink"
-,"admin.theme.blueprint":"Blueprint"
-,"admin.theme.broadcast":"Tournament Broadcast"
-,"admin.theme.graphite":"Minimal Graphite"
-,"admin.theme.manual":"Retro Fighting Manual"
-,"admin.themes.extra":"Thèmes additionnels (aperçu atelier)"
-,"admin.da":"Direction artistique"
-,"admin.da.lead":"Architecture visuelle, distincte du thème (palette). Une seule direction à la fois. Prévisualiser ne change pas le site public."
-,"admin.da.legacy":"Ancienne direction artistique"
-,"admin.da.studio":"Nouvelle direction artistique"
-,"admin.da.preview":"Prévisualiser"
-,"admin.da.apply":"Appliquer pour tout le monde"
-,"admin.da.restore":"Rétablir l’ancienne"
-,"admin.da.confirm":"Appliquer cette direction à tous les visiteurs ? Ce n’est pas une prévisualisation."
-,"admin.da.ok":"Direction artistique enregistrée pour tout le monde."
-,"admin.da.fail":"Direction changée ici, pas encore pour les autres."
-,"admin.da.previewing":"Prévisualisation locale — la production n’a pas changé."
-,"admin.nav.slim":"Réduire le menu"
-,"admin.nav.full":"Menu avec libellés"
-,"admin.dash.studio":"KPI issus des combos publics et des files Atelier. Aucun win rate inventé."
 ,"admin.stats.source":"Source : combos publics ComboDex (wiki). Ce n’est pas un win rate de matchs."
 ,"admin.stats.empty":"Aucun combo public pour tracer un graphique."
 ,"admin.stats.total":"Combos publics"
@@ -531,27 +510,6 @@ en:{
 "admin.theme.wood":"Wood",
 "admin.theme.borne":"Cabinet",
 "admin.theme.capsule":"Capsule",
-"admin.theme.arcade":"Arcade CRT",
-"admin.theme.ink":"Editorial Ink",
-"admin.theme.blueprint":"Blueprint",
-"admin.theme.broadcast":"Tournament Broadcast",
-"admin.theme.graphite":"Minimal Graphite",
-"admin.theme.manual":"Retro Fighting Manual",
-"admin.themes.extra":"Extra themes (atelier preview)",
-"admin.da":"Art direction",
-"admin.da.lead":"Visual architecture, distinct from the theme (palette). Only one direction at a time. Preview does not change the public site.",
-"admin.da.legacy":"Previous art direction",
-"admin.da.studio":"New art direction",
-"admin.da.preview":"Preview",
-"admin.da.apply":"Apply for everyone",
-"admin.da.restore":"Restore previous",
-"admin.da.confirm":"Apply this art direction for every visitor? This is not a preview.",
-"admin.da.ok":"Art direction saved for everyone.",
-"admin.da.fail":"Changed here, not yet for others.",
-"admin.da.previewing":"Local preview — production is unchanged.",
-"admin.nav.slim":"Collapse menu",
-"admin.nav.full":"Menu with labels",
-"admin.dash.studio":"KPIs from public combos and Atelier queues. No invented win rates.",
 "admin.stats.source":"Source: ComboDex public combos (wiki). Not a match win rate.",
 "admin.stats.empty":"No public combos to chart.",
 "admin.stats.total":"Public combos",
@@ -1045,27 +1003,6 @@ es:{
 "admin.theme.wood":"Madera",
 "admin.theme.borne":"Recreativa",
 "admin.theme.capsule":"Cápsula",
-"admin.theme.arcade":"Arcade CRT",
-"admin.theme.ink":"Editorial Ink",
-"admin.theme.blueprint":"Blueprint",
-"admin.theme.broadcast":"Tournament Broadcast",
-"admin.theme.graphite":"Minimal Graphite",
-"admin.theme.manual":"Retro Fighting Manual",
-"admin.themes.extra":"Temas extra (vista previa del taller)",
-"admin.da":"Dirección artística",
-"admin.da.lead":"Arquitectura visual, distinta del tema (paleta). Solo una dirección a la vez. Previsualizar no cambia el sitio público.",
-"admin.da.legacy":"Dirección artística anterior",
-"admin.da.studio":"Nueva dirección artística",
-"admin.da.preview":"Previsualizar",
-"admin.da.apply":"Aplicar para todos",
-"admin.da.restore":"Restaurar la anterior",
-"admin.da.confirm":"¿Aplicar esta dirección a todos los visitantes? Esto no es una previsualización.",
-"admin.da.ok":"Dirección artística guardada para todos.",
-"admin.da.fail":"Cambiada aquí, aún no para los demás.",
-"admin.da.previewing":"Previsualización local — la producción no ha cambiado.",
-"admin.nav.slim":"Reducir el menú",
-"admin.nav.full":"Menú con etiquetas",
-"admin.dash.studio":"KPI de combos públicos y colas del Atelier. Sin win rates inventados.",
 "admin.stats.source":"Fuente: combos públicos de ComboDex (wiki). No es un win rate de partidas.",
 "admin.stats.empty":"No hay combos públicos para graficar.",
 "admin.stats.total":"Combos públicos",

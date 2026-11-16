@@ -146,9 +146,6 @@ function wikiHeaders(extra){
 function wikiApi(){return WIKI_URL}
 const SITE_ID="cdx-site";
 const CDX_THEMES=["official","wood","dojo","borne","capsule"];
-const CDX_STUDIO_THEMES=["arcade","ink","blueprint","broadcast","graphite","manual"];
-const CDX_DAS=["legacy","studio"];
-let daPreview=null;
 const HOME_FONTS={
   now:{f:"system-ui,-apple-system,\"Segoe UI\",sans-serif",l:".1em",w:"850",s:"clamp(52px,8.8vw,96px)"},
   pixel:{f:'"Press Start 2P",cursive',l:".06em",w:"400",s:"clamp(22px,4.8vw,44px)"},
@@ -166,33 +163,7 @@ const HOME_FONTS={
   mochiy:{f:'"Mochiy Pop P One",sans-serif',l:".04em",w:"400",s:"clamp(34px,6.2vw,68px)"},
   wallpoet:{f:"Wallpoet,sans-serif",l:".04em",w:"400",s:"clamp(36px,6.6vw,72px)"}
 };
-function isCdxTheme(n){return CDX_THEMES.indexOf(n)>=0||CDX_STUDIO_THEMES.indexOf(n)>=0}
-function isCdxDa(n){return n==="studio"||n==="legacy"}
-function liveDa(){return daPreview||d.siteDa||document.documentElement.dataset.da||"legacy"}
-function applyDa(id,persist){
-  const v=id==="studio"?"studio":"legacy";
-  document.documentElement.dataset.da=v;
-  if(persist){
-    d.siteDa=v;
-    try{const u=JSON.parse(localStorage.getItem(Le))||{};u.da=v;localStorage.setItem(Le,JSON.stringify(u))}catch{}
-  }
-}
-function previewDa(id){
-  daPreview=id==="studio"?"studio":"legacy";
-  applyDa(daPreview,!1);
-  atelierPreviewPing();
-  if(window.CDX_ADMIN&&isAtelier())renderAtelierDash();
-}
-async function saveSiteDa(id){
-  if(!isAtelier())return;
-  if(!confirm(cdxT("admin.da.confirm")))return;
-  daPreview=null;
-  applyDa(id,!0);
-  const ok=await saveSiteRow();
-  g(ok?cdxT("admin.da.ok"):cdxT("admin.da.fail"),!ok);
-  atelierPreviewPing();
-  renderAtelierDash();
-}
+function isCdxTheme(n){return CDX_THEMES.indexOf(n)>=0}
 function siteFontId(v){return HOME_FONTS[v]?v:null}
 function wikiRow(c){
   const p=wikiStrip(c);
@@ -457,7 +428,7 @@ function publishWiki(combos){
 async function loadWiki(){
   const byId=new Map(),reqs=[];
   d.objets={};d.portraits={};
-  const add=c=>{if(c&&c.id===SITE_ID){const f=siteFontId(c.homeFont);if(f)d.siteFont=f;if(isCdxDa(c.da)&&!daPreview){d.siteDa=c.da;applyDa(c.da,!cdxIsPreview())}d.xOk=Array.isArray(c.xOk)?[...new Set(c.xOk.map(x=>String(x)).filter(id=>/^\d{5,}$/.test(id)))]:(d.xOk||[]);return}if(c&&(c.origin==="objet"||c.character==="_objet")){upsertWikiObjet(c);return}if(c&&c.origin==="portrait"){upsertWikiPortrait(c);return}if(c&&c.game==="_req"){const x=xid(c.video);if(x)reqs.push({id:x,req:c.id,game:c.reqGame,character:c.reqChar,at:c.createdAt});return}if(!c||!c.id||!c.game||!c.character||c.deleted)return;if(c.review==="pending"&&!isAtelier()&&!myReview.has(c.id))return;if(!Array.isArray(c.tokens))c.tokens=[];if(!c.tokens.length&&!c.video)return;const t=wikiStrip(c);byId.set(t.id,t)};
+  const add=c=>{if(c&&c.id===SITE_ID){const f=siteFontId(c.homeFont);if(f)d.siteFont=f;d.xOk=Array.isArray(c.xOk)?[...new Set(c.xOk.map(x=>String(x)).filter(id=>/^\d{5,}$/.test(id)))]:(d.xOk||[]);return}if(c&&(c.origin==="objet"||c.character==="_objet")){upsertWikiObjet(c);return}if(c&&c.origin==="portrait"){upsertWikiPortrait(c);return}if(c&&c.game==="_req"){const x=xid(c.video);if(x)reqs.push({id:x,req:c.id,game:c.reqGame,character:c.reqChar,at:c.createdAt});return}if(!c||!c.id||!c.game||!c.character||c.deleted)return;if(c.review==="pending"&&!isAtelier()&&!myReview.has(c.id))return;if(!Array.isArray(c.tokens))c.tokens=[];if(!c.tokens.length&&!c.video)return;const t=wikiStrip(c);byId.set(t.id,t)};
   try{
     const r=await wikiFetch(wikiApi()+"?select=payload&limit=10000",wikiHeaders());
     if(r.ok){
@@ -925,9 +896,9 @@ function renderAtelierDash(){
 }
 function renderAtelierDashBody(){
   const dash=a("atelierDash");if(!dash)return;
+  if(atelierView==="site")atelierView="home";
   const pend=pendingXRows(),reps=reportedCombos(),labs=labRequests();
-  const ico=v=>`<svg class="admin-ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="${{home:"M4 11l8-7 8 7v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z",reports:"M6 4h12v16H6z M9 8h6 M9 12h6",review:"M5 7h14 M5 12h10 M5 17h8",x:"M7 7l10 10 M17 7L7 17",lab:"M9 3h6v6l4 8H5l4-8z",edits:"M4 20h4L18 10l-4-4L4 16z",refs:"M8 6h8v4H8z M7 14h10v6H7z",portraits:"M8 14a4 4 0 1 1 8 0 M12 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4",people:"M8 18v-1a4 4 0 0 1 8 0v1 M12 9a3 3 0 1 1 0-6 3 3 0 0 1 0 6",keys:"M7 14a4 4 0 1 0 3.5 2H20v-2h-2v-2h-2v-2h-2",import:"M12 4v10 M8 10l4 4 4-4 M5 18h14",replay:"M8 6v12l10-6z",font:"M6 18V8h4 M14 18V8h4",site:"M4 6h16v12H4z M4 10h16"}[v]||"M6 6h12v12H6z"}"/></svg>`;
-  const leaf=(v,label,n)=>`<button type="button" class="leaf${atelierView===v?" sel":""}" data-av="${v}">${ico(v)}<span>${l(label)}</span>${n?`<span class="count">${n}</span>`:""}</button>`;
+  const leaf=(v,label,n)=>`<button type="button" class="leaf${atelierView===v?" sel":""}" data-av="${v}">${l(label)}${n?`<span class="count">${n}</span>`:""}</button>`;
   const where=c=>`${b[c.game]?b[c.game].name:c.game} · ${charLabel(c.character)}`;
   const notif=(ico,kind,c,text,acts)=>`<div class="atelier-notif"><button type="button" class="atelier-notif-main" data-go-combo="${l(c.id)}"><span aria-hidden="true">${ico}</span><span><b>${l(cdxT(kind))}</b> · ${l(c.name||"")} <span class="muted">(${l(where(c))})</span>${text?`<br><span class="small">${l(text)}</span>`:""}</span></button><span class="atelier-notif-acts">${acts}</span></div>`;
   const items=[
@@ -944,7 +915,7 @@ function renderAtelierDashBody(){
   }).join("");
   const fonts=Object.keys(HOME_FONTS).map(id=>`<button type="button" data-home-font="${id}" aria-pressed="${homeFontId===id}" style="font-family:${HOME_FONTS[id].f}">${l(cdxT("home.font."+id))}</button>`).join("");
   const work=atelierWorkHtml(pend,fonts);
-  const treeNav=`<button type="button" data-av="home" class="${atelierView==="home"?"sel":""}">${ico("home")}<span>${l(cdxT("admin.overview"))}</span></button>
+  const treeNav=`<button type="button" data-av="home" class="${atelierView==="home"?"sel":""}">${l(cdxT("admin.overview"))}</button>
         <div class="admin-nav-group"><span class="admin-nav-label">${l(cdxT("admin.group.mod"))}</span>
         ${leaf("reports",cdxT("atelier.tree.reports"),reps.length)}
         ${leaf("review",cdxT("atelier.tree.review"),reviewRows().length)}
@@ -960,13 +931,11 @@ function renderAtelierDashBody(){
         ${leaf("import",cdxT("atelier.tree.import"))}
         ${leaf("replay",cdxT("atelier.tree.replay"))}</div>
         <div class="admin-nav-group"><span class="admin-nav-label">${l(cdxT("admin.group.site"))}</span>
-        ${leaf("font",cdxT("atelier.tree.font"))}
-        ${leaf("site",cdxT("atelier.tree.site"))}</div>`;
+        ${leaf("font",cdxT("atelier.tree.font"))}</div>`;
   if(window.CDX_ADMIN){
     const themeNow=document.documentElement.dataset.theme||"official";
     const themeBtns=CDX_THEMES.map(id=>`<button type="button" data-admin-theme="${id}" aria-pressed="${themeNow===id?"true":"false"}">${l(cdxT("admin.theme."+id))}</button>`).join("");
-    const slim=!!adminLayout().navSlim;
-    const head=`<div class="admin-brandline"><span class="admin-mark admin-mark-sm" aria-hidden="true">CD</span><span class="admin-brand-name">ComboDex</span><span class="admin-badge">${l(cdxT("admin.badge"))}</span></div><span class="atelier-head-actions"><button type="button" class="tiny" id="adminNavSlim" aria-pressed="${slim?"true":"false"}">${l(cdxT(slim?"admin.nav.full":"admin.nav.slim"))}</button><div class="admin-themes" id="adminThemes" role="group" aria-label="${l(cdxT("admin.theme"))}">${themeBtns}</div><button type="button" class="tiny" id="adminPreviewToggle" onclick="window.cdxTogglePreview&&window.cdxTogglePreview(event)">${l(cdxT("admin.preview.hide"))}</button><span class="admin-session">${l(cdxT("admin.session"))}</span><a class="tiny" href="${l(atelierSiteHref())}">${l(cdxT("admin.site"))}</a><button type="button" class="tiny" id="atelierOut">${l(cdxT("admin.out"))}</button></span>`;
+    const head=`<div class="admin-brandline"><span class="admin-mark admin-mark-sm" aria-hidden="true">CD</span><span class="admin-brand-name">ComboDex</span><span class="admin-badge">${l(cdxT("admin.badge"))}</span></div><span class="atelier-head-actions"><div class="admin-themes" id="adminThemes" role="group" aria-label="${l(cdxT("admin.theme"))}">${themeBtns}</div><button type="button" class="tiny" id="adminPreviewToggle" onclick="window.cdxTogglePreview&&window.cdxTogglePreview(event)">${l(cdxT("admin.preview.hide"))}</button><span class="admin-session">${l(cdxT("admin.session"))}</span><a class="tiny" href="${l(atelierSiteHref())}">${l(cdxT("admin.site"))}</a><button type="button" class="tiny" id="atelierOut">${l(cdxT("admin.out"))}</button></span>`;
     if(!dash.dataset.shell){
       dash.dataset.shell="1";
       dash.innerHTML=`<div class="atelier-head" id="adminHead"></div>
@@ -1020,7 +989,6 @@ function renderAtelierDashBody(){
         <button type="button" class="leaf${atelierView==="portraits"?" sel":""}" data-av="portraits">${l(cdxT("atelier.tree.portraits"))}</button>
         <button type="button" class="leaf${atelierView==="keys"?" sel":""}" data-av="keys">${l(cdxT("atelier.tree.keys"))}</button>
         <button type="button" class="leaf${atelierView==="replay"?" sel":""}" data-av="replay">${l(cdxT("atelier.tree.replay"))}</button>
-        <button type="button" class="leaf${atelierView==="site"?" sel":""}" data-av="site">${l(cdxT("atelier.tree.site"))}</button>
       </nav><div class="atelier-split" id="atelierSplit" role="separator" aria-orientation="horizontal" tabindex="0"></div>
       <div class="atelier-work" id="atelierWork">${work}</div>
     </div>`;
@@ -1068,9 +1036,6 @@ function renderAtelierDashBody(){
   const go=a("atelierXGo");if(go)go.onclick=()=>saveXOk((a("atelierX")||{}).value);
   const goRefs=a("atelierGoRefs");if(goRefs)goRefs.onclick=()=>{atelierView="refs";renderAtelierDash()};
   bindAtelierRefs();
-  bindAtelierDa();
-  const slimBtn=a("adminNavSlim");
-  if(slimBtn)slimBtn.onclick=()=>{const next=!adminLayout().navSlim;saveAdminLayout({navSlim:next});applyAdminLayout({navSlim:next});slimBtn.setAttribute("aria-pressed",next?"true":"false");slimBtn.textContent=l(cdxT(next?"admin.nav.full":"admin.nav.slim"))};
   bindAtelierAssets();
   const out=a("atelierOut");if(out)out.onclick=()=>{atelierForget();try{C()}catch{}g(window.CDX_ADMIN?cdxT("admin.closed"):cdxT("atelier.out"))};
   try{atelierEmbed()}catch{}
@@ -1099,11 +1064,10 @@ function saveAdminLayout(patch){
 function applyAdminLayout(live){
   const dash=a("atelierDash");if(!dash||!window.CDX_ADMIN)return;
   const L={...adminLayout(),...live||{}};
-  const slim=!!L.navSlim&&liveDa()==="studio";
-  const nav=slim?72:Math.max(148,Math.min(420,L.nav||220));
+  const nav=Math.max(148,Math.min(220,L.nav||168));
   const off=!!L.previewOff;
   const prev=off?0:Math.max(220,Math.min(Math.round(innerWidth*.72),L.preview||Math.round(innerWidth*.4)));
-  dash.classList.toggle("nav-slim",slim);
+  dash.classList.remove("nav-slim");
   dash.style.setProperty("--admin-nav",nav+"px");
   dash.style.setProperty("--admin-preview",off?"0px":prev+"px");
   dash.classList.toggle("preview-off",off);
@@ -1157,7 +1121,7 @@ function bindAdminLayout(){
     navG.addEventListener("pointerdown",e=>{
       atelierDrag(e,navG,ev=>{
         const r=dash.getBoundingClientRect();
-        applyAdminLayout({nav:Math.round(Math.max(148,Math.min(420,ev.clientX-r.left)))});
+        applyAdminLayout({nav:Math.round(Math.max(148,Math.min(188,ev.clientX-r.left)))});
       },()=>{
         const n=parseInt(dash.style.getPropertyValue("--admin-nav"),10);
         if(n)saveAdminLayout({nav:n});
@@ -1166,7 +1130,7 @@ function bindAdminLayout(){
     navG.addEventListener("keydown",e=>{
       if(e.key!=="ArrowLeft"&&e.key!=="ArrowRight")return;
       e.preventDefault();
-      saveAdminLayout({nav:Math.round(Math.max(148,Math.min(420,(adminLayout().nav||220)+(e.key==="ArrowRight"?16:-16))))});
+      saveAdminLayout({nav:Math.round(Math.max(148,Math.min(188,(adminLayout().nav||168)+(e.key==="ArrowRight"?16:-16))))});
       applyAdminLayout();
     });
   }
@@ -1239,11 +1203,9 @@ function atelierPreviewPing(){
   const id=siteFontId(homeFontId)||siteFontId(d&&d.siteFont)||"stencil";
   const x=HOME_FONTS[id]||HOME_FONTS.stencil;
   const theme=document.documentElement.dataset.theme||"official";
-  const da=liveDa();
   const paint=doc=>{
     if(!doc||!doc.documentElement)return;
     doc.documentElement.dataset.theme=theme;
-    doc.documentElement.dataset.da=da;
     doc.documentElement.dataset.homeFont=id;
     const set=el=>{if(!el||!el.style)return;el.style.setProperty("--cdx-brand-font",x.f);el.style.setProperty("--cdx-brand-track",x.l);el.style.setProperty("--cdx-brand-weight",x.w);el.style.setProperty("--cdx-brand-size",x.s)};
     set(doc.documentElement);if(doc.body)set(doc.body);
@@ -1259,7 +1221,7 @@ function atelierPreviewPing(){
     if(win&&win.location&&String(win.location.href).indexOf("index.html")>=0&&(win.location.hash||"")!=="#/home")win.location.hash="#/home";
   }catch{}
   try{paint(frame.contentDocument)}catch{}
-  try{frame.contentWindow&&frame.contentWindow.postMessage({cdx:"preview",theme,homeFont:id,da},location.origin)}catch{}
+  try{frame.contentWindow&&frame.contentWindow.postMessage({cdx:"preview",theme,homeFont:id},location.origin)}catch{}
 }
 function atelierEmbed(){
   if(!window.CDX_ADMIN)return;
@@ -1297,18 +1259,16 @@ function atelierDashHomeHtml(n,reps,labs,rev,ed){
   const incomplete=list.filter(c=>!(c.tokens&&c.tokens.length)||!c.video).length;
   const card=(av,title,count,hint)=>`<button type="button" class="admin-task" data-av-go="${av}"><span class="admin-task-count">${count}</span><b>${l(title)}</b><span>${l(hint)}</span></button>`;
   const section=(key,body)=>`<section class="admin-section"><header class="admin-section-head"><h4>${l(cdxT("admin.group."+key))}</h4><p>${l(cdxT("admin.group."+key+".lead"))}</p></header><div class="admin-tasks">${body}</div></section>`;
-  const studio=liveDa()==="studio";
   const kpis=`<div class="admin-metrics">
         <div class="admin-metric"><b>${list.length}</b><span>${l(cdxT("admin.stats.total"))}</span></div>
         <div class="admin-metric"><b>${waiting}</b><span>${l(cdxT("admin.stats.waiting"))}</span></div>
         <div class="admin-metric"><b>${withVid}</b><span>${l(cdxT("admin.stats.video"))}</span></div>
         <div class="admin-metric"><b>${labOk}</b><span>${l(cdxT("admin.stats.lab"))}</span></div>
       </div>`;
-  const quality=`<div class="admin-card admin-quality"><h4>${l(cdxT("admin.stats.incomplete"))}</h4><p class="admin-metric"><b>${incomplete}</b></p><p class="muted small">${l(cdxT("admin.stats.source"))}</p></div>
-      <div class="admin-card"><h4>${l(cdxT("admin.stats.bygame"))}</h4>${atelierGameBars(by)}</div>`;
-  return `<header class="admin-task-head"><p class="admin-kicker">${l(cdxT("admin.only"))}</p><h3>${l(cdxT("admin.title"))}</h3><p class="admin-help">${l(cdxT(studio?"admin.dash.studio":"admin.dash.lead"))}</p>${daPreview?`<p class="admin-preview-flag">${l(cdxT("admin.da.previewing"))}</p>`:""}</header>
+  return `<header class="admin-task-head"><p class="admin-kicker">${l(cdxT("admin.only"))}</p><h3>${l(cdxT("admin.title"))}</h3><p class="admin-help">${l(cdxT("admin.dash.lead"))}</p></header>
       ${kpis}
-      ${studio?quality:""}
+      <div class="admin-card admin-quality"><h4>${l(cdxT("admin.stats.incomplete"))}</h4><p class="admin-metric"><b>${incomplete}</b></p><p class="muted small">${l(cdxT("admin.stats.source"))}</p></div>
+      <div class="admin-card"><h4>${l(cdxT("admin.stats.bygame"))}</h4>${atelierGameBars(by)}</div>
       ${section("mod",`${card("reports",cdxT("atelier.tree.reports"),reps,cdxT("admin.task.reports"))}
         ${card("review",cdxT("atelier.tree.review"),rev,cdxT("admin.task.review"))}
         ${card("x",cdxT("atelier.tree.x"),n,cdxT("atelier.x"))}
@@ -1320,50 +1280,7 @@ function atelierDashHomeHtml(n,reps,labs,rev,ed){
         ${card("keys",cdxT("atelier.tree.keys"),"—",cdxT("admin.task.keys"))}
         ${card("import",cdxT("atelier.tree.import"),"—",cdxT("admin.import.combos"))}
         ${card("replay",cdxT("atelier.tree.replay"),"—",cdxT("admin.replay.lead"))}`)}
-      ${section("site",`${card("font",cdxT("atelier.tree.font"),homeFontId||"—",cdxT("atelier.font"))}
-        ${card("site",cdxT("atelier.tree.site"),liveDa(),cdxT("admin.da"))}`)}`;
-}
-function atelierSiteHtml(){
-  const da=liveDa();
-  const extra=CDX_STUDIO_THEMES.map(id=>`<button type="button" data-admin-theme="${id}" aria-pressed="${(document.documentElement.dataset.theme||"")==id?"true":"false"}">${l(cdxT("admin.theme."+id))}</button>`).join("");
-  return atelierTask(cdxT("atelier.tree.site"),cdxT("admin.da.lead"),`<div class="admin-card">
-      <h4>${l(cdxT("admin.da"))}</h4>
-      <div class="admin-da-seg" id="adminDaSeg" role="radiogroup" aria-label="${l(cdxT("admin.da"))}">
-        <label><input type="radio" name="adminDa" value="legacy"${da==="legacy"?" checked":""}> ${l(cdxT("admin.da.legacy"))}</label>
-        <label><input type="radio" name="adminDa" value="studio"${da==="studio"?" checked":""}> ${l(cdxT("admin.da.studio"))}</label>
-      </div>
-      ${daPreview?`<p class="admin-preview-flag">${l(cdxT("admin.da.previewing"))}</p>`:""}
-      <div class="row atelier-ref-actions">
-        <button type="button" class="tiny" id="adminDaPreview">${l(cdxT("admin.da.preview"))}</button>
-        <button type="button" class="primary tiny" id="adminDaApply">${l(cdxT("admin.da.apply"))}</button>
-        <button type="button" class="tiny" id="adminDaRestore">${l(cdxT("admin.da.restore"))}</button>
-      </div>
-    </div>
-    <div class="admin-card">
-      <h4>${l(cdxT("admin.themes.extra"))}</h4>
-      <div class="admin-themes" id="adminExtraThemes" role="group">${extra}</div>
-      <p class="muted small">${l(cdxT("admin.infra.note"))}</p>
-    </div>
-    <div class="admin-card"><p>${y((d.combos||[]).length,"combo")} ${cdxT((d.combos||[]).length>1?"publics":"public")}</p></div>`);
-}
-function bindAtelierDa(){
-  const seg=a("adminDaSeg");
-  const picked=()=>{const el=seg&&seg.querySelector("input[name=adminDa]:checked");return el&&el.value==="studio"?"studio":"legacy"};
-  const prev=a("adminDaPreview");if(prev)prev.onclick=()=>previewDa(picked());
-  const apply=a("adminDaApply");if(apply)apply.onclick=()=>saveSiteDa(picked());
-  const rest=a("adminDaRestore");if(rest)rest.onclick=()=>saveSiteDa("legacy");
-  const extra=a("adminExtraThemes");
-  if(extra)extra.onclick=e=>{
-    const b=e.target.closest("[data-admin-theme]");if(!b)return;
-    const name=b.dataset.adminTheme;
-    if(window.CDX_REF_API&&typeof window.CDX_REF_API.setTheme==="function")window.CDX_REF_API.setTheme(name);
-    else{
-      document.documentElement.dataset.theme=name;
-      try{const u=JSON.parse(localStorage.getItem(Le))||{};u.theme=name;localStorage.setItem(Le,JSON.stringify(u))}catch{}
-    }
-    extra.querySelectorAll("[data-admin-theme]").forEach(x=>x.setAttribute("aria-pressed",x.dataset.adminTheme===name?"true":"false"));
-    atelierPreviewPing();
-  };
+      ${section("site",`${card("font",cdxT("atelier.tree.font"),homeFontId||"—",cdxT("atelier.font"))}`)}`;
 }
 function atelierWorkHtml(pend,fonts){
   if(atelierView==="font")return atelierTask(cdxT("atelier.tree.font"),cdxT("atelier.font"),`<div class="admin-card"><div class="home-font-row" id="atelierFonts" role="group">${fonts}</div></div>`);
@@ -1419,7 +1336,6 @@ function atelierWorkHtml(pend,fonts){
   }
   if(atelierView==="replay")return atelierTask(cdxT("atelier.tree.replay"),cdxT("admin.replay.lead"),`<div class="admin-card"><a class="primary" href="${l(atelierSiteHref("#/replay"))}">${l(cdxT("admin.open.replay"))}</a></div>`);
   if(atelierView==="refs")return atelierRefsHtml();
-  if(atelierView==="site")return atelierSiteHtml();
   const n=pend.length;
   const reps=reportedCombos().length,labs=labRequests().length,rev=reviewRows().length,ed=editRequests().length;
   if(window.CDX_ADMIN)return atelierDashHomeHtml(n,reps,labs,rev,ed);
@@ -1707,7 +1623,7 @@ function bindAtelierAssets(){
 }
 async function saveSiteRow(){
   if(!isAtelier())return !1;
-  const row=wikiRow({id:SITE_ID,game:"site",character:"site",name:"",tokens:["site"],homeFont:d.siteFont||homeFontId||"stencil",da:d.siteDa||"legacy",xOk:[...(d.xOk||[])],origin:"site",updatedAt:new Date().toISOString()});
+  const row=wikiRow({id:SITE_ID,game:"site",character:"site",name:"",tokens:["site"],homeFont:d.siteFont||homeFontId||"stencil",xOk:[...(d.xOk||[])],origin:"site",updatedAt:new Date().toISOString()});
   try{
     const r=await fetch(wikiApi()+"?on_conflict=id",{method:"POST",headers:wikiHeaders({"Content-Type":"application/json","Prefer":"resolution=merge-duplicates,return=minimal"}),body:JSON.stringify(row),cache:"no-store"});
     return r.ok||r.status===201;
@@ -3711,12 +3627,11 @@ window.addEventListener("message",e=>{
   if(!cdxIsPreview())return;
   try{
     if(isCdxTheme(e.data.theme))document.documentElement.dataset.theme=e.data.theme;
-    if(isCdxDa(e.data.da)){daPreview=e.data.da;applyDa(e.data.da,!1)}
     const f=siteFontId(e.data.homeFont);
     if(f){d.siteFont=f;applyHomeFont(f,!1)}
   }catch{}
 });
-try{if(window.CDX_ADMIN){try{atelierLive=localStorage.getItem(ATELIER_K)===ATELIER_S}catch{}atelierMark();if(!atelierLive)bindAtelierLogin()}else{atelierLive=!1;atelierMark()}const hb=a("homeBrand");if(hb)hb.onclick=()=>j("home");const hg=a("homeGrid");if(hg)hg.addEventListener("click",e=>{const v=e.target.closest("[data-kc-view]"),t=e.target.closest("[data-tab]");if(t&&t.dataset.tab==="knowledge")o.kcView=v?v.dataset.kcView:"hub";t&&j(t.dataset.tab)});const storedFont=(()=>{try{return siteFontId((JSON.parse(localStorage.getItem(Le))||{}).homeFont)}catch{return null}})();applyHomeFont(d.siteFont||storedFont||"stencil");try{const u=JSON.parse(localStorage.getItem(Le))||{};if(isCdxDa(u.da)&&!daPreview)applyDa(u.da,!1)}catch{}}catch{}
+try{if(window.CDX_ADMIN){try{atelierLive=localStorage.getItem(ATELIER_K)===ATELIER_S}catch{}atelierMark();if(!atelierLive)bindAtelierLogin()}else{atelierLive=!1;atelierMark()}const hb=a("homeBrand");if(hb)hb.onclick=()=>j("home");const hg=a("homeGrid");if(hg)hg.addEventListener("click",e=>{const v=e.target.closest("[data-kc-view]"),t=e.target.closest("[data-tab]");if(t&&t.dataset.tab==="knowledge")o.kcView=v?v.dataset.kcView:"hub";t&&j(t.dataset.tab)});const storedFont=(()=>{try{return siteFontId((JSON.parse(localStorage.getItem(Le))||{}).homeFont)}catch{return null}})();applyHomeFont(d.siteFont||storedFont||"stencil")}catch{}
 function homeFaces(){
   const faces=[["bbcf","Ragna the Bloodedge"],["mvc2","Shuma-Gorath"],["tokon","Captain America"],["sf6","Ryu"],["ggst","Sol"],["2xko","Ahri"],["al","Aang"],["umvc3","Dante"],["dbfz","Krillin"],["gbvsr","Avatar Belial"]];
   const people=a("hvPeople");
