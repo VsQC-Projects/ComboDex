@@ -133,7 +133,7 @@ async function applyXGuess(id,{fillImport}={}){
   }
   o.importChars=info.chars||(info.char?[info.char]:[]);
   return{...info,title:meta.text,mp4:meta.mp4};
-}const Ce="combo-dex-final-v1",Le="combo-dex-ui-v1";let d={combos:[],keys:{},training:{},fav:new Set,_localCombos:[],pending:[],xOk:[],objets:{},portraits:{}};function wikiStrip(e){if(!e||typeof e!="object")return e;const t={...e};delete t.favorite;return t}
+}const Ce="combo-dex-final-v1",Le="combo-dex-ui-v1";let d={combos:[],keys:{},training:{},fav:new Set,_localCombos:[],pending:[],xOk:[],objets:{},portraits:{},wikiOk:!1,wikiAt:"",wikiN:0};function wikiStrip(e){if(!e||typeof e!="object")return e;const t={...e};delete t.favorite;return t}
 function wikiFetch(url,headers){const opt={cache:"no-store"};if(headers)opt.headers=headers;try{opt.signal=AbortSignal.timeout(9e3)}catch{}return fetch(url,opt)}function persistPending(){try{localStorage.setItem("cdx-pending",JSON.stringify(d.pending||[]))}catch{}}
 const WIKI_URL="https://adkziylvpzivjnajqqle.supabase.co/rest/v1/combos";
 const REPORT_URL="https://adkziylvpzivjnajqqle.supabase.co/rest/v1/reports";
@@ -434,13 +434,16 @@ async function loadWiki(){
     if(r.ok){
       const j=await r.json();
       (Array.isArray(j)?j:[]).forEach(row=>add(row&&row.payload?row.payload:row));
-    }
-  }catch{}
+      d.wikiOk=!0;
+      d.wikiAt=new Date().toISOString();
+    }else d.wikiOk=!1;
+  }catch{d.wikiOk=!1}
   d.pending=(d.pending||[]).filter(p=>p&&p.id&&p.id!==SITE_ID&&!byId.has(p.id));
   persistPending();
   for(const p of d.pending)add(p);
   for(const p of d._localCombos||[])if(p&&p.id&&!byId.has(p.id))add(p);
   d.combos=[...byId.values()];
+  d.wikiN=d.combos.length;
   d.xReqs=reqs;
   try{window.CDX_REF_API&&window.CDX_REF_API.reload&&window.CDX_REF_API.reload()}catch{}
   if(d.pending.length)saveWikiLive();
@@ -1007,6 +1010,8 @@ function renderAtelierDashBody(){
     const go=e.target.closest("[data-go-combo]"),done=e.target.closest("[data-rep-done]"),lab=e.target.closest("[data-lab-set]");
     const avGo=e.target.closest("[data-av-go]");
     if(avGo){atelierView=avGo.dataset.avGo;renderAtelierDash();return}
+    const gk=e.target.closest("[data-game-kpi]");
+    if(gk&&b[gk.dataset.gameKpi]){o.game=gk.dataset.gameKpi;o.char=(T(o.game)[0]||{}).name||o.char;atelierView="people";renderAtelierDash();return}
     if(go){const c=L(go.dataset.goCombo);if(c){o.game=c.game;o.char=c.character;o.focusId=c.id;if(window.CDX_ADMIN){atelierView="people";renderAtelierDash();return}j("people")}return}
     if(done){const c=L(done.dataset.repDone);if(c){c.reports=[];c.updatedAt=new Date().toISOString();publishQuiet(c)}renderAtelierDash();return}
     const rv=e.target.closest("[data-review-set]");
@@ -1301,15 +1306,25 @@ function atelierQueue(rows){
 function atelierQRow(id,title,meta,acts){
   return `<article class="admin-q-row"><${id?`button type="button" class="admin-q-main" data-go-combo="${l(id)}"`:`div class="admin-q-main"`}><b>${l(title)}</b><span class="admin-q-meta">${l(meta||"")}</span>${id?"</button>":"</div>"}<span class="admin-q-acts">${acts}</span></article>`;
 }
+function atelierWikiWhen(){
+  if(!d.wikiAt)return "";
+  try{
+    const loc=window.cdxLang==="en"?"en":window.cdxLang==="es"?"es":"fr";
+    return new Date(d.wikiAt).toLocaleString(loc,{dateStyle:"short",timeStyle:"short"});
+  }catch{return String(d.wikiAt)}
+}
 function atelierGameBars(by){
-  const rows=Object.entries(by||{}).sort((a,c)=>c[1]-a[1]);
+  const rows=Object.keys(b).map(g=>[g,by[g]||0]).filter(r=>r[1]>0).sort((a,c)=>c[1]-a[1]);
   if(!rows.length)return `<p class="muted small">${l(cdxT("admin.stats.empty"))}</p>`;
   const max=Math.max(1,...rows.map(r=>r[1]));
   return `<ul class="admin-bars" aria-label="${l(cdxT("admin.stats.bygame"))}">${rows.map(([g,n])=>{
     const name=l((b[g]&&b[g].name)||g);
     const pct=Math.max(2,Math.round(n/max*100));
-    return `<li><span class="admin-bar-lab">${name}</span><span class="admin-bar-track"><i style="width:${pct}%"></i></span><b>${n}</b></li>`;
-  }).join("")}</ul><p class="muted small">${l(cdxT("admin.stats.source"))}</p>`;
+    const roster=(ke[g]||[]).length||T(g).length;
+    const covered=T(g).filter(r=>q(g,r.name).length).length;
+    const cover=roster?Math.round(covered/roster*100):0;
+    return `<li><button type="button" data-game-kpi="${l(g)}"><span class="admin-bar-lab">${name}</span><span class="admin-bar-track"><i style="width:${pct}%"></i></span><b>${n}</b><span class="admin-cover">${covered}/${roster} · ${cover}%</span></button></li>`;
+  }).join("")}</ul><p class="muted small">${l(cdxT("admin.stats.source"))} · ${l(cdxT("admin.stats.cover.hint"))}</p>`;
 }
 function atelierDashHomeHtml(n,reps,labs,rev,ed){
   const list=d.combos||[];
@@ -1317,19 +1332,39 @@ function atelierDashHomeHtml(n,reps,labs,rev,ed){
   for(const c of list){const g=c.game||"?";by[g]=(by[g]||0)+1}
   const waiting=reps+rev+n+labs+ed;
   const withVid=list.filter(c=>c.video).length;
-  const labOk=list.filter(c=>c.lab==="ok").length;
+  const labOk=list.filter(c=>labState(c)==="ok").length;
   const incomplete=list.filter(c=>!(c.tokens&&c.tokens.length)||!c.video).length;
+  const nTot=list.length;
+  const gamesHave=Object.keys(b).filter(g=>(by[g]||0)>0).length;
+  let charsHave=0,charsAll=0;
+  for(const g of Object.keys(b)){
+    const roster=T(g);
+    charsAll+=roster.length;
+    charsHave+=roster.filter(r=>q(g,r.name).length).length;
+  }
+  const vidPct=nTot?Math.round(withVid/nTot*100):0;
+  const labPct=nTot?Math.round(labOk/nTot*100):0;
+  const when=atelierWikiWhen();
+  const conf=d.wikiOk&&when?cdxT("admin.stats.conf.ok").replace("{0}",when).replace("{1}",String(d.wikiN||nTot)):d.wikiAt?cdxT("admin.stats.conf.off").replace("{0}",String(nTot)):cdxT("admin.stats.conf.none").replace("{0}",String(nTot));
+  const metric=(av,count,label,hint)=>`<button type="button" class="admin-metric" data-av-go="${av}"><b>${count}</b><span>${l(label)}</span><small class="admin-metric-n">${l(hint)}</small></button>`;
+  const na=(title,hint)=>`<div class="admin-metric admin-na"><b>${l(cdxT("admin.stats.na"))}</b><span>${l(title)}</span><small class="admin-metric-n">${l(hint)}</small></div>`;
   const card=(av,title,count,hint)=>`<button type="button" class="admin-task" data-av-go="${av}"><span class="admin-task-count">${count}</span><b>${l(title)}</b><span>${l(hint)}</span></button>`;
   const section=(key,body)=>`<section class="admin-section"><header class="admin-section-head"><h4>${l(cdxT("admin.group."+key))}</h4><p>${l(cdxT("admin.group."+key+".lead"))}</p></header><div class="admin-tasks">${body}</div></section>`;
-  const kpis=`<div class="admin-metrics">
-        <div class="admin-metric"><b>${list.length}</b><span>${l(cdxT("admin.stats.total"))}</span></div>
-        <div class="admin-metric"><b>${waiting}</b><span>${l(cdxT("admin.stats.waiting"))}</span></div>
-        <div class="admin-metric"><b>${withVid}</b><span>${l(cdxT("admin.stats.video"))}</span></div>
-        <div class="admin-metric"><b>${labOk}</b><span>${l(cdxT("admin.stats.lab"))}</span></div>
+  const kpis=`<p class="admin-conf muted small">${l(conf)}</p><div class="admin-metrics">
+        ${metric("people",nTot,cdxT("admin.stats.total"),cdxT("admin.stats.n").replace("{0}",String(nTot)))}
+        ${metric("reports",waiting,cdxT("admin.stats.waiting"),cdxT("admin.stats.n").replace("{0}",String(waiting)))}
+        ${metric("people",withVid,cdxT("admin.stats.video"),cdxT("admin.stats.video.n").replace("{0}",String(withVid)).replace("{1}",String(nTot))+" · "+cdxT("admin.stats.pct").replace("{0}",String(vidPct)))}
+        ${metric("lab",labOk,cdxT("admin.stats.lab"),cdxT("admin.stats.video.n").replace("{0}",String(labOk)).replace("{1}",String(nTot))+" · "+cdxT("admin.stats.pct").replace("{0}",String(labPct)))}
+        ${metric("people",incomplete,cdxT("admin.stats.incomplete.short"),cdxT("admin.stats.n").replace("{0}",String(incomplete)))}
+        ${metric("people",gamesHave+" / 15",cdxT("admin.stats.games"),cdxT("admin.stats.chars")+" "+charsHave+" / "+charsAll)}
+      </div>
+      <div class="admin-metrics admin-metrics-na">
+        ${na(cdxT("admin.stats.winrate"),cdxT("admin.stats.winrate.off"))}
+        ${na(cdxT("admin.stats.regions"),cdxT("admin.stats.regions.off"))}
+        ${na(cdxT("admin.stats.pop"),cdxT("admin.stats.pop.off"))}
       </div>`;
   return `<header class="admin-task-head"><p class="admin-kicker">${l(cdxT("admin.only"))}</p><h3>${l(cdxT("admin.title"))}</h3><p class="admin-help">${l(cdxT("admin.dash.lead"))}</p></header>
       ${kpis}
-      <div class="admin-card admin-quality"><h4>${l(cdxT("admin.stats.incomplete"))}</h4><p class="admin-metric"><b>${incomplete}</b></p><p class="muted small">${l(cdxT("admin.stats.source"))}</p></div>
       <div class="admin-card"><h4>${l(cdxT("admin.stats.bygame"))}</h4>${atelierGameBars(by)}</div>
       ${section("mod",`${card("reports",cdxT("atelier.tree.reports"),reps,cdxT("admin.task.reports"))}
         ${card("review",cdxT("atelier.tree.review"),rev,cdxT("admin.task.review"))}

@@ -586,6 +586,42 @@ body.cdx-admin .admin-metric span{
   color:var(--admin-muted);
   font-size:12px;
 }
+body.cdx-admin button.admin-metric{
+  width:100%;
+  text-align:left;
+  cursor:pointer;
+  color:inherit;
+}
+body.cdx-admin button.admin-metric:hover{
+  border-color:var(--admin-accent);
+}
+body.cdx-admin .admin-metric-n{
+  display:block;
+  margin-top:6px;
+  font-size:11px;
+  color:var(--admin-muted);
+}
+body.cdx-admin .admin-conf{margin:8px 0 0}
+body.cdx-admin .admin-na b{
+  font-size:13px;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  color:var(--admin-muted);
+}
+body.cdx-admin .admin-bars li button{
+  display:grid;
+  grid-template-columns:minmax(72px,140px) 1fr 36px auto;
+  gap:8px;
+  align-items:center;
+  width:100%;
+  padding:4px 0;
+  background:transparent;
+  border:0;
+  color:inherit;
+  text-align:left;
+  cursor:pointer;
+}
+body.cdx-admin .admin-cover{font-size:11px;color:var(--admin-muted);white-space:nowrap}
 body.cdx-admin .admin-card{
   background:var(--admin-card);
   border:1px solid var(--admin-line);

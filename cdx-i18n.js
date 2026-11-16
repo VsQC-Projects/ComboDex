@@ -136,6 +136,23 @@ fr:{
 ,"admin.stats.lab":"Lab vérifié"
 ,"admin.stats.incomplete":"Fiches incomplètes (sans séquence ou sans vidéo)"
 ,"admin.stats.bygame":"Volume par jeu"
+,"admin.stats.n":"n = {0}"
+,"admin.stats.pct":"{0} %"
+,"admin.stats.video.n":"{0} / {1}"
+,"admin.stats.conf.ok":"Wiki chargé {0} · n = {1}"
+,"admin.stats.conf.off":"Wiki injoignable — totaux locaux seulement · n = {0}"
+,"admin.stats.conf.none":"Wiki pas encore chargé · n = {0}"
+,"admin.stats.cover.hint":"Persos avec au moins un combo / roster"
+,"admin.stats.incomplete.short":"Incomplets"
+,"admin.stats.games":"Jeux avec combos"
+,"admin.stats.chars":"Persos couverts"
+,"admin.stats.na":"Indisponible"
+,"admin.stats.winrate":"Win rate matchs"
+,"admin.stats.winrate.off":"Aucune donnée de match sourcée. ComboDex ne calcule pas de pourcentage compétitif."
+,"admin.stats.regions":"Régions"
+,"admin.stats.regions.off":"Pas de télémétrie joueurs."
+,"admin.stats.pop":"Popularité in-game"
+,"admin.stats.pop.off":"Pas de données de matchmaking."
 ,"admin.infra.note":"GitHub Pages sert l’interface. Rôles, journal d’audit et statistiques de matchs partagées exigent un backend. ComboDex partage déjà les combos via le wiki."
 ,"admin.closed":"Console fermée."
 ,"admin.overview":"Tableau de bord"
@@ -536,6 +553,23 @@ en:{
 "admin.stats.lab":"Lab verified",
 "admin.stats.incomplete":"Incomplete sheets (no sequence or no video)",
 "admin.stats.bygame":"Volume by game",
+"admin.stats.n":"n = {0}",
+"admin.stats.pct":"{0}%",
+"admin.stats.video.n":"{0} / {1}",
+"admin.stats.conf.ok":"Wiki loaded {0} · n = {1}",
+"admin.stats.conf.off":"Wiki unreachable — local totals only · n = {0}",
+"admin.stats.conf.none":"Wiki not loaded yet · n = {0}",
+"admin.stats.cover.hint":"Characters with at least one combo / roster",
+"admin.stats.incomplete.short":"Incomplete",
+"admin.stats.games":"Games with combos",
+"admin.stats.chars":"Characters covered",
+"admin.stats.na":"Unavailable",
+"admin.stats.winrate":"Match win rate",
+"admin.stats.winrate.off":"No sourced match data. ComboDex does not invent competitive percentages.",
+"admin.stats.regions":"Regions",
+"admin.stats.regions.off":"No player telemetry.",
+"admin.stats.pop":"In-game popularity",
+"admin.stats.pop.off":"No matchmaking data.",
 "admin.infra.note":"GitHub Pages serves the UI. Roles, audit logs and shared match stats need a backend. Combos are already shared through the wiki.",
 "admin.closed":"Console closed.",
 "admin.overview":"Dashboard",
@@ -1039,6 +1073,23 @@ es:{
 "admin.stats.lab":"Lab verificado",
 "admin.stats.incomplete":"Fichas incompletas (sin secuencia o sin vídeo)",
 "admin.stats.bygame":"Volumen por juego",
+"admin.stats.n":"n = {0}",
+"admin.stats.pct":"{0} %",
+"admin.stats.video.n":"{0} / {1}",
+"admin.stats.conf.ok":"Wiki cargado {0} · n = {1}",
+"admin.stats.conf.off":"Wiki inalcanzable — solo totales locales · n = {0}",
+"admin.stats.conf.none":"Wiki aún no cargado · n = {0}",
+"admin.stats.cover.hint":"Personajes con al menos un combo / roster",
+"admin.stats.incomplete.short":"Incompletos",
+"admin.stats.games":"Juegos con combos",
+"admin.stats.chars":"Personajes cubiertos",
+"admin.stats.na":"No disponible",
+"admin.stats.winrate":"Win rate de partidas",
+"admin.stats.winrate.off":"No hay datos de partidas con fuente. ComboDex no inventa porcentajes competitivos.",
+"admin.stats.regions":"Regiones",
+"admin.stats.regions.off":"Sin telemetría de jugadores.",
+"admin.stats.pop":"Popularidad in-game",
+"admin.stats.pop.off":"Sin datos de matchmaking.",
 "admin.infra.note":"GitHub Pages sirve la interfaz. Roles, auditoría y estadísticas de partidas compartidas requieren un backend. Los combos ya se comparten por el wiki.",
 "admin.closed":"Consola cerrada.",
 "admin.overview":"Panel",
