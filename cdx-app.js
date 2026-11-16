@@ -935,7 +935,7 @@ function renderAtelierDashBody(){
   if(window.CDX_ADMIN){
     const themeNow=document.documentElement.dataset.theme||"official";
     const themeBtns=CDX_THEMES.map(id=>`<button type="button" data-admin-theme="${id}" aria-pressed="${themeNow===id?"true":"false"}">${l(cdxT("admin.theme."+id))}</button>`).join("");
-    const head=`<div class="admin-brandline"><span class="admin-mark admin-mark-sm" aria-hidden="true">CD</span><span class="admin-brand-name">ComboDex</span><span class="admin-badge">${l(cdxT("admin.badge"))}</span></div><span class="atelier-head-actions"><div class="admin-themes" id="adminThemes" role="group" aria-label="${l(cdxT("admin.theme"))}">${themeBtns}</div><button type="button" class="tiny" id="adminPreviewToggle" aria-pressed="true">${l(cdxT("admin.preview.toggle"))}</button><span class="admin-session">${l(cdxT("admin.session"))}</span><a class="tiny" href="${l(atelierSiteHref())}">${l(cdxT("admin.site"))}</a><button type="button" class="tiny" id="atelierOut">${l(cdxT("admin.out"))}</button></span>`;
+    const head=`<div class="admin-brandline"><span class="admin-mark admin-mark-sm" aria-hidden="true">CD</span><span class="admin-brand-name">ComboDex</span><span class="admin-badge">${l(cdxT("admin.badge"))}</span></div><span class="atelier-head-actions"><div class="admin-themes" id="adminThemes" role="group" aria-label="${l(cdxT("admin.theme"))}">${themeBtns}</div><button type="button" class="tiny" id="adminPreviewToggle">${l(cdxT("admin.preview.toggle"))}</button><span class="admin-session">${l(cdxT("admin.session"))}</span><a class="tiny" href="${l(atelierSiteHref())}">${l(cdxT("admin.site"))}</a><button type="button" class="tiny" id="atelierOut">${l(cdxT("admin.out"))}</button></span>`;
     if(!dash.dataset.shell){
       dash.dataset.shell="1";
       dash.innerHTML=`<div class="atelier-head" id="adminHead"></div>
@@ -967,6 +967,7 @@ function renderAtelierDashBody(){
       bindAdminLayout();
     }
     const hd=a("adminHead");if(hd)hd.innerHTML=head;
+    bindPreviewToggle();
     applyAdminLayout();
     const treeEl=a("atelierTree");if(treeEl)treeEl.innerHTML=treeNav;
     const workEl=a("atelierWork");if(workEl)workEl.innerHTML=work;
@@ -1068,11 +1069,21 @@ function applyAdminLayout(live){
   const off=!!L.previewOff;
   const prev=off?0:Math.max(220,Math.min(Math.round(innerWidth*.72),L.preview||Math.round(innerWidth*.4)));
   dash.style.setProperty("--admin-nav",nav+"px");
-  dash.style.setProperty("--admin-preview",prev+"px");
+  dash.style.setProperty("--admin-preview",off?"0px":prev+"px");
   dash.classList.toggle("preview-off",off);
   document.body.classList.toggle("cdx-preview-off",off);
-  const pane=a("adminPreviewPane");if(pane){pane.hidden=off;pane.setAttribute("aria-hidden",off?"true":"false")}
-  const g2=a("adminGripPreview");if(g2)g2.hidden=off;
+  const pane=a("adminPreviewPane"),g2=a("adminGripPreview"),frame=a("adminPreview");
+  if(pane){
+    pane.hidden=off;
+    pane.setAttribute("aria-hidden",off?"true":"false");
+    pane.style.display=off?"none":"";
+    pane.style.width=off?"0":"";
+    pane.style.minWidth=off?"0":"";
+    pane.style.overflow=off?"hidden":"";
+    pane.style.visibility=off?"hidden":"";
+  }
+  if(g2){g2.hidden=off;g2.style.display=off?"none":""}
+  if(frame)frame.style.display=off?"none":"";
   const tog=a("adminPreviewToggle");
   if(tog){
     tog.setAttribute("aria-pressed",off?"false":"true");
@@ -1081,17 +1092,17 @@ function applyAdminLayout(live){
 }
 function toggleAdminPreview(force){
   const dash=a("atelierDash");
-  const off=force==null?!(dash&&dash.classList.contains("preview-off")):!!force;
+  const off=force==null?!(document.body.classList.contains("cdx-preview-off")||(dash&&dash.classList.contains("preview-off"))):!!force;
   saveAdminLayout({previewOff:off});
   applyAdminLayout();
-  if(!off)atelierPreviewSync();
+  if(!off){atelierPreviewSync();atelierPreviewPing()}
 }
-document.addEventListener("click",e=>{
-  if(!window.CDX_ADMIN||!e.target||!e.target.closest)return;
-  if(!e.target.closest("#adminPreviewToggle,[data-preview-hide]"))return;
-  e.preventDefault();
-  toggleAdminPreview();
-},true);
+window.cdxTogglePreview=function(ev){if(ev&&ev.preventDefault)ev.preventDefault();toggleAdminPreview()};
+function bindPreviewToggle(){
+  const tog=a("adminPreviewToggle");
+  if(tog)tog.onclick=window.cdxTogglePreview;
+  document.querySelectorAll("[data-preview-hide]").forEach(b=>{b.onclick=window.cdxTogglePreview});
+}
 function bindAdminLayout(){
   const dash=a("atelierDash");if(!dash||dash.dataset.layoutBound)return;
   dash.dataset.layoutBound="1";
@@ -1147,6 +1158,7 @@ function bindAdminPreview(){
     }
     if(e.target.closest("#adminPreviewReload"))atelierPreviewSync(!0);
   });
+  bindPreviewToggle();
   const frame=a("adminPreview");
   if(frame&&!frame.dataset.pingBound){
     frame.dataset.pingBound="1";
@@ -1178,10 +1190,22 @@ function atelierPreviewSync(force){
   }catch{}
 }
 function atelierPreviewPing(){
-  const frame=a("adminPreview");
-  if(!frame||!frame.contentWindow)return;
-  const msg={cdx:"preview",theme:document.documentElement.dataset.theme||"official",homeFont:homeFontId||(d&&d.siteFont)||""};
-  try{frame.contentWindow.postMessage(msg,location.origin)}catch{}
+  const frame=a("adminPreview");if(!frame)return;
+  const id=siteFontId(homeFontId)||siteFontId(d&&d.siteFont)||"stencil";
+  const x=HOME_FONTS[id]||HOME_FONTS.stencil;
+  const theme=document.documentElement.dataset.theme||"official";
+  const paint=doc=>{
+    if(!doc||!doc.documentElement)return;
+    doc.documentElement.dataset.theme=theme;
+    doc.documentElement.dataset.homeFont=id;
+    const set=el=>{if(!el||!el.style)return;el.style.setProperty("--cdx-brand-font",x.f);el.style.setProperty("--cdx-brand-track",x.l);el.style.setProperty("--cdx-brand-weight",x.w);el.style.setProperty("--cdx-brand-size",x.s)};
+    set(doc.documentElement);set(doc.body);
+    doc.querySelectorAll(".brand-word,.brand-btn").forEach(el=>{el.style.fontFamily=x.f;el.style.letterSpacing=x.l;el.style.fontWeight=x.w});
+    const word=doc.querySelector(".brand-word");
+    if(word)word.style.fontSize=x.s;
+  };
+  try{paint(frame.contentDocument)}catch{}
+  try{frame.contentWindow&&frame.contentWindow.postMessage({cdx:"preview",theme,homeFont:id},location.origin)}catch{}
 }
 function atelierEmbed(){
   if(!window.CDX_ADMIN)return;
