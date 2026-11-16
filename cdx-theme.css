@@ -679,3 +679,10 @@ html[data-theme="dojo"] .cdx-ref{filter:drop-shadow(3px 3px 0 #1d1d2240)}
 .cdx-hunt .hunt-btns{display:flex;justify-content:flex-end;gap:6px}
 @keyframes huntIn{from{opacity:0;transform:translate(-50%,-16px)}}
 @media (prefers-reduced-motion:reduce){.cdx-ref,.cdx-hunt,.cdx-ref.hunt-win{animation:none;transition:none}}
+.brand-mark,.brand-mark-end,
+html[data-theme] .brand-mark,html[data-theme] .brand-mark-end{
+  color:#d9412b !important;
+  -webkit-text-fill-color:#d9412b !important;
+  background:none !important;
+  font-family:var(--cdx-brand-font,inherit);
+}

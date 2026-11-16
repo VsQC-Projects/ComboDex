@@ -935,7 +935,7 @@ function renderAtelierDashBody(){
   if(window.CDX_ADMIN){
     const themeNow=document.documentElement.dataset.theme||"official";
     const themeBtns=CDX_THEMES.map(id=>`<button type="button" data-admin-theme="${id}" aria-pressed="${themeNow===id?"true":"false"}">${l(cdxT("admin.theme."+id))}</button>`).join("");
-    const head=`<div class="admin-brandline"><span class="admin-mark admin-mark-sm" aria-hidden="true">CD</span><span class="admin-brand-name">ComboDex</span><span class="admin-badge">${l(cdxT("admin.badge"))}</span></div><span class="atelier-head-actions"><div class="admin-themes" id="adminThemes" role="group" aria-label="${l(cdxT("admin.theme"))}">${themeBtns}</div><button type="button" class="tiny" id="adminPreviewToggle">${l(cdxT("admin.preview.toggle"))}</button><span class="admin-session">${l(cdxT("admin.session"))}</span><a class="tiny" href="${l(atelierSiteHref())}">${l(cdxT("admin.site"))}</a><button type="button" class="tiny" id="atelierOut">${l(cdxT("admin.out"))}</button></span>`;
+    const head=`<div class="admin-brandline"><span class="admin-mark admin-mark-sm" aria-hidden="true">CD</span><span class="admin-brand-name">ComboDex</span><span class="admin-badge">${l(cdxT("admin.badge"))}</span></div><span class="atelier-head-actions"><div class="admin-themes" id="adminThemes" role="group" aria-label="${l(cdxT("admin.theme"))}">${themeBtns}</div><button type="button" class="tiny" id="adminPreviewToggle" onclick="window.cdxTogglePreview&&window.cdxTogglePreview(event)">${l(cdxT("admin.preview.hide"))}</button><span class="admin-session">${l(cdxT("admin.session"))}</span><a class="tiny" href="${l(atelierSiteHref())}">${l(cdxT("admin.site"))}</a><button type="button" class="tiny" id="atelierOut">${l(cdxT("admin.out"))}</button></span>`;
     if(!dash.dataset.shell){
       dash.dataset.shell="1";
       dash.innerHTML=`<div class="atelier-head" id="adminHead"></div>
@@ -953,7 +953,7 @@ function renderAtelierDashBody(){
               <button type="button" class="tiny" data-prev-size="pc" aria-pressed="true">${l(cdxT("admin.preview.pc"))}</button>
               <button type="button" class="tiny" data-prev-size="phone" aria-pressed="false">${l(cdxT("admin.preview.phone"))}</button>
               <button type="button" class="tiny" id="adminPreviewReload">${l(cdxT("admin.preview.reload"))}</button>
-              <button type="button" class="tiny" data-preview-hide>${l(cdxT("admin.preview.hide"))}</button>
+              <button type="button" class="tiny" data-preview-hide onclick="window.cdxTogglePreview&&window.cdxTogglePreview(event)">${l(cdxT("admin.preview.hide"))}</button>
               <a class="tiny" id="adminPreviewOpen" href="index.html" target="_blank" rel="noopener">${l(cdxT("admin.preview.open"))}</a>
             </span>
           </header>
@@ -1092,12 +1092,21 @@ function applyAdminLayout(live){
 }
 function toggleAdminPreview(force){
   const dash=a("atelierDash");
-  const off=force==null?!(document.body.classList.contains("cdx-preview-off")||(dash&&dash.classList.contains("preview-off"))):!!force;
+  const now=document.body.classList.contains("cdx-preview-off")||(dash&&dash.classList.contains("preview-off"));
+  const off=force==null?!now:!!force;
   saveAdminLayout({previewOff:off});
-  applyAdminLayout();
-  if(!off){atelierPreviewSync();atelierPreviewPing()}
+  applyAdminLayout({previewOff:off});
+  const frame=a("adminPreview");
+  if(off){try{if(frame)frame.removeAttribute("src")}catch{}}
+  else{atelierPreviewSync(!0);atelierPreviewPing()}
 }
-window.cdxTogglePreview=function(ev){if(ev&&ev.preventDefault)ev.preventDefault();toggleAdminPreview()};
+window.cdxTogglePreview=function(ev){
+  if(ev){if(ev.preventDefault)ev.preventDefault();if(ev.stopPropagation)ev.stopPropagation()}
+  if(window.__cdxPrevLock)return;
+  window.__cdxPrevLock=1;
+  setTimeout(()=>{window.__cdxPrevLock=0},250);
+  toggleAdminPreview();
+};
 function bindPreviewToggle(){
   const tog=a("adminPreviewToggle");
   if(tog)tog.onclick=window.cdxTogglePreview;
@@ -1190,7 +1199,7 @@ function atelierPreviewSync(force){
   }catch{}
 }
 function atelierPreviewPing(){
-  const frame=a("adminPreview");if(!frame)return;
+  const frame=a("adminPreview");if(!frame||document.body.classList.contains("cdx-preview-off"))return;
   const id=siteFontId(homeFontId)||siteFontId(d&&d.siteFont)||"stencil";
   const x=HOME_FONTS[id]||HOME_FONTS.stencil;
   const theme=document.documentElement.dataset.theme||"official";
@@ -1199,11 +1208,18 @@ function atelierPreviewPing(){
     doc.documentElement.dataset.theme=theme;
     doc.documentElement.dataset.homeFont=id;
     const set=el=>{if(!el||!el.style)return;el.style.setProperty("--cdx-brand-font",x.f);el.style.setProperty("--cdx-brand-track",x.l);el.style.setProperty("--cdx-brand-weight",x.w);el.style.setProperty("--cdx-brand-size",x.s)};
-    set(doc.documentElement);set(doc.body);
-    doc.querySelectorAll(".brand-word,.brand-btn").forEach(el=>{el.style.fontFamily=x.f;el.style.letterSpacing=x.l;el.style.fontWeight=x.w});
+    set(doc.documentElement);if(doc.body)set(doc.body);
+    let st=doc.getElementById("cdx-preview-font");
+    if(!st&&doc.head){st=doc.createElement("style");st.id="cdx-preview-font";doc.head.appendChild(st)}
+    if(st)st.textContent=".brand-btn,.brand-word,.brand-mark{font-family:"+x.f+" !important;letter-spacing:"+x.l+" !important;font-weight:"+x.w+" !important}.brand-word{font-size:"+x.s+" !important}.brand-mark,.brand-mark-end{color:#d9412b !important;-webkit-text-fill-color:#d9412b !important}";
+    doc.querySelectorAll(".brand-word,.brand-btn,.brand-mark").forEach(el=>{el.style.fontFamily=x.f;el.style.letterSpacing=x.l;el.style.fontWeight=x.w});
     const word=doc.querySelector(".brand-word");
     if(word)word.style.fontSize=x.s;
   };
+  try{
+    const win=frame.contentWindow;
+    if(win&&win.location&&String(win.location.href).indexOf("index.html")>=0&&(win.location.hash||"")!=="#/home")win.location.hash="#/home";
+  }catch{}
   try{paint(frame.contentDocument)}catch{}
   try{frame.contentWindow&&frame.contentWindow.postMessage({cdx:"preview",theme,homeFont:id},location.origin)}catch{}
 }
@@ -1597,6 +1613,8 @@ async function saveSiteFont(id){
   applyHomeFont(f,!0);
   d.siteFont=f;
   atelierPreviewPing();
+  setTimeout(atelierPreviewPing,120);
+  setTimeout(atelierPreviewPing,400);
   if(!isAtelier())return;
   const ok=await saveSiteRow();
   g(ok?cdxT("atelier.font.ok"):cdxT("atelier.font.fail"),!ok);
@@ -3546,7 +3564,10 @@ function paintHomeFont(id){
   apply(document.documentElement.style);
   if(document.body)apply(document.body.style);
   document.documentElement.dataset.homeFont=homeFontId;
+  document.querySelectorAll(".brand-word,.brand-btn,.brand-mark").forEach(el=>{el.style.fontFamily=x.f;el.style.letterSpacing=x.l;el.style.fontWeight=x.w});
+  const word=document.querySelector(".brand-word");if(word)word.style.fontSize=x.s;
   document.querySelectorAll("[data-home-font]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.homeFont===homeFontId?"true":"false"));
+  if(window.CDX_ADMIN)try{atelierPreviewPing()}catch{}
 }
 function applyHomeFont(id,persist){
   const next=HOME_FONTS[id]?id:"stencil";

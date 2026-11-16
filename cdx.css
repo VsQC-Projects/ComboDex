@@ -156,6 +156,7 @@ body.on-home .brand,body.on-home .brand-btn{justify-content:center}
 body.on-home .head h1.brand{font-size:var(--cdx-brand-size,clamp(46px,8vw,88px))!important;letter-spacing:var(--cdx-brand-track,.05em);line-height:.95;margin:4px 0 0}
 body.on-home .brand-btn{font-family:var(--cdx-brand-font,Silkscreen,sans-serif);font-weight:var(--cdx-brand-weight,400);gap:14px}
 body.on-home .brand-mark{font-size:.52em}
+.brand-mark,.brand-mark-end{color:#d9412b;-webkit-text-fill-color:#d9412b;font-family:var(--cdx-brand-font,inherit);background:none}
 .home-hero{margin:10px 0 18px;text-align:center}
 .home-font-row{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-start}
 .home-font-row button{padding:6px 10px;font-size:12px;font-weight:700}

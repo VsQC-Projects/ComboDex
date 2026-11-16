@@ -36,7 +36,7 @@ body.cdx-admin.is-atelier #atelierDash:not(.hidden){
   display:grid;
   position:fixed;
   inset:0;
-  z-index:24;
+  z-index:40;
   width:100%;
   height:100%;
   min-width:0;
@@ -56,18 +56,21 @@ body.cdx-admin.is-atelier #atelierDash:not(.hidden).preview-off .admin-preview,
 body.cdx-admin.is-atelier #atelierDash:not(.hidden).preview-off #adminGripPreview,
 body.cdx-admin.cdx-preview-off .admin-preview,
 body.cdx-admin.cdx-preview-off #adminGripPreview,
+body.cdx-admin.cdx-preview-off #adminPreview,
+body.cdx-admin.cdx-preview-off .admin-preview-stage,
 body.cdx-admin .admin-preview[hidden]{
   display:none !important;
   visibility:hidden !important;
   width:0 !important;
+  height:0 !important;
   min-width:0 !important;
   overflow:hidden !important;
   pointer-events:none !important;
 }
 body.cdx-admin.is-atelier .wrap{
-  display:none;
+  display:none !important;
   position:fixed;
-  z-index:25;
+  z-index:1;
   top:64px;
   left:260px;
   right:0;
@@ -76,7 +79,7 @@ body.cdx-admin.is-atelier .wrap{
   padding:0 24px 32px;
   background:var(--admin-bg);
 }
-body.cdx-admin.is-atelier.admin-embed .wrap{display:block}
+body.cdx-admin.is-atelier.admin-embed .wrap{display:block !important}
 body.cdx-admin.is-atelier.admin-embed .atelier-work{visibility:hidden}
 body.cdx-admin.is-atelier .head,
 body.cdx-admin.is-atelier .wrap > .nav,
@@ -814,8 +817,7 @@ body.cdx-admin .admin-key{
     grid-template-rows:auto auto minmax(0,1fr) minmax(220px,38vh) 36px;
     grid-template-areas:"head" "nav" "work" "preview" "foot";
   }
-  body.cdx-admin.is-atelier #atelierDash:not(.hidden).preview-off,
-  body.cdx-admin.cdx-preview-off.is-atelier #atelierDash:not(.hidden){
+  body.cdx-admin.is-atelier #atelierDash:not(.hidden).preview-off{
     grid-template-columns:1fr !important;
     grid-template-rows:auto auto minmax(0,1fr) 0 36px !important;
   }
@@ -1094,9 +1096,9 @@ html[data-theme="capsule"] body.cdx-admin .admin-themes button[aria-pressed="tru
     grid-template-rows:auto minmax(0,1fr) 40px;
     grid-template-areas:"head head head head head" "nav g1 work g2 preview" "foot foot foot foot foot";
   }
+  body.cdx-admin.is-atelier #atelierDash:not(.hidden).preview-off{
   body.cdx-admin.is-atelier #atelierDash:not(.hidden).preview-off,
   body.cdx-admin.cdx-preview-off.is-atelier #atelierDash:not(.hidden){
-    grid-template-columns:var(--admin-nav,200px) 16px minmax(160px,1fr) 0 0 !important;
   }
 }
 @media(prefers-reduced-motion:reduce){
