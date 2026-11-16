@@ -48,11 +48,22 @@ body.cdx-admin.is-atelier #atelierDash:not(.hidden){
   grid-template-rows:auto minmax(0,1fr) 40px;
   grid-template-areas:"head head head head head" "nav g1 work g2 preview" "foot foot foot foot foot";
 }
-body.cdx-admin.is-atelier #atelierDash:not(.hidden).preview-off{
+body.cdx-admin.is-atelier #atelierDash:not(.hidden).preview-off,
+body.cdx-admin.cdx-preview-off.is-atelier #atelierDash:not(.hidden){
   grid-template-columns:var(--admin-nav,220px) 16px minmax(200px,1fr) 0 0 !important;
 }
 body.cdx-admin.is-atelier #atelierDash:not(.hidden).preview-off .admin-preview,
-body.cdx-admin.is-atelier #atelierDash:not(.hidden).preview-off #adminGripPreview{display:none !important}
+body.cdx-admin.is-atelier #atelierDash:not(.hidden).preview-off #adminGripPreview,
+body.cdx-admin.cdx-preview-off .admin-preview,
+body.cdx-admin.cdx-preview-off #adminGripPreview,
+body.cdx-admin .admin-preview[hidden]{
+  display:none !important;
+  visibility:hidden !important;
+  width:0 !important;
+  min-width:0 !important;
+  overflow:hidden !important;
+  pointer-events:none !important;
+}
 body.cdx-admin.is-atelier .wrap{
   display:none;
   position:fixed;
@@ -803,7 +814,8 @@ body.cdx-admin .admin-key{
     grid-template-rows:auto auto minmax(0,1fr) minmax(220px,38vh) 36px;
     grid-template-areas:"head" "nav" "work" "preview" "foot";
   }
-  body.cdx-admin.is-atelier #atelierDash:not(.hidden).preview-off{
+  body.cdx-admin.is-atelier #atelierDash:not(.hidden).preview-off,
+  body.cdx-admin.cdx-preview-off.is-atelier #atelierDash:not(.hidden){
     grid-template-columns:1fr !important;
     grid-template-rows:auto auto minmax(0,1fr) 0 36px !important;
   }
@@ -1082,7 +1094,8 @@ html[data-theme="capsule"] body.cdx-admin .admin-themes button[aria-pressed="tru
     grid-template-rows:auto minmax(0,1fr) 40px;
     grid-template-areas:"head head head head head" "nav g1 work g2 preview" "foot foot foot foot foot";
   }
-  body.cdx-admin.is-atelier #atelierDash:not(.hidden).preview-off{
+  body.cdx-admin.is-atelier #atelierDash:not(.hidden).preview-off,
+  body.cdx-admin.cdx-preview-off.is-atelier #atelierDash:not(.hidden){
     grid-template-columns:var(--admin-nav,200px) 16px minmax(160px,1fr) 0 0 !important;
   }
 }

@@ -1070,7 +1070,8 @@ function applyAdminLayout(live){
   dash.style.setProperty("--admin-nav",nav+"px");
   dash.style.setProperty("--admin-preview",prev+"px");
   dash.classList.toggle("preview-off",off);
-  const pane=a("adminPreviewPane");if(pane)pane.hidden=off;
+  document.body.classList.toggle("cdx-preview-off",off);
+  const pane=a("adminPreviewPane");if(pane){pane.hidden=off;pane.setAttribute("aria-hidden",off?"true":"false")}
   const g2=a("adminGripPreview");if(g2)g2.hidden=off;
   const tog=a("adminPreviewToggle");
   if(tog){
@@ -1079,20 +1080,22 @@ function applyAdminLayout(live){
   }
 }
 function toggleAdminPreview(force){
-  const off=force==null?!a("atelierDash")?.classList.contains("preview-off"):!!force;
+  const dash=a("atelierDash");
+  const off=force==null?!(dash&&dash.classList.contains("preview-off")):!!force;
   saveAdminLayout({previewOff:off});
   applyAdminLayout();
   if(!off)atelierPreviewSync();
 }
+document.addEventListener("click",e=>{
+  if(!window.CDX_ADMIN||!e.target||!e.target.closest)return;
+  if(!e.target.closest("#adminPreviewToggle,[data-preview-hide]"))return;
+  e.preventDefault();
+  toggleAdminPreview();
+},true);
 function bindAdminLayout(){
   const dash=a("atelierDash");if(!dash||dash.dataset.layoutBound)return;
   dash.dataset.layoutBound="1";
   applyAdminLayout();
-  dash.addEventListener("click",e=>{
-    if(!e.target.closest("#adminPreviewToggle,[data-preview-hide]"))return;
-    e.preventDefault();
-    toggleAdminPreview();
-  });
   const navG=a("adminGripNav"),prevG=a("adminGripPreview");
   if(navG){
     navG.addEventListener("pointerdown",e=>{
@@ -1144,6 +1147,11 @@ function bindAdminPreview(){
     }
     if(e.target.closest("#adminPreviewReload"))atelierPreviewSync(!0);
   });
+  const frame=a("adminPreview");
+  if(frame&&!frame.dataset.pingBound){
+    frame.dataset.pingBound="1";
+    frame.addEventListener("load",()=>atelierPreviewPing());
+  }
 }
 function atelierPreviewSync(force){
   if(!window.CDX_ADMIN)return;
@@ -1157,6 +1165,7 @@ function atelierPreviewSync(force){
       const loc=frame.contentWindow&&frame.contentWindow.location;
       if(loc&&loc.href&&loc.href.indexOf("index.html")>=0){
         if((loc.hash||"#")!==hash)loc.hash=hash;
+        atelierPreviewPing();
         return;
       }
     }catch{}
@@ -1170,7 +1179,9 @@ function atelierPreviewSync(force){
 }
 function atelierPreviewPing(){
   const frame=a("adminPreview");
-  try{frame&&frame.contentWindow&&frame.contentWindow.postMessage({cdx:"preview"},location.origin)}catch{}
+  if(!frame||!frame.contentWindow)return;
+  const msg={cdx:"preview",theme:document.documentElement.dataset.theme||"official",homeFont:homeFontId||(d&&d.siteFont)||""};
+  try{frame.contentWindow.postMessage(msg,location.origin)}catch{}
 }
 function atelierEmbed(){
   if(!window.CDX_ADMIN)return;
@@ -1561,6 +1572,7 @@ async function saveSiteFont(id){
   const f=siteFontId(id)||"stencil";
   applyHomeFont(f,!0);
   d.siteFont=f;
+  atelierPreviewPing();
   if(!isAtelier())return;
   const ok=await saveSiteRow();
   g(ok?cdxT("atelier.font.ok"):cdxT("atelier.font.fail"),!ok);
@@ -1949,7 +1961,7 @@ function Lt(){V("import",yt),a("importGame").onchange=e=>{importManual(),me(e.ta
     ${isAtelier()?`<p class="muted small" style="margin:7px 0 0">Le déplacement conserve les séquences et les noms. Vérifie la destination avant de valider.</p>`:""}`,isAtelier()&&(k(a("moveGame"),De(),o.game),Oe(o.game,o.char))}const Oe=(e,t)=>k(a("moveChar"),T(e).map(n=>[n.name,charLabel(n.name)]),t);function At(){if(!isAtelier()||!a("moveGame"))return;const e=a("moveGame").value,t=a("moveChar").value,n=d.combos.filter(s=>o.selected.has(s.id));if(!b[e]||!t||!n.length)return g("Destination invalide.",!0);if(e===o.game&&t===o.char)return g("Les combos sont déjà ici.",!0);if(confirm(`Déplacer ${y(n.length,"combo")} vers ${b[e].name} · ${t} ?`)){for(const s of n)Object.assign(s,{game:e,character:t});publishWiki(n);M(),o.selected.clear(),o.game=e,o.char=t,Q(),g(`${y(n.length,"combo")} déplacé${n.length>1?"s":""} vers ${t}.`)}}function Re(e){if(!e.length)return;const list=e.map(id=>L(id)).filter(Boolean);if(!list.length)return;const names=list.map(c=>`${c.name||"Combo"} · ${charLabel(c.character||"")}`).join(" · ");ce(cdxT("Signaler un combo erroné"),`<p style="margin:0 0 8px">${l(names)}</p><p class="muted small">${l(cdxT("Le combo reste public : seul l’administrateur peut le retirer."))}</p><label class="muted small" for="reportNote">${l(cdxT("Explique l’erreur (optionnel)"))}</label><textarea id="reportNote" rows="4" style="width:100%;margin-top:6px" placeholder="${l(cdxT("Explique l’erreur (optionnel)"))}" autofocus></textarea><div class="row" style="margin-top:12px;justify-content:flex-end;gap:8px"><button type="button" class="primary" id="reportSend">${cdxT("Envoyer le signalement")}</button></div>`);a("reportSend").onclick=()=>{const note=(a("reportNote").value||"").trim();G();sendReport(list,note)}}
 async function sendReport(list,note){const at=new Date().toISOString();for(const c of list){c.reports=[...(Array.isArray(c.reports)?c.reports:[]),{note:String(note||"").slice(0,300),at}].slice(-10);c.updatedAt=at}publishQuiet(list);try{const rows=list.map(c=>({combo_id:c.id,game:c.game||"",character:c.character||"",combo_name:c.name||"",note:String(note||"").slice(0,2000)}));const r=await fetch(REPORT_URL,{method:"POST",headers:wikiHeaders({"Content-Type":"application/json","Prefer":"return=minimal"}),body:JSON.stringify(rows.length===1?rows[0]:rows),cache:"no-store"});if(r.ok||r.status===201){g(cdxT("Signalement envoyé. Merci."));return}}catch{}g(cdxT("Impossible d’envoyer le signalement."),!0)}function wt(e){const t=L(e),n=document.querySelector(`[data-combo="${CSS.escape(e)}"] .rename-row`);if(!t||!n)return;n.innerHTML='<input class="rename-input" aria-label="Nouveau nom du combo" maxlength="100"><button class="tiny" data-save-name aria-label="Valider">✓</button><button class="tiny" data-cancel-name aria-label="Annuler">✕</button>';const s=n.querySelector("input");s.value=t.name,s.focus(),s.select();const r=()=>{const i=s.value.trim();if(!i)return g("Le nom ne peut pas être vide.",!0);ae(e,{name:i}),C(),g("Combo renommé.")};n.querySelector("[data-save-name]").onclick=r,n.querySelector("[data-cancel-name]").onclick=C,s.onkeydown=i=>{i.key==="Enter"&&r(),i.key==="Escape"&&(i.stopPropagation(),C())}}const Mt=Object.entries(b).flatMap(([e,t])=>[...t.aliases,t.name,t.short].map(n=>[w(n),e])).sort((e,t)=>t[0].length-e[0].length);function Tt(e){let t=" "+w(e)+" ",n=[];for(const[s,r]of Mt){const i=" "+s+" ";if(t.includes(i)){n=[r],t=t.replace(i," ");break}}return{games:n,terms:w(t).split(" ").filter(Boolean)}}function jt(e,t){const n=w([e.name,e.character,charBlob(e.character),e.position,e.meter,e.assist,e.special,Object.values(e.extra||{}).join(" "),(e.dna||[]).join(" "),e.difficulty,e.damage,e.notes,(e.tokens||[]).join(" "),e.verified?"verifie lab":"non verifie",e.favorite?"favori":"",e.imported?"importe":""].join(" "));return t.every(s=>n.includes(s))}function B(){const e=a("search").value.trim(),t=a("searchResults");if(a("clearSearch").classList.toggle("hidden",!e),t.classList.toggle("hidden",!e),a("peopleWorkspace").classList.toggle("hidden",!!e),!e)return;const n=Tt(e),s=d.combos.filter(i=>(!n.games.length||n.games.includes(i.game))&&jt(i,n.terms)),r=n.games.length?b[n.games[0]].name:cdxT("tous les jeux");t.innerHTML=`<hr><h3>${y(s.length,"résultat")} ${cdxT("dans")} ${l(r)}</h3>`+(s.length?s.map(i=>{var c;return`<button class="listitem result" data-open="${l(i.id)}"><span class="grow"><b>${l(i.name)}</b>${d.fav.has(i.id)?" ★":""}<br>
               <span class="muted small">${l(charLabel(i.character))} · ${l(((c=b[i.game])==null?void 0:c.name)||i.game)} · ${l(i.position)}</span>
-              <span class="seq">${K(i.tokens,void 0,i.game)}</span></span><span>${cdxT("Ouvrir ›")}</span></button>`}).join(""):`<div class="empty">${d.combos.length?cdxT("Aucun combo ne correspond à tous ces mots-clés."):cdxT("Aucun combo public pour l’instant : crée ou importe le premier.")}</div>`)}function xt(e,t){if(e==="replay"){raOpen(t);return}const n=L(t);n&&(e==="favorite"?(d.fav.has(t)?d.fav.delete(t):d.fav.add(t),M(),C()):e==="lab"?labToggle(t):e==="rename"?wt(t):e==="edit"?at(t):e==="variant"?nt(t):e==="train"?gt(t):e==="video"?ht(t):e==="desc"?ce(cdxT("Description du combo"),`<p style="white-space:pre-wrap;margin:0;line-height:1.45">${l(comboView(n).desc||comboDescOf(n)||"")}</p>`):e==="copy"?Fe(joinTokens(comboView(n).tokens)).then(s=>g(s?"Séquence copiée.":"Copie impossible.",!s)):e==="wipe"?askWipe([t]):e==="delete"&&Re([t]))}function Ht(){if(!a("peopleGame"))return;V("people",Q),a("peopleGame").onchange=e=>{o.game=e.target.value,o.char=null,o.selected.clear(),a("charFilter").value="",C()},a("charFilter").oninput=ee,a("charFilter").onkeydown=e=>{if(e.key!=="Enter")return;const t=a("charList").querySelector("[data-char]");t&&t.click()},a("onlyWithCombos").onchange=e=>{o.onlyWithCombos=e.target.checked,ee(),oe()},a("charList").onclick=e=>{const t=e.target.closest("[data-char]");t&&(o.char=t.dataset.char,o.selected.clear(),C(),matchMedia("(max-width: 860px)").matches&&a("personTitle").scrollIntoView({behavior:"smooth",block:"start"}))},a("onlyFavorites").onchange=()=>{o.selected.clear(),C()},a("sortCombos").onchange=e=>{o.sort=e.target.value,C()},a("dnaFilter").onclick=e=>{const t=e.target.closest("[data-dnaf]");if(t){const n=t.dataset.dnaf;o.dnaFilter.has(n)?o.dnaFilter.delete(n):o.dnaFilter.add(n),C();return}e.target.closest("[data-dnaf-clear]")&&(o.dnaFilter.clear(),C())},a("newForPerson").onclick=()=>X(),a("search").oninput=B,a("search").onkeydown=e=>{e.key==="Escape"&&a("search").value&&(e.stopPropagation(),a("search").value="",B())},a("clearSearch").onclick=()=>{a("search").value="",B(),a("search").focus()},a("searchResults").onclick=e=>{const t=e.target.closest("[data-open]"),n=t&&L(t.dataset.open);n&&(o.game=n.game,o.char=n.character,o.focusId=n.id,a("search").value="",a("onlyFavorites").checked=!1,Q())},a("personCombos").onchange=e=>{var n;if(!e.target.matches("[data-select-combo]"))return;const t=e.target.dataset.selectCombo;e.target.checked?o.selected.add(t):o.selected.delete(t),(n=e.target.closest(".combo"))==null||n.classList.toggle("checked",e.target.checked),qe()},a("personCombos").onclick=e=>{if(e.target.closest("[data-keep-guest]")&&o.guestVideo){const cid=addVideoCombo("https://www.youtube.com/watch?v="+o.guestVideo,o.game,o.char);if(cid){o.watchId=cid;o.focusId=cid;o.guestVideo=null;C()}return}const t=e.target.closest("[data-empty]");if(t)return t.dataset.empty==="create"?X():j("import");const n=e.target.closest("[data-action]");n&&xt(n.dataset.action,n.dataset.id)},a("personDock")&&(a("personDock").onclick=e=>{const t=e.target.closest("[data-empty]");if(t)t.dataset.empty==="create"?X():j("import")}),a("bulkActions").onchange=e=>{e.target.id==="moveGame"&&Oe(e.target.value)},a("bulkActions").onclick=e=>{if(e.target.closest("#clearSelection"))o.selected.clear(),C();else if(e.target.closest("#selectAllCombos"))pe().forEach(t=>o.selected.add(t.id)),C();else if(e.target.closest("#moveSelected"))At();else if(e.target.closest("#reportSelected"))Re([...o.selected]);else if(e.target.closest("#wipeSelected"))askWipe([...o.selected])}}Ke();U();if(!window.__cdxBoot){window.__cdxBoot=1;try{Ht()}catch{}try{tt()}catch{}try{ct()}catch{}try{Lt()}catch{}try{vt()}catch{}}if(!window.CDX_ADMIN)j(o.tab);(async()=>{try{await loadWiki();try{migrateTokens()&&M()}catch{};try{if(d.siteFont)applyHomeFont(d.siteFont,!cdxIsPreview());else applyHomeFont(homeFontId)}catch{}}catch(e){console.warn("ComboDex wiki",e)}try{if(window.CDX_ADMIN&&atelierLive)renderAtelierDash()}catch{}try{Q()}catch{}try{if(o.tab==="compare")Y()}catch{}try{if(o.tab==="replay")raRender()}catch{}try{if(o.tab==="knowledge"&&window.CDX_KC)CDX_KC.render()}catch{}})();a("nav")&&a("nav").addEventListener("click",e=>{const t=e.target.closest("[data-tab]");t&&(t.dataset.tab==="knowledge"&&(o.kcView="hub"),j(t.dataset.tab))});const ye=["people","frames","compare","replay","create","import"];let lastCombo=null;document.addEventListener("mouseover",e=>{const t=e.target.closest("article.combo[data-combo]");t&&(lastCombo=t.dataset.combo)});document.addEventListener("keydown",e=>{if(!(e.ctrlKey||e.metaKey)||e.altKey||e.shiftKey||e.key.toLowerCase()!=="e"||Ie())return;e.preventDefault();const t=document.activeElement?.closest?.("article.combo[data-combo]")?.dataset.combo,n=pe(),s=[t,lastCombo].find(r=>r&&n.some(i=>i.id===r))||n[0]?.id;if(!s)return g(o.char?"Aucun combo à entraîner pour ce personnage.":"Choisis d’abord un personnage.",!0);o.tab!=="people"&&j("people"),gt(s)});document.addEventListener("keydown",e=>{Ie()||e.ctrlKey||e.metaKey||e.altKey||e.target.closest("input,textarea,select,[contenteditable]")||(ye[Number(e.key)-1]?j(ye[Number(e.key)-1]):e.key==="/"&&(e.preventDefault(),j("people"),a("search").focus()))});(async()=>{var e,t;try{await((t=(e=navigator.storage)==null?void 0:e.persist)==null?void 0:t.call(e))}catch{}})();const DUST="https://www.dustloop.com/wiki/api.php",SUPER="https://wiki.supercombo.gg/api.php",DREAM="https://dreamcancel.com/w/api.php",WAVU="https://wavu.wiki/w/api.php";
+              <span class="seq">${K(i.tokens,void 0,i.game)}</span></span><span>${cdxT("Ouvrir ›")}</span></button>`}).join(""):`<div class="empty">${d.combos.length?cdxT("Aucun combo ne correspond à tous ces mots-clés."):cdxT("Aucun combo public pour l’instant : crée ou importe le premier.")}</div>`)}function xt(e,t){if(e==="replay"){raOpen(t);return}const n=L(t);n&&(e==="favorite"?(d.fav.has(t)?d.fav.delete(t):d.fav.add(t),M(),C()):e==="lab"?labToggle(t):e==="rename"?wt(t):e==="edit"?at(t):e==="variant"?nt(t):e==="train"?gt(t):e==="video"?ht(t):e==="desc"?ce(cdxT("Description du combo"),`<p style="white-space:pre-wrap;margin:0;line-height:1.45">${l(comboView(n).desc||comboDescOf(n)||"")}</p>`):e==="copy"?Fe(joinTokens(comboView(n).tokens)).then(s=>g(s?"Séquence copiée.":"Copie impossible.",!s)):e==="wipe"?askWipe([t]):e==="delete"&&Re([t]))}function Ht(){if(!a("peopleGame"))return;V("people",Q),a("peopleGame").onchange=e=>{o.game=e.target.value,o.char=null,o.selected.clear(),a("charFilter").value="",C()},a("charFilter").oninput=ee,a("charFilter").onkeydown=e=>{if(e.key!=="Enter")return;const t=a("charList").querySelector("[data-char]");t&&t.click()},a("onlyWithCombos").onchange=e=>{o.onlyWithCombos=e.target.checked,ee(),oe()},a("charList").onclick=e=>{const t=e.target.closest("[data-char]");t&&(o.char=t.dataset.char,o.selected.clear(),C(),matchMedia("(max-width: 860px)").matches&&a("personTitle").scrollIntoView({behavior:"smooth",block:"start"}))},a("onlyFavorites").onchange=()=>{o.selected.clear(),C()},a("sortCombos").onchange=e=>{o.sort=e.target.value,C()},a("dnaFilter").onclick=e=>{const t=e.target.closest("[data-dnaf]");if(t){const n=t.dataset.dnaf;o.dnaFilter.has(n)?o.dnaFilter.delete(n):o.dnaFilter.add(n),C();return}e.target.closest("[data-dnaf-clear]")&&(o.dnaFilter.clear(),C())},a("newForPerson").onclick=()=>X(),a("search").oninput=B,a("search").onkeydown=e=>{e.key==="Escape"&&a("search").value&&(e.stopPropagation(),a("search").value="",B())},a("clearSearch").onclick=()=>{a("search").value="",B(),a("search").focus()},a("searchResults").onclick=e=>{const t=e.target.closest("[data-open]"),n=t&&L(t.dataset.open);n&&(o.game=n.game,o.char=n.character,o.focusId=n.id,a("search").value="",a("onlyFavorites").checked=!1,Q())},a("personCombos").onchange=e=>{var n;if(!e.target.matches("[data-select-combo]"))return;const t=e.target.dataset.selectCombo;e.target.checked?o.selected.add(t):o.selected.delete(t),(n=e.target.closest(".combo"))==null||n.classList.toggle("checked",e.target.checked),qe()},a("personCombos").onclick=e=>{if(e.target.closest("[data-keep-guest]")&&o.guestVideo){const cid=addVideoCombo("https://www.youtube.com/watch?v="+o.guestVideo,o.game,o.char);if(cid){o.watchId=cid;o.focusId=cid;o.guestVideo=null;C()}return}const t=e.target.closest("[data-empty]");if(t)return t.dataset.empty==="create"?X():j("import");const n=e.target.closest("[data-action]");n&&xt(n.dataset.action,n.dataset.id)},a("personDock")&&(a("personDock").onclick=e=>{const t=e.target.closest("[data-empty]");if(t)t.dataset.empty==="create"?X():j("import")}),a("bulkActions").onchange=e=>{e.target.id==="moveGame"&&Oe(e.target.value)},a("bulkActions").onclick=e=>{if(e.target.closest("#clearSelection"))o.selected.clear(),C();else if(e.target.closest("#selectAllCombos"))pe().forEach(t=>o.selected.add(t.id)),C();else if(e.target.closest("#moveSelected"))At();else if(e.target.closest("#reportSelected"))Re([...o.selected]);else if(e.target.closest("#wipeSelected"))askWipe([...o.selected])}}Ke();U();if(!window.__cdxBoot){window.__cdxBoot=1;try{Ht()}catch{}try{tt()}catch{}try{ct()}catch{}try{Lt()}catch{}try{vt()}catch{}}if(!window.CDX_ADMIN)j(o.tab);(async()=>{try{await loadWiki();try{migrateTokens()&&M()}catch{};try{const stored=(()=>{try{return siteFontId((JSON.parse(localStorage.getItem(Le))||{}).homeFont)}catch{return null}})();if(cdxIsPreview())applyHomeFont(stored||d.siteFont||homeFontId,!1);else if(d.siteFont)applyHomeFont(d.siteFont,!0);else applyHomeFont(stored||homeFontId)}catch{}}catch(e){console.warn("ComboDex wiki",e)}try{if(window.CDX_ADMIN&&atelierLive)renderAtelierDash()}catch{}try{Q()}catch{}try{if(o.tab==="compare")Y()}catch{}try{if(o.tab==="replay")raRender()}catch{}try{if(o.tab==="knowledge"&&window.CDX_KC)CDX_KC.render()}catch{}})();a("nav")&&a("nav").addEventListener("click",e=>{const t=e.target.closest("[data-tab]");t&&(t.dataset.tab==="knowledge"&&(o.kcView="hub"),j(t.dataset.tab))});const ye=["people","frames","compare","replay","create","import"];let lastCombo=null;document.addEventListener("mouseover",e=>{const t=e.target.closest("article.combo[data-combo]");t&&(lastCombo=t.dataset.combo)});document.addEventListener("keydown",e=>{if(!(e.ctrlKey||e.metaKey)||e.altKey||e.shiftKey||e.key.toLowerCase()!=="e"||Ie())return;e.preventDefault();const t=document.activeElement?.closest?.("article.combo[data-combo]")?.dataset.combo,n=pe(),s=[t,lastCombo].find(r=>r&&n.some(i=>i.id===r))||n[0]?.id;if(!s)return g(o.char?"Aucun combo à entraîner pour ce personnage.":"Choisis d’abord un personnage.",!0);o.tab!=="people"&&j("people"),gt(s)});document.addEventListener("keydown",e=>{Ie()||e.ctrlKey||e.metaKey||e.altKey||e.target.closest("input,textarea,select,[contenteditable]")||(ye[Number(e.key)-1]?j(ye[Number(e.key)-1]):e.key==="/"&&(e.preventDefault(),j("people"),a("search").focus()))});(async()=>{var e,t;try{await((t=(e=navigator.storage)==null?void 0:e.persist)==null?void 0:t.call(e))}catch{}})();const DUST="https://www.dustloop.com/wiki/api.php",SUPER="https://wiki.supercombo.gg/api.php",DREAM="https://dreamcancel.com/w/api.php",WAVU="https://wavu.wiki/w/api.php";
 const FT_SRC={
   ggst:{site:"Dustloop",api:DUST,table:"MoveData_GGST",page:"https://www.dustloop.com/w/GGST/",f:{input:"input",name:"name",type:"type",startup:"startup",active:"active",recovery:"recovery",damage:"damage",guard:"guard",onBlock:"onBlock",onHit:"onHit",invuln:"invuln",cancel:"cancel",notes:"notes",images:"images",hitboxes:"hitboxes"},
     alias:{"Anji":"Anji Mito","Axl":"Axl Low","Chipp":"Chipp Zanuff","Elphelt":"Elphelt Valentine","Goldlewis":"Goldlewis Dickinson","Jam":"Jam Kuradoberi","Ky":"Ky Kiske","Leo":"Leo Whitefang","Millia":"Millia Rage","Ramlethal":"Ramlethal Valentine","Sin":"Sin Kiske","Sol":"Sol Badguy","Jack-O'":"Jack-O","Bedman?":"Bedman","Asuka R#":"Asuka R"}},
@@ -3537,16 +3549,20 @@ window.addEventListener("storage",e=>{
     const old=JSON.parse(e.oldValue||"{}");
     if(isCdxTheme(u.theme))document.documentElement.dataset.theme=u.theme;
     const incoming=siteFontId(u.homeFont);
-    if(!incoming||incoming===old.homeFont||incoming===homeFontId)return;
+    if(!incoming||incoming===homeFontId)return;
+    if(cdxIsPreview()){applyHomeFont(incoming,!1);return}
+    if(incoming===old.homeFont)return;
     if(d.siteFont&&incoming!==d.siteFont)return;
     applyHomeFont(incoming);
   }catch{}
 });
 window.addEventListener("message",e=>{
   if(e.origin!==location.origin||!e.data||e.data.cdx!=="preview")return;
+  if(!cdxIsPreview())return;
   try{
-    const u=JSON.parse(localStorage.getItem(Le))||{};
-    if(isCdxTheme(u.theme))document.documentElement.dataset.theme=u.theme;
+    if(isCdxTheme(e.data.theme))document.documentElement.dataset.theme=e.data.theme;
+    const f=siteFontId(e.data.homeFont);
+    if(f){d.siteFont=f;applyHomeFont(f,!1)}
   }catch{}
 });
 try{if(window.CDX_ADMIN){try{atelierLive=localStorage.getItem(ATELIER_K)===ATELIER_S}catch{}atelierMark();if(!atelierLive)bindAtelierLogin()}else{atelierLive=!1;atelierMark()}const hb=a("homeBrand");if(hb)hb.onclick=()=>j("home");const hg=a("homeGrid");if(hg)hg.addEventListener("click",e=>{const v=e.target.closest("[data-kc-view]"),t=e.target.closest("[data-tab]");if(t&&t.dataset.tab==="knowledge")o.kcView=v?v.dataset.kcView:"hub";t&&j(t.dataset.tab)});const storedFont=(()=>{try{return siteFontId((JSON.parse(localStorage.getItem(Le))||{}).homeFont)}catch{return null}})();applyHomeFont(d.siteFont||storedFont||"stencil")}catch{}
