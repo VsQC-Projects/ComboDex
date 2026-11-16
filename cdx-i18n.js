@@ -118,6 +118,8 @@ fr:{
 ,"admin.theme.official":"Officielle"
 ,"admin.theme.dojo":"Dojo"
 ,"admin.theme.wood":"Bois"
+,"admin.theme.borne":"Borne"
+,"admin.theme.capsule":"Capsule"
 ,"admin.closed":"Console fermée."
 ,"admin.overview":"Tableau de bord"
 ,"admin.group.mod":"File d’attente"
@@ -300,6 +302,11 @@ fr:{
 ,"home.font.neon":"Néon"
 ,"home.font.silkscreen":"Silkscreen"
 ,"home.font.teko":"Teko"
+,"home.font.rampart":"Rempart"
+,"home.font.goldman":"Course"
+,"home.font.fugaz":"Affiche"
+,"home.font.mochiy":"Pop"
+,"home.font.wallpoet":"Muraille"
 ,"Combos · Frame data · Entraînement":"Combos · frames · entraînement"
 ,"Accueil":"Accueil"
 ,"Light Punch":"Direct léger","Medium Punch":"Direct moyen","Heavy Punch":"Direct fort","Light Kick":"Coup de pied léger","Medium Kick":"Coup de pied moyen","Heavy Kick":"Coup de pied fort","Punch":"Coup de poing","Kick":"Coup de pied","Slash":"Slash","Heavy Slash":"Heavy Slash","Dust":"Dust","Special":"Special","Special 1":"Special 1","Special 2":"Special 2"},
@@ -366,6 +373,11 @@ en:{
 "home.font.neon":"Neon",
 "home.font.silkscreen":"Silkscreen",
 "home.font.teko":"Teko",
+"home.font.rampart":"Rampart",
+"home.font.goldman":"Goldman",
+"home.font.fugaz":"Fugaz",
+"home.font.mochiy":"Pop",
+"home.font.wallpoet":"Wallpoet",
 "combo 1":"combo 1",
 "combo 2":"combo 2",
 "Crayon":"Pen",
@@ -487,6 +499,8 @@ en:{
 "admin.theme.official":"Official",
 "admin.theme.dojo":"Dojo",
 "admin.theme.wood":"Wood",
+"admin.theme.borne":"Cabinet",
+"admin.theme.capsule":"Capsule",
 "admin.closed":"Console closed.",
 "admin.overview":"Dashboard",
 "admin.group.mod":"Inbox",
@@ -843,6 +857,11 @@ es:{
 "home.font.neon":"Neón",
 "home.font.silkscreen":"Silkscreen",
 "home.font.teko":"Teko",
+"home.font.rampart":"Rampart",
+"home.font.goldman":"Goldman",
+"home.font.fugaz":"Fugaz",
+"home.font.mochiy":"Pop",
+"home.font.wallpoet":"Muro",
 "combo 1":"combo 1",
 "combo 2":"combo 2",
 "Crayon":"Lápiz",
@@ -964,6 +983,8 @@ es:{
 "admin.theme.official":"Oficial",
 "admin.theme.dojo":"Dojo",
 "admin.theme.wood":"Madera",
+"admin.theme.borne":"Recreativa",
+"admin.theme.capsule":"Cápsula",
 "admin.closed":"Consola cerrada.",
 "admin.overview":"Panel",
 "admin.group.mod":"Cola",

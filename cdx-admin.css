@@ -44,15 +44,15 @@ body.cdx-admin.is-atelier #atelierDash:not(.hidden){
   background:transparent;
   --admin-nav:220px;
   --admin-preview:40vw;
-  grid-template-columns:minmax(148px,var(--admin-nav)) 7px minmax(220px,1fr) 7px minmax(0,var(--admin-preview));
-  grid-template-rows:64px minmax(0,1fr) 40px;
+  grid-template-columns:var(--admin-nav,220px) 16px minmax(200px,1fr) 16px var(--admin-preview,40vw);
+  grid-template-rows:auto minmax(0,1fr) 40px;
   grid-template-areas:"head head head head head" "nav g1 work g2 preview" "foot foot foot foot foot";
 }
-body.cdx-admin.is-atelier #atelierDash.preview-off{
-  grid-template-columns:minmax(148px,var(--admin-nav)) 7px minmax(220px,1fr) 0 0;
+body.cdx-admin.is-atelier #atelierDash:not(.hidden).preview-off{
+  grid-template-columns:var(--admin-nav,220px) 16px minmax(200px,1fr) 0 0 !important;
 }
-body.cdx-admin.is-atelier #atelierDash.preview-off .admin-preview,
-body.cdx-admin.is-atelier #atelierDash.preview-off #adminGripPreview{display:none}
+body.cdx-admin.is-atelier #atelierDash:not(.hidden).preview-off .admin-preview,
+body.cdx-admin.is-atelier #atelierDash:not(.hidden).preview-off #adminGripPreview{display:none !important}
 body.cdx-admin.is-atelier .wrap{
   display:none;
   position:fixed;
@@ -166,8 +166,8 @@ body.cdx-admin .atelier-dash{
   z-index:24;
   --admin-nav:220px;
   --admin-preview:40vw;
-  grid-template-columns:minmax(148px,var(--admin-nav)) 7px minmax(220px,1fr) 7px minmax(0,var(--admin-preview));
-  grid-template-rows:64px minmax(0,1fr) 40px;
+  grid-template-columns:var(--admin-nav,220px) 16px minmax(200px,1fr) 16px var(--admin-preview,40vw);
+  grid-template-rows:auto minmax(0,1fr) 40px;
   grid-template-areas:"head head head head head" "nav g1 work g2 preview" "foot foot foot foot foot";
 }
 body.cdx-admin .atelier-grip-x,
@@ -178,9 +178,12 @@ body.cdx-admin .atelier-head{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:16px;
+  flex-wrap:wrap;
+  gap:10px 16px;
+  min-height:64px;
+  height:auto;
   cursor:default;
-  padding:0 24px;
+  padding:8px 24px;
   background:var(--admin-chrome);
   border-bottom:1px solid var(--admin-line);
   touch-action:auto;
@@ -192,6 +195,8 @@ body.cdx-admin .atelier-head b{
 body.cdx-admin .atelier-head-actions{
   display:flex;
   align-items:center;
+  flex-wrap:wrap;
+  justify-content:flex-end;
   gap:8px;
 }
 body.cdx-admin .admin-brandline{
@@ -282,30 +287,37 @@ body.cdx-admin .atelier-tree button.sel{
 body.cdx-admin .atelier-tree .leaf{padding-left:10px}
 body.cdx-admin .admin-grip{
   grid-area:g1;
-  width:7px;
-  min-width:7px;
+  width:16px;
+  min-width:16px;
   margin:0;
   padding:0;
   border:0;
   cursor:col-resize;
   touch-action:none;
   user-select:none;
-  background:transparent;
+  background:var(--admin-chrome);
   position:relative;
-  z-index:3;
+  z-index:12;
 }
 body.cdx-admin #adminGripPreview{grid-area:g2}
 body.cdx-admin .admin-grip::before{
   content:"";
   position:absolute;
-  inset:0 2px;
+  inset:8px 5px;
   border-radius:99px;
   background:var(--admin-line);
-  opacity:.7;
+  opacity:.85;
+  pointer-events:none;
+}
+body.cdx-admin .admin-grip::after{
+  content:"";
+  position:absolute;
+  inset:0 -10px;
 }
 body.cdx-admin .admin-grip:hover::before,
-body.cdx-admin .admin-grip:focus-visible::before{
-  inset:0 1px;
+body.cdx-admin .admin-grip:focus-visible::before,
+body.atelier-dragging .admin-grip::before{
+  inset:6px 4px;
   background:var(--admin-accent);
   opacity:1;
 }
@@ -314,8 +326,8 @@ body.cdx-admin .admin-grip:focus-visible{
   outline-offset:-2px;
 }
 body.atelier-dragging,
-body.atelier-dragging *{cursor:col-resize !important;user-select:none !important}
-body.atelier-dragging iframe{pointer-events:none}
+body.atelier-dragging *{cursor:col-resize !important;user-select:none !important;touch-action:none !important}
+body.atelier-dragging iframe{pointer-events:none !important}
 body.cdx-admin .atelier-work{
   grid-area:work;
   overflow:auto;
@@ -785,15 +797,15 @@ body.cdx-admin .admin-key{
   font-family:"Fira Code",ui-monospace,monospace;
   cursor:pointer;
 }
-@media(max-width:860px){
+@media(max-width:640px){
   body.cdx-admin.is-atelier #atelierDash:not(.hidden){
     grid-template-columns:1fr;
-    grid-template-rows:56px auto minmax(0,1fr) minmax(220px,38vh) 36px;
+    grid-template-rows:auto auto minmax(0,1fr) minmax(220px,38vh) 36px;
     grid-template-areas:"head" "nav" "work" "preview" "foot";
   }
-  body.cdx-admin.is-atelier #atelierDash.preview-off{
-    grid-template-columns:1fr;
-    grid-template-rows:56px auto minmax(0,1fr) 0 36px;
+  body.cdx-admin.is-atelier #atelierDash:not(.hidden).preview-off{
+    grid-template-columns:1fr !important;
+    grid-template-rows:auto auto minmax(0,1fr) 0 36px !important;
   }
   body.cdx-admin .admin-grip{display:none}
   body.cdx-admin .admin-preview{border-left:0;border-top:1px solid var(--admin-line)}
@@ -979,15 +991,99 @@ html[data-theme="wood"] body.cdx-admin .admin-themes button[aria-pressed="true"]
   color:#f6ead3;
   border-color:#2a1d12;
 }
-@media (max-width:1100px){
+html[data-theme="borne"] body.cdx-admin{
+  --admin-bg:#070b07;
+  --admin-chrome:#101610;
+  --admin-card:#141c14;
+  --admin-line:#2f5a2c;
+  --admin-ink:#d8ffd0;
+  --admin-muted:#7aa87a;
+  --admin-accent:#7cff6a;
+  --admin-accent2:#1c3a18;
+  --admin-input:#0a120a;
+  --admin-hover:#182418;
+  --admin-sel:#1e3a1c;
+  --admin-sel-ink:#7cff6a;
+  background:
+    repeating-linear-gradient(180deg,#0000 0 2px,#00000055 2px 3px),
+    radial-gradient(900px 480px at 50% -8%,#143018 0%,transparent 55%),
+    #070b07;
+  background-attachment:fixed;
+  color:var(--admin-ink);
+}
+html[data-theme="borne"] body.cdx-admin .atelier-head,
+html[data-theme="borne"] body.cdx-admin .atelier-tree,
+html[data-theme="borne"] body.cdx-admin .admin-foot{
+  background:var(--admin-chrome);
+  color:var(--admin-ink);
+  border-color:var(--admin-line);
+}
+html[data-theme="borne"] body.cdx-admin .atelier-tree button{color:var(--admin-ink)}
+html[data-theme="borne"] body.cdx-admin .atelier-tree button.sel{
+  background:var(--admin-sel);
+  color:var(--admin-sel-ink);
+  border-color:var(--admin-accent);
+}
+html[data-theme="borne"] body.cdx-admin .admin-themes button[aria-pressed="true"]{
+  background:#7cff6a;
+  color:#071007;
+  border-color:#7cff6a;
+}
+html[data-theme="capsule"] body.cdx-admin{
+  --admin-bg:#f3ead0;
+  --admin-chrome:#fffdf4;
+  --admin-card:#fffdf4;
+  --admin-line:#1a1a1a;
+  --admin-ink:#1a1a1a;
+  --admin-muted:#5c4a38;
+  --admin-accent:#d91f6a;
+  --admin-accent2:#0b8a86;
+  --admin-input:#fff8dc;
+  --admin-hover:#ffe08a;
+  --admin-sel:#0b8a86;
+  --admin-sel-ink:#fffdf4;
+  background:
+    repeating-linear-gradient(90deg,#0000 0 17px,#d91f6a14 17px 19px),
+    #f3ead0;
+  color:var(--admin-ink);
+}
+html[data-theme="capsule"] body.cdx-admin .atelier-head,
+html[data-theme="capsule"] body.cdx-admin .atelier-tree,
+html[data-theme="capsule"] body.cdx-admin .admin-foot{
+  background:var(--admin-chrome);
+  color:var(--admin-ink);
+  border-color:var(--admin-line);
+}
+html[data-theme="capsule"] body.cdx-admin .atelier-tree button{color:var(--admin-ink)}
+html[data-theme="capsule"] body.cdx-admin .atelier-tree button.sel{
+  background:var(--admin-sel);
+  color:var(--admin-sel-ink);
+  border-color:#1a1a1a;
+}
+html[data-theme="capsule"] body.cdx-admin .atelier-head,
+html[data-theme="capsule"] body.cdx-admin .atelier-tree,
+html[data-theme="capsule"] body.cdx-admin .admin-foot,
+html[data-theme="capsule"] body.cdx-admin .admin-section,
+html[data-theme="capsule"] body.cdx-admin .admin-card,
+html[data-theme="capsule"] body.cdx-admin .admin-task{
+  border-width:2px;
+  border-style:solid;
+  box-shadow:3px 3px 0 #d91f6a;
+}
+html[data-theme="capsule"] body.cdx-admin .admin-themes button[aria-pressed="true"]{
+  background:#d91f6a;
+  color:#fff;
+  border-color:#1a1a1a;
+}
+@media (max-width:1100px) and (min-width:641px){
   body.cdx-admin.is-atelier #atelierDash:not(.hidden),
   body.cdx-admin .atelier-dash{
-    grid-template-columns:minmax(132px,var(--admin-nav,200px)) 7px minmax(180px,1fr) 7px minmax(0,var(--admin-preview,34vw));
-    grid-template-rows:64px minmax(0,1fr) 40px;
+    grid-template-columns:var(--admin-nav,200px) 16px minmax(160px,1fr) 16px var(--admin-preview,34vw);
+    grid-template-rows:auto minmax(0,1fr) 40px;
     grid-template-areas:"head head head head head" "nav g1 work g2 preview" "foot foot foot foot foot";
   }
-  body.cdx-admin.is-atelier #atelierDash.preview-off{
-    grid-template-columns:minmax(132px,var(--admin-nav,200px)) 7px minmax(180px,1fr) 0 0;
+  body.cdx-admin.is-atelier #atelierDash:not(.hidden).preview-off{
+    grid-template-columns:var(--admin-nav,200px) 16px minmax(160px,1fr) 0 0 !important;
   }
 }
 @media(prefers-reduced-motion:reduce){

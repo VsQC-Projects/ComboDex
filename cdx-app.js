@@ -145,6 +145,7 @@ function wikiHeaders(extra){
 }
 function wikiApi(){return WIKI_URL}
 const SITE_ID="cdx-site";
+const CDX_THEMES=["official","wood","dojo","borne","capsule"];
 const HOME_FONTS={
   now:{f:"system-ui,-apple-system,\"Segoe UI\",sans-serif",l:".1em",w:"850",s:"clamp(52px,8.8vw,96px)"},
   pixel:{f:'"Press Start 2P",cursive',l:".06em",w:"400",s:"clamp(22px,4.8vw,44px)"},
@@ -155,8 +156,14 @@ const HOME_FONTS={
   russo:{f:'"Russo One",sans-serif',l:".04em",w:"400",s:"clamp(46px,8vw,88px)"},
   neon:{f:"Monoton,cursive",l:".06em",w:"400",s:"clamp(40px,7vw,78px)"},
   silkscreen:{f:"Silkscreen,sans-serif",l:".04em",w:"400",s:"clamp(28px,5.4vw,52px)"},
-  teko:{f:"Teko,sans-serif",l:".08em",w:"600",s:"clamp(54px,9vw,100px)"}
+  teko:{f:"Teko,sans-serif",l:".08em",w:"600",s:"clamp(54px,9vw,100px)"},
+  rampart:{f:'"Rampart One",sans-serif',l:".02em",w:"400",s:"clamp(40px,7.2vw,80px)"},
+  goldman:{f:"Goldman,sans-serif",l:".06em",w:"400",s:"clamp(42px,7.4vw,84px)"},
+  fugaz:{f:'"Fugaz One",sans-serif',l:".02em",w:"400",s:"clamp(44px,7.6vw,86px)"},
+  mochiy:{f:'"Mochiy Pop P One",sans-serif',l:".04em",w:"400",s:"clamp(34px,6.2vw,68px)"},
+  wallpoet:{f:"Wallpoet,sans-serif",l:".04em",w:"400",s:"clamp(36px,6.6vw,72px)"}
 };
+function isCdxTheme(n){return CDX_THEMES.indexOf(n)>=0}
 function siteFontId(v){return HOME_FONTS[v]?v:null}
 function wikiRow(c){
   const p=wikiStrip(c);
@@ -841,8 +848,31 @@ function askAtelier(after){
 }
 let atelierView="home",atelierTop=0,atelierW=0,atelierY=-1,atelierRefGame="";
 function atelierBoxApply(){if(window.CDX_ADMIN)return;const dash=a("atelierDash");if(!dash)return;if(atelierW){dash.style.width=atelierW+"px";document.body.style.setProperty("--at-w",atelierW+"px")}if(atelierY>=0){dash.style.top=atelierY+"px";dash.style.bottom="0";dash.style.height="auto"}}
-function atelierDrag(e,el,onMove){e.preventDefault();el.setPointerCapture(e.pointerId);const up=()=>{el.removeEventListener("pointermove",onMove);el.removeEventListener("pointerup",up);el.removeEventListener("pointercancel",up);document.body.classList.remove("atelier-dragging")};document.body.classList.add("atelier-dragging");el.addEventListener("pointermove",onMove);el.addEventListener("pointerup",up);el.addEventListener("pointercancel",up)}
-document.addEventListener("pointerdown",e=>{const gx=e.target.closest("#atelierGripX");if(gx){atelierDrag(e,gx,ev=>{atelierW=Math.round(Math.max(260,Math.min(innerWidth*.85,innerWidth-ev.clientX)));atelierBoxApply()});return}const hd=e.target.closest("#atelierDash .atelier-head");if(!hd||e.target.closest("button,a,input,select"))return;const dash=a("atelierDash"),off=e.clientY-dash.getBoundingClientRect().top;atelierDrag(e,hd,ev=>{atelierY=Math.round(Math.max(0,Math.min(innerHeight-hd.offsetHeight,ev.clientY-off)));atelierBoxApply()})});
+function atelierDrag(e,el,onMove,onEnd){
+  e.preventDefault();e.stopPropagation();
+  const pid=e.pointerId;
+  try{el.setPointerCapture(pid)}catch{}
+  document.body.classList.add("atelier-dragging");
+  const move=ev=>{if(ev.pointerId!==pid)return;ev.preventDefault();onMove(ev)};
+  const up=ev=>{
+    if(ev.pointerId!==pid)return;
+    document.removeEventListener("pointermove",move,true);
+    document.removeEventListener("pointerup",up,true);
+    document.removeEventListener("pointercancel",up,true);
+    try{el.releasePointerCapture(pid)}catch{}
+    document.body.classList.remove("atelier-dragging");
+    onEnd&&onEnd();
+  };
+  document.addEventListener("pointermove",move,true);
+  document.addEventListener("pointerup",up,true);
+  document.addEventListener("pointercancel",up,true);
+}
+document.addEventListener("pointerdown",e=>{
+  if(window.CDX_ADMIN)return;
+  const gx=e.target.closest("#atelierGripX");if(gx){atelierDrag(e,gx,ev=>{atelierW=Math.round(Math.max(260,Math.min(innerWidth*.85,innerWidth-ev.clientX)));atelierBoxApply()});return}
+  const hd=e.target.closest("#atelierDash .atelier-head");if(!hd||e.target.closest("button,a,input,select,.admin-grip"))return;
+  const dash=a("atelierDash"),off=e.clientY-dash.getBoundingClientRect().top;atelierDrag(e,hd,ev=>{atelierY=Math.round(Math.max(0,Math.min(innerHeight-hd.offsetHeight,ev.clientY-off)));atelierBoxApply()});
+});
 function atelierTopApply(){const bd=document.querySelector("#atelierDash .atelier-body");if(bd&&atelierTop)bd.style.setProperty("--at-top",atelierTop+"px")}
 document.addEventListener("pointerdown",e=>{const sp=e.target.closest("#atelierSplit");if(!sp)return;const bd=sp.parentElement;e.preventDefault();sp.setPointerCapture(e.pointerId);const mv=ev=>{const r=bd.getBoundingClientRect();atelierTop=Math.round(Math.max(60,Math.min(r.height-80,ev.clientY-r.top)));atelierTopApply()},up=()=>{sp.removeEventListener("pointermove",mv);sp.removeEventListener("pointerup",up);sp.removeEventListener("pointercancel",up)};sp.addEventListener("pointermove",mv);sp.addEventListener("pointerup",up);sp.addEventListener("pointercancel",up)});
 document.addEventListener("keydown",e=>{if(!e.target.closest||!e.target.closest("#atelierSplit")||(e.key!=="ArrowDown"&&e.key!=="ArrowUp"))return;e.preventDefault();const bd=e.target.parentElement,r=bd.getBoundingClientRect(),cur=atelierTop||bd.querySelector(".atelier-tree").getBoundingClientRect().height;atelierTop=Math.round(Math.max(60,Math.min(r.height-80,cur+(e.key==="ArrowDown"?24:-24))));atelierTopApply()});
@@ -904,7 +934,7 @@ function renderAtelierDashBody(){
         ${leaf("site",cdxT("atelier.tree.site"))}</div>`;
   if(window.CDX_ADMIN){
     const themeNow=document.documentElement.dataset.theme||"official";
-    const themeBtns=["official","dojo","wood"].map(id=>`<button type="button" data-admin-theme="${id}" aria-pressed="${themeNow===id?"true":"false"}">${l(cdxT("admin.theme."+id))}</button>`).join("");
+    const themeBtns=CDX_THEMES.map(id=>`<button type="button" data-admin-theme="${id}" aria-pressed="${themeNow===id?"true":"false"}">${l(cdxT("admin.theme."+id))}</button>`).join("");
     const head=`<div class="admin-brandline"><span class="admin-mark admin-mark-sm" aria-hidden="true">CD</span><span class="admin-brand-name">ComboDex</span><span class="admin-badge">${l(cdxT("admin.badge"))}</span></div><span class="atelier-head-actions"><div class="admin-themes" id="adminThemes" role="group" aria-label="${l(cdxT("admin.theme"))}">${themeBtns}</div><button type="button" class="tiny" id="adminPreviewToggle" aria-pressed="true">${l(cdxT("admin.preview.toggle"))}</button><span class="admin-session">${l(cdxT("admin.session"))}</span><a class="tiny" href="${l(atelierSiteHref())}">${l(cdxT("admin.site"))}</a><button type="button" class="tiny" id="atelierOut">${l(cdxT("admin.out"))}</button></span>`;
     if(!dash.dataset.shell){
       dash.dataset.shell="1";
@@ -923,6 +953,7 @@ function renderAtelierDashBody(){
               <button type="button" class="tiny" data-prev-size="pc" aria-pressed="true">${l(cdxT("admin.preview.pc"))}</button>
               <button type="button" class="tiny" data-prev-size="phone" aria-pressed="false">${l(cdxT("admin.preview.phone"))}</button>
               <button type="button" class="tiny" id="adminPreviewReload">${l(cdxT("admin.preview.reload"))}</button>
+              <button type="button" class="tiny" data-preview-hide>${l(cdxT("admin.preview.hide"))}</button>
               <a class="tiny" id="adminPreviewOpen" href="index.html" target="_blank" rel="noopener">${l(cdxT("admin.preview.open"))}</a>
             </span>
           </header>
@@ -1002,13 +1033,6 @@ function renderAtelierDashBody(){
     }
     atelierPreviewPing();
   };
-  const tog=a("adminPreviewToggle");
-  if(tog)tog.onclick=()=>{
-    const off=!adminLayout().previewOff;
-    saveAdminLayout({previewOff:off});
-    applyAdminLayout();
-    if(!off)atelierPreviewSync();
-  };
   const go=a("atelierXGo");if(go)go.onclick=()=>saveXOk((a("atelierX")||{}).value);
   const goRefs=a("atelierGoRefs");if(goRefs)goRefs.onclick=()=>{atelierView="refs";renderAtelierDash()};
   bindAtelierRefs();
@@ -1037,32 +1061,47 @@ function saveAdminLayout(patch){
     localStorage.setItem(Le,JSON.stringify(u));
   }catch{}
 }
-function applyAdminLayout(){
+function applyAdminLayout(live){
   const dash=a("atelierDash");if(!dash||!window.CDX_ADMIN)return;
-  const L=adminLayout();
+  const L={...adminLayout(),...live||{}};
   const nav=Math.max(148,Math.min(420,L.nav||220));
   const off=!!L.previewOff;
-  const prev=off?0:Math.max(200,Math.min(Math.round(innerWidth*.72),L.preview||Math.round(innerWidth*.4)));
+  const prev=off?0:Math.max(220,Math.min(Math.round(innerWidth*.72),L.preview||Math.round(innerWidth*.4)));
   dash.style.setProperty("--admin-nav",nav+"px");
   dash.style.setProperty("--admin-preview",prev+"px");
   dash.classList.toggle("preview-off",off);
+  const pane=a("adminPreviewPane");if(pane)pane.hidden=off;
+  const g2=a("adminGripPreview");if(g2)g2.hidden=off;
   const tog=a("adminPreviewToggle");
   if(tog){
     tog.setAttribute("aria-pressed",off?"false":"true");
     tog.textContent=l(cdxT(off?"admin.preview.show":"admin.preview.hide"));
   }
 }
+function toggleAdminPreview(force){
+  const off=force==null?!a("atelierDash")?.classList.contains("preview-off"):!!force;
+  saveAdminLayout({previewOff:off});
+  applyAdminLayout();
+  if(!off)atelierPreviewSync();
+}
 function bindAdminLayout(){
   const dash=a("atelierDash");if(!dash||dash.dataset.layoutBound)return;
   dash.dataset.layoutBound="1";
   applyAdminLayout();
+  dash.addEventListener("click",e=>{
+    if(!e.target.closest("#adminPreviewToggle,[data-preview-hide]"))return;
+    e.preventDefault();
+    toggleAdminPreview();
+  });
   const navG=a("adminGripNav"),prevG=a("adminGripPreview");
   if(navG){
     navG.addEventListener("pointerdown",e=>{
       atelierDrag(e,navG,ev=>{
         const r=dash.getBoundingClientRect();
-        saveAdminLayout({nav:Math.round(Math.max(148,Math.min(420,ev.clientX-r.left)))});
-        applyAdminLayout();
+        applyAdminLayout({nav:Math.round(Math.max(148,Math.min(420,ev.clientX-r.left)))});
+      },()=>{
+        const n=parseInt(dash.style.getPropertyValue("--admin-nav"),10);
+        if(n)saveAdminLayout({nav:n});
       });
     });
     navG.addEventListener("keydown",e=>{
@@ -1076,15 +1115,17 @@ function bindAdminLayout(){
     prevG.addEventListener("pointerdown",e=>{
       atelierDrag(e,prevG,ev=>{
         const r=dash.getBoundingClientRect();
-        saveAdminLayout({preview:Math.round(Math.max(200,Math.min(r.width*.72,r.right-ev.clientX))),previewOff:!1});
-        applyAdminLayout();
+        applyAdminLayout({preview:Math.round(Math.max(220,Math.min(r.width*.72,r.right-ev.clientX))),previewOff:!1});
+      },()=>{
+        const p=parseInt(dash.style.getPropertyValue("--admin-preview"),10);
+        if(p)saveAdminLayout({preview:p,previewOff:!1});
       });
     });
     prevG.addEventListener("keydown",e=>{
       if(e.key!=="ArrowLeft"&&e.key!=="ArrowRight")return;
       e.preventDefault();
       const cur=adminLayout().preview||Math.round(innerWidth*.4);
-      saveAdminLayout({preview:Math.round(Math.max(200,Math.min(innerWidth*.72,cur+(e.key==="ArrowLeft"?16:-16)))),previewOff:!1});
+      saveAdminLayout({preview:Math.round(Math.max(220,Math.min(innerWidth*.72,cur+(e.key==="ArrowLeft"?16:-16)))),previewOff:!1});
       applyAdminLayout();
     });
   }
@@ -3494,7 +3535,7 @@ window.addEventListener("storage",e=>{
   try{
     const u=JSON.parse(e.newValue||"{}");
     const old=JSON.parse(e.oldValue||"{}");
-    if(u.theme==="wood"||u.theme==="dojo"||u.theme==="official")document.documentElement.dataset.theme=u.theme;
+    if(isCdxTheme(u.theme))document.documentElement.dataset.theme=u.theme;
     const incoming=siteFontId(u.homeFont);
     if(!incoming||incoming===old.homeFont||incoming===homeFontId)return;
     if(d.siteFont&&incoming!==d.siteFont)return;
@@ -3505,7 +3546,7 @@ window.addEventListener("message",e=>{
   if(e.origin!==location.origin||!e.data||e.data.cdx!=="preview")return;
   try{
     const u=JSON.parse(localStorage.getItem(Le))||{};
-    if(u.theme==="wood"||u.theme==="dojo"||u.theme==="official")document.documentElement.dataset.theme=u.theme;
+    if(isCdxTheme(u.theme))document.documentElement.dataset.theme=u.theme;
   }catch{}
 });
 try{if(window.CDX_ADMIN){try{atelierLive=localStorage.getItem(ATELIER_K)===ATELIER_S}catch{}atelierMark();if(!atelierLive)bindAtelierLogin()}else{atelierLive=!1;atelierMark()}const hb=a("homeBrand");if(hb)hb.onclick=()=>j("home");const hg=a("homeGrid");if(hg)hg.addEventListener("click",e=>{const v=e.target.closest("[data-kc-view]"),t=e.target.closest("[data-tab]");if(t&&t.dataset.tab==="knowledge")o.kcView=v?v.dataset.kcView:"hub";t&&j(t.dataset.tab)});const storedFont=(()=>{try{return siteFontId((JSON.parse(localStorage.getItem(Le))||{}).homeFont)}catch{return null}})();applyHomeFont(d.siteFont||storedFont||"stencil")}catch{}
