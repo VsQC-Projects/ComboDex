@@ -155,6 +155,16 @@ fr:{
 ,"admin.stats.pop.off":"Pas de données de matchmaking."
 ,"search.chars":"Personnages"
 ,"dock.mastery":"Maîtrise"
+,"ra.pan":"Pan"
+,"ra.zoom.reset":"1:1"
+,"ra.redo":"Rétablir"
+,"ra.track.all":"Toutes les pistes"
+,"ra.track.neutral":"Neutral"
+,"ra.track.punish":"Punish"
+,"ra.track.okizeme":"Okizeme"
+,"ra.track.mix":"Mix"
+,"ra.track.convert":"Convert"
+,"ra.track.defense":"Defense"
 ,"import.preview.hint":"Les lignes déjà présentes ou en double dans le collage sont décochées."
 ,"import.dup":"doublon du collage"
 ,"import.blocked":"Ce wiki refuse la lecture automatique. Aucun combo ajouté. Colle les combos ou importe un fichier HTML."
@@ -583,6 +593,16 @@ en:{
 "admin.stats.pop.off":"No matchmaking data.",
 "search.chars":"Characters",
 "dock.mastery":"Mastery",
+"ra.pan":"Pan",
+"ra.zoom.reset":"1:1",
+"ra.redo":"Redo",
+"ra.track.all":"All tracks",
+"ra.track.neutral":"Neutral",
+"ra.track.punish":"Punish",
+"ra.track.okizeme":"Okizeme",
+"ra.track.mix":"Mix",
+"ra.track.convert":"Convert",
+"ra.track.defense":"Defense",
 "import.preview.hint":"Rows already in the library or duplicated in the paste are unchecked.",
 "import.dup":"duplicate in paste",
 "import.blocked":"This wiki blocks automatic reading. No combo added. Paste the combos or import an HTML file.",
@@ -1114,6 +1134,16 @@ es:{
 "admin.stats.pop.off":"Sin datos de matchmaking.",
 "search.chars":"Personajes",
 "dock.mastery":"Maestría",
+"ra.pan":"Pan",
+"ra.zoom.reset":"1:1",
+"ra.redo":"Rehacer",
+"ra.track.all":"Todas las pistas",
+"ra.track.neutral":"Neutral",
+"ra.track.punish":"Punish",
+"ra.track.okizeme":"Okizeme",
+"ra.track.mix":"Mix",
+"ra.track.convert":"Convert",
+"ra.track.defense":"Defense",
 "import.preview.hint":"Las líneas ya presentes o duplicadas en el pegado quedan desmarcadas.",
 "import.dup":"duplicado del pegado",
 "import.blocked":"Esta wiki bloquea la lectura automática. No se añadió ningún combo. Pega los combos o importa un HTML.",

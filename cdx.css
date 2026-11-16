@@ -64,6 +64,12 @@ main{flex:1 1 auto;padding-bottom:0}
 .id-head h2{margin:0}
 .ra-ids .save-combo{flex:none;padding:10px 16px;font-size:14px}
 .ra-stage.is-flip .ra-ink,.ra-stage.is-flip .ra-ghosts{transform:scaleX(-1)}
+.ra-layer{position:absolute;inset:0;z-index:2;transform-origin:0 0;pointer-events:none}
+.ra-layer .ra-ink,.ra-layer .ra-text{pointer-events:auto}
+.ra-stage[data-tool=play] .ra-layer .ra-ink{pointer-events:none}
+.ra-stage[data-tool=pan] .ra-ink{cursor:grab}
+.ra-stage[data-tool=pan] .ra-ink:active{cursor:grabbing}
+.ra-layer-tools{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-left:auto}
 .ra-ghosts{position:absolute;inset:0;z-index:3;pointer-events:none}
 .ra-ghost{position:absolute;max-width:42%;padding:6px 10px;border-radius:7px;background:#f6e7a3;color:#1a160c;font-size:13px;font-weight:800;line-height:1.25;border:2px solid #2c2614;box-shadow:0 4px 16px #000c;white-space:pre-wrap;transform:translate(-20%,-30%)}
 .ra-empty{position:absolute;inset:0;z-index:5;margin:0;border:0;min-height:100%;display:grid;place-items:center;background:#07070cee}

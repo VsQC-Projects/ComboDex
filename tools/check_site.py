@@ -185,6 +185,10 @@ def main():
         fail("raMakePlayer missing — Replay player must stay")
     if "function raBindFloat" not in app:
         fail("raBindFloat missing")
+    if 'id="raLayer"' not in html:
+        fail("Replay analysis layer missing")
+    if "function ytIframe" in app and "raMakePlayer" in app and "function raCmd" not in app:
+        fail("raCmd must stay")
 
     allowed = {
         "combo-dex-final-v1",
