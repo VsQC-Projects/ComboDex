@@ -1,0 +1,25 @@
+name: PNG authentic source research (15 per game)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install collector dependencies
+        run: npm install --prefix tools/png-collector --no-audit --no-fund
+      - name: Collect and verify candidates
+        run: node tools/png-collector/collect.mjs
+      - name: Upload results for human review
+        uses: actions/upload-artifact@v4
+        with:
+          name: combodex-png-candidates
+          path: combodex-png-candidats/
+          if-no-files-found: error
+          retention-days: 14
