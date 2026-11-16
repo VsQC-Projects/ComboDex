@@ -98,6 +98,12 @@ fr:{
 ,"admin.gate.lead":"Espace réservé à l’administrateur. Clef requise pour ouvrir la console ComboDex, importer des PNG et régler les références."
 ,"admin.back":"Retour à ComboDex"
 ,"admin.site":"Ouvrir ComboDex"
+,"admin.preview":"Aperçu ComboDex"
+,"admin.preview.hint":"Les jauges, la police et le thème se voient ici tout de suite, sans quitter la console."
+,"admin.preview.reload":"Actualiser"
+,"admin.preview.pc":"PC"
+,"admin.preview.phone":"Mobile"
+,"admin.preview.open":"Nouvel onglet"
 ,"admin.out":"Fermer la session"
 ,"admin.theme":"Thème"
 ,"admin.theme.official":"Officielle"
@@ -113,7 +119,7 @@ fr:{
 ,"admin.group.content.lead":"Roster, palettes, import wiki et Replay Analyzer."
 ,"admin.group.site":"Site"
 ,"admin.group.site.lead":"Apparence publique et aperçu du wiki."
-,"admin.dash.lead":"Chaque carte est une tâche séparée. Rien n’est mélangé : tu ouvres une file, tu la traites, tu reviens ici."
+,"admin.dash.lead":"À droite : aperçu live de ComboDex. À gauche : une tâche à la fois. Les jauges et la police s’y voient tout de suite."
 ,"admin.combos":"Combos publics"
 ,"admin.waiting":"En attente"
 ,"admin.refs.lib":"Références"
@@ -452,6 +458,12 @@ en:{
 "admin.gate.lead":"Reserved for the administrator. The key is required to open ComboDex Console, import PNGs and adjust references.",
 "admin.back":"Back to ComboDex",
 "admin.site":"Open ComboDex",
+"admin.preview":"ComboDex preview",
+"admin.preview.hint":"Gauges, typeface and theme show up here immediately, without leaving the console.",
+"admin.preview.reload":"Refresh",
+"admin.preview.pc":"Desktop",
+"admin.preview.phone":"Mobile",
+"admin.preview.open":"New tab",
 "admin.out":"End session",
 "admin.theme":"Theme",
 "admin.theme.official":"Official",
@@ -467,7 +479,7 @@ en:{
 "admin.group.content.lead":"Roster, palettes, wiki import and Replay Analyzer.",
 "admin.group.site":"Site",
 "admin.group.site.lead":"Public look and wiki overview.",
-"admin.dash.lead":"Each card is a separate task. Nothing is mixed: open a queue, handle it, come back here.",
+"admin.dash.lead":"On the right: a live ComboDex preview. On the left: one task at a time. Gauges and typeface show up immediately.",
 "admin.combos":"Public combos",
 "admin.waiting":"Waiting",
 "admin.refs.lib":"References",
@@ -914,6 +926,12 @@ es:{
 "admin.gate.lead":"Espacio reservado al administrador. Hace falta la clave para abrir la consola ComboDex, importar PNG y ajustar las referencias.",
 "admin.back":"Volver a ComboDex",
 "admin.site":"Abrir ComboDex",
+"admin.preview":"Vista previa de ComboDex",
+"admin.preview.hint":"Las barras, la fuente y el tema se ven aquí al momento, sin salir de la consola.",
+"admin.preview.reload":"Actualizar",
+"admin.preview.pc":"PC",
+"admin.preview.phone":"Móvil",
+"admin.preview.open":"Nueva pestaña",
 "admin.out":"Cerrar la sesión",
 "admin.theme":"Tema",
 "admin.theme.official":"Oficial",
@@ -929,7 +947,7 @@ es:{
 "admin.group.content.lead":"Roster, paletas, importación wiki y Replay Analyzer.",
 "admin.group.site":"Sitio",
 "admin.group.site.lead":"Apariencia pública y vista del wiki.",
-"admin.dash.lead":"Cada tarjeta es una tarea aparte. Nada se mezcla: abres una cola, la tratas, vuelves aquí.",
+"admin.dash.lead":"A la derecha: vista previa en vivo de ComboDex. A la izquierda: una tarea cada vez. Las barras y la fuente se ven al momento.",
 "admin.combos":"Combos públicos",
 "admin.waiting":"En espera",
 "admin.refs.lib":"Referencias",

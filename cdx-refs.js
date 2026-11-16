@@ -598,7 +598,20 @@ function init() {
   }).observe(main, {subtree: true, childList: true, attributes: true, attributeFilter: ["class"]});
   addEventListener("resize", () => schedule(300));
   addEventListener("hashchange", () => schedule(120));
-  addEventListener("storage", e => { if (e.key === UI_KEY) { rebuildPlan(); schedule(80); } });
+  addEventListener("storage", e => {
+    if (e.key !== UI_KEY) return;
+    const u = readUI();
+    if (u.theme && THEMES.includes(u.theme) && document.documentElement.dataset.theme !== u.theme) {
+      document.documentElement.dataset.theme = u.theme;
+    }
+    rebuildPlan();
+    schedule(80);
+  });
+  addEventListener("message", e => {
+    if (e.origin !== location.origin || !e.data || e.data.cdx !== "preview") return;
+    rebuildPlan();
+    schedule(40);
+  });
   window.addEventListener("cdx-lang", () => { labelSwitch(); placed.forEach(p => (p.img.title = `${label(p.it)} · ${gameName(p.it.g)}`)); if (game) renderPanel(game.end ? "found" : ""); });
   (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => schedule(300));
 }

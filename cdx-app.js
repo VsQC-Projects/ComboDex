@@ -799,7 +799,7 @@ function atelierMark(){
   const dash=a("atelierDash");if(dash)dash.classList.toggle("hidden",!on);
   const gate=a("adminGate");if(gate)gate.classList.toggle("hidden",atelierLive);
 }
-function atelierForget(){atelierLive=!1;try{localStorage.removeItem(ATELIER_K)}catch{}try{document.body.classList.remove("admin-embed")}catch{}atelierMark();const dash=a("atelierDash");if(dash)dash.innerHTML=""}
+function atelierForget(){atelierLive=!1;try{localStorage.removeItem(ATELIER_K)}catch{}try{document.body.classList.remove("admin-embed")}catch{}atelierMark();const dash=a("atelierDash");if(dash){dash.innerHTML="";delete dash.dataset.shell}}
 async function atelierHash(s){const buf=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(String(s||"").trim()));return[...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,"0")).join("")}
 function atelierAdminUrl(){try{return new URL("console.html",location.href).href}catch{return"console.html"}}
 function atelierSiteHref(hash){try{return new URL("index.html"+(hash||""),location.href).href}catch{return"index.html"+(hash||"")}}
@@ -827,7 +827,7 @@ function askAtelier(after){
   bindAtelierLogin(after);
 }
 let atelierView="home",atelierTop=0,atelierW=0,atelierY=-1,atelierRefGame="";
-function atelierBoxApply(){const dash=a("atelierDash");if(!dash)return;if(atelierW){dash.style.width=atelierW+"px";document.body.style.setProperty("--at-w",atelierW+"px")}if(atelierY>=0){dash.style.top=atelierY+"px";dash.style.bottom="0";dash.style.height="auto"}}
+function atelierBoxApply(){if(window.CDX_ADMIN)return;const dash=a("atelierDash");if(!dash)return;if(atelierW){dash.style.width=atelierW+"px";document.body.style.setProperty("--at-w",atelierW+"px")}if(atelierY>=0){dash.style.top=atelierY+"px";dash.style.bottom="0";dash.style.height="auto"}}
 function atelierDrag(e,el,onMove){e.preventDefault();el.setPointerCapture(e.pointerId);const up=()=>{el.removeEventListener("pointermove",onMove);el.removeEventListener("pointerup",up);el.removeEventListener("pointercancel",up);document.body.classList.remove("atelier-dragging")};document.body.classList.add("atelier-dragging");el.addEventListener("pointermove",onMove);el.addEventListener("pointerup",up);el.addEventListener("pointercancel",up)}
 document.addEventListener("pointerdown",e=>{const gx=e.target.closest("#atelierGripX");if(gx){atelierDrag(e,gx,ev=>{atelierW=Math.round(Math.max(260,Math.min(innerWidth*.85,innerWidth-ev.clientX)));atelierBoxApply()});return}const hd=e.target.closest("#atelierDash .atelier-head");if(!hd||e.target.closest("button,a,input,select"))return;const dash=a("atelierDash"),off=e.clientY-dash.getBoundingClientRect().top;atelierDrag(e,hd,ev=>{atelierY=Math.round(Math.max(0,Math.min(innerHeight-hd.offsetHeight,ev.clientY-off)));atelierBoxApply()})});
 function atelierTopApply(){const bd=document.querySelector("#atelierDash .atelier-body");if(bd&&atelierTop)bd.style.setProperty("--at-top",atelierTop+"px")}
@@ -892,10 +892,36 @@ function renderAtelierDashBody(){
   if(window.CDX_ADMIN){
     const themeNow=document.documentElement.dataset.theme||"official";
     const themeBtns=["official","dojo","wood"].map(id=>`<button type="button" data-admin-theme="${id}" aria-pressed="${themeNow===id?"true":"false"}">${l(cdxT("admin.theme."+id))}</button>`).join("");
-    dash.innerHTML=`<div class="atelier-head"><div class="admin-brandline"><span class="admin-mark admin-mark-sm" aria-hidden="true">CD</span><span class="admin-brand-name">ComboDex</span><span class="admin-badge">${l(cdxT("admin.badge"))}</span></div><span class="atelier-head-actions"><div class="admin-themes" id="adminThemes" role="group" aria-label="${l(cdxT("admin.theme"))}">${themeBtns}</div><span class="admin-session">${l(cdxT("admin.session"))}</span><a class="tiny" href="${l(atelierSiteHref())}">${l(cdxT("admin.site"))}</a><button type="button" class="tiny" id="atelierOut">${l(cdxT("admin.out"))}</button></span></div>
-      <nav class="atelier-tree" id="atelierTree" aria-label="${l(cdxT("admin.title"))}">${treeNav}</nav>
-      <div class="atelier-work" id="atelierWork">${work}</div>
-      <div class="admin-foot"><span>CRÉÉ PAR VSQC</span><span>${l(cdxT("admin.title"))}</span></div>`;
+    const head=`<div class="admin-brandline"><span class="admin-mark admin-mark-sm" aria-hidden="true">CD</span><span class="admin-brand-name">ComboDex</span><span class="admin-badge">${l(cdxT("admin.badge"))}</span></div><span class="atelier-head-actions"><div class="admin-themes" id="adminThemes" role="group" aria-label="${l(cdxT("admin.theme"))}">${themeBtns}</div><span class="admin-session">${l(cdxT("admin.session"))}</span><a class="tiny" href="${l(atelierSiteHref())}">${l(cdxT("admin.site"))}</a><button type="button" class="tiny" id="atelierOut">${l(cdxT("admin.out"))}</button></span>`;
+    if(!dash.dataset.shell){
+      dash.dataset.shell="1";
+      dash.innerHTML=`<div class="atelier-head" id="adminHead"></div>
+        <nav class="atelier-tree" id="atelierTree" aria-label="${l(cdxT("admin.title"))}"></nav>
+        <div class="atelier-work" id="atelierWork"></div>
+        <aside class="admin-preview" id="adminPreviewPane">
+          <header class="admin-preview-h">
+            <div>
+              <p class="admin-kicker">${l(cdxT("admin.preview"))}</p>
+              <b>${l(cdxT("admin.preview"))}</b>
+            </div>
+            <span class="admin-preview-acts">
+              <button type="button" class="tiny" data-prev-size="pc" aria-pressed="true">${l(cdxT("admin.preview.pc"))}</button>
+              <button type="button" class="tiny" data-prev-size="phone" aria-pressed="false">${l(cdxT("admin.preview.phone"))}</button>
+              <button type="button" class="tiny" id="adminPreviewReload">${l(cdxT("admin.preview.reload"))}</button>
+              <a class="tiny" id="adminPreviewOpen" href="index.html" target="_blank" rel="noopener">${l(cdxT("admin.preview.open"))}</a>
+            </span>
+          </header>
+          <p class="muted small admin-preview-hint">${l(cdxT("admin.preview.hint"))}</p>
+          <div class="admin-preview-stage" id="adminPreviewStage" data-size="pc">
+            <iframe id="adminPreview" title="${l(cdxT("admin.preview"))}" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"></iframe>
+          </div>
+        </aside>
+        <div class="admin-foot"><span>CRÉÉ PAR VSQC</span><span>${l(cdxT("admin.title"))}</span></div>`;
+      bindAdminPreview();
+    }
+    const hd=a("adminHead");if(hd)hd.innerHTML=head;
+    const treeEl=a("atelierTree");if(treeEl)treeEl.innerHTML=treeNav;
+    const workEl=a("atelierWork");if(workEl)workEl.innerHTML=work;
   }else{
     dash.innerHTML=`<div class="atelier-grip-x" id="atelierGripX" role="separator" aria-orientation="vertical"></div><div class="atelier-head"><b>${l(cdxT("atelier.dash"))}</b><button type="button" class="tiny" id="atelierOut">${l(cdxT("Fermer l’atelier"))}</button></div>
     <div class="atelier-bell" id="atelierBell">${bell||`<span class="muted small">${l(cdxT("atelier.notif.none"))}</span>`}</div>
@@ -957,6 +983,7 @@ function renderAtelierDashBody(){
       try{const u=JSON.parse(localStorage.getItem("combo-dex-ui-v1"))||{};u.theme=name;localStorage.setItem("combo-dex-ui-v1",JSON.stringify(u))}catch{}
       themes.querySelectorAll("[data-admin-theme]").forEach(x=>x.setAttribute("aria-pressed",x.dataset.adminTheme===name?"true":"false"));
     }
+    atelierPreviewPing();
   };
   const go=a("atelierXGo");if(go)go.onclick=()=>saveXOk((a("atelierX")||{}).value);
   const goRefs=a("atelierGoRefs");if(goRefs)goRefs.onclick=()=>{atelierView="refs";renderAtelierDash()};
@@ -966,12 +993,53 @@ function renderAtelierDashBody(){
   try{atelierEmbed()}catch{}
   try{hydratePortraits()}catch{}
 }
-const ADMIN_EMBED={import:"import",replay:"replay",create:"create"};
+function adminPreviewHash(){
+  if(atelierView==="replay")return"#/replay";
+  if(atelierView==="import")return"#/import";
+  if(atelierView==="font"||atelierView==="site"||atelierView==="home")return"#/home";
+  const g=atelierView==="refs"?(atelierRefGame||o.game):o.game;
+  if((atelierView==="refs"||atelierView==="people"||atelierView==="portraits"||atelierView==="keys")&&g){
+    const ch=o.char||((T(g)[0]||{}).name)||"";
+    return"#/"+encodeURIComponent(g)+(ch?"/"+encodeURIComponent(ch):"");
+  }
+  return"#/home";
+}
+function bindAdminPreview(){
+  const pane=a("adminPreviewPane");if(!pane||pane.dataset.bound)return;
+  pane.dataset.bound="1";
+  pane.addEventListener("click",e=>{
+    const sz=e.target.closest("[data-prev-size]");
+    if(sz){
+      const stage=a("adminPreviewStage");
+      if(stage)stage.dataset.size=sz.dataset.prevSize;
+      pane.querySelectorAll("[data-prev-size]").forEach(b=>b.setAttribute("aria-pressed",b===sz?"true":"false"));
+      return;
+    }
+    if(e.target.closest("#adminPreviewReload"))atelierPreviewSync(!0);
+  });
+}
+function atelierPreviewSync(force){
+  if(!window.CDX_ADMIN)return;
+  const frame=a("adminPreview"),open=a("adminPreviewOpen");
+  if(!frame)return;
+  if(!atelierLive){frame.removeAttribute("src");return}
+  const hash=adminPreviewHash(),url=atelierSiteHref(hash);
+  if(open)open.href=url;
+  const cur=frame.getAttribute("src")||"";
+  const same=cur&&cur.split("#")[0]===url.split("#")[0];
+  if(force||!cur||!same){frame.src=url;return}
+  try{
+    if(frame.contentWindow&&frame.contentWindow.location.hash!==hash)frame.contentWindow.location.hash=hash;
+  }catch{frame.src=url}
+}
+function atelierPreviewPing(){
+  const frame=a("adminPreview");
+  try{frame&&frame.contentWindow&&frame.contentWindow.postMessage({cdx:"preview"},location.origin)}catch{}
+}
 function atelierEmbed(){
   if(!window.CDX_ADMIN)return;
-  const tab=ADMIN_EMBED[atelierView];
-  document.body.classList.toggle("admin-embed",!!tab);
-  if(tab)try{j(tab)}catch{}
+  document.body.classList.remove("admin-embed");
+  atelierPreviewSync();
 }
 function atelierTask(title,lead,body){
   return `<header class="admin-task-head"><p class="admin-kicker">${l(cdxT("admin.title"))}</p><h3>${l(title)}</h3><p class="admin-help">${l(lead)}</p></header>${body}`;
@@ -1122,7 +1190,9 @@ function atelierRefsHtml(){
       <p class="muted small">${l(cdxT("atelier.refs.catalog")).replace("{0}",cat).replace("{1}",builtin).replace("{2}",wikiN)}</p>
       ${lib}
     </div>
+    <div class="admin-card">
     <h4>${l(cdxT("atelier.refs.global"))}</h4>
+    <div class="admin-ref-gauges">
     ${atelierRefRow("perGame",cfg.perGame,0,mx.perGame)}
     ${atelierRefRow("peopleDesktop",cfg.peopleDesktop,0,mx.peopleDesktop)}
     ${atelierRefRow("peopleMobile",cfg.peopleMobile,0,mx.peopleMobile)}
@@ -1131,9 +1201,13 @@ function atelierRefsHtml(){
     ${atelierRefRow("logoPc",cfg.logoPc,0,mx.logoPc)}
     ${atelierRefRow("gap",cfg.gap,0,mx.gap)}
     ${atelierRefRow("tries",cfg.tries,80,mx.tries)}
+    </div>
     <div class="atelier-ref-actions"><button type="button" class="primary tiny" id="atelierRefsApply">${l(cdxT("atelier.refs.apply"))}</button><button type="button" class="tiny" id="atelierRefsReset">${l(cdxT("atelier.refs.reset"))}</button></div>
+    </div>
+    <div class="admin-card">
     <h4>${l(cdxT("atelier.refs.game"))}</h4>
     <p class="muted small">${l(cdxT("atelier.refs.game.hint"))}</p>
+    <div class="admin-ref-gauges">
     ${atelierRefRow("perGame",gVal("perGame"),0,mx.perGame,`data-ref-game="perGame"`,"g.perGame")}
     ${atelierRefRow("peopleDesktop",gVal("peopleDesktop"),0,mx.peopleDesktop,`data-ref-game="peopleDesktop"`,"g.peopleDesktop")}
     ${atelierRefRow("peopleMobile",gVal("peopleMobile"),0,mx.peopleMobile,`data-ref-game="peopleMobile"`,"g.peopleMobile")}
@@ -1141,15 +1215,17 @@ function atelierRefsHtml(){
     ${atelierRefRow("footerMobile",gVal("footerMobile"),0,mx.footerMobile,`data-ref-game="footerMobile"`,"g.footerMobile")}
     ${atelierRefRow("logoPc",gVal("logoPc"),0,mx.logoPc,`data-ref-game="logoPc"`,"g.logoPc")}
     ${atelierRefRow("gap",gVal("gap"),0,mx.gap,`data-ref-game="gap"`,"g.gap")}
+    </div>
     <p class="muted small">${custom?l(cdxT("atelier.refs.custom")):l(cdxT("atelier.refs.inherit"))}</p>
-    <div class="atelier-ref-actions"><button type="button" class="tiny" id="atelierRefsResetGame">${l(cdxT("atelier.refs.resetGame"))}</button></div>`;
+    <div class="atelier-ref-actions"><button type="button" class="tiny" id="atelierRefsResetGame">${l(cdxT("atelier.refs.resetGame"))}</button></div>
+    </div>`;
 }
 function bindAtelierRefs(){
   const api=window.CDX_REF_API;if(!api)return;
   const dash=a("atelierDash");if(!dash)return;
   const paint=(key,v)=>{const el=dash.querySelector(`[data-ref-val="${key}"]`);if(el)el.textContent=atelierRefVal(key.replace(/^g\./,""),v)};
   dash.querySelectorAll("[data-ref-cfg]").forEach(inp=>{
-    inp.oninput=()=>{const k=inp.dataset.refCfg,v=+inp.value;paint(k,v);api.set({[k]:v});atelierRefLivePaint()};
+    inp.oninput=()=>{const k=inp.dataset.refCfg,v=+inp.value;paint(k,v);api.set({[k]:v});atelierRefLivePaint();atelierPreviewPing()};
   });
   dash.querySelectorAll("[data-ref-game]").forEach(inp=>{
     inp.oninput=()=>{
@@ -1159,12 +1235,13 @@ function bindAtelierRefs(){
       const cur=api.get();
       api.setGame(g,{...(cur.games[g]||{}),[k]:v});
       atelierRefLivePaint();
+      atelierPreviewPing();
     };
   });
   const sel=a("atelierRefGame");
   if(sel)sel.onchange=()=>{atelierRefGame=sel.value;renderAtelierDash()};
   const apply=a("atelierRefsApply");
-  if(apply)apply.onclick=()=>{api.reload();atelierRefLivePaint();g(cdxT("atelier.refs.apply.ok"))};
+  if(apply)apply.onclick=()=>{api.reload();atelierRefLivePaint();atelierPreviewSync(!0);g(cdxT("atelier.refs.apply.ok"))};
   const reset=a("atelierRefsReset");
   if(reset)reset.onclick=()=>{api.reset();atelierRefGame="";renderAtelierDash();g(cdxT("atelier.refs.reset.ok"))};
   const resetG=a("atelierRefsResetGame");
@@ -1333,6 +1410,7 @@ async function saveSiteFont(id){
   if(!isAtelier())return;
   const ok=await saveSiteRow();
   g(ok?cdxT("atelier.font.ok"):cdxT("atelier.font.fail"),!ok);
+  atelierPreviewPing();
   if(isAtelier())renderAtelierDash();
 }
 async function saveXOk(raw,reopen){
@@ -3280,7 +3358,27 @@ function applyHomeFont(id){
   root.setProperty("--cdx-brand-weight",x.w);
   root.setProperty("--cdx-brand-size",x.s);
   document.querySelectorAll("[data-home-font]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.homeFont===homeFontId?"true":"false"));
+  try{
+    const u=JSON.parse(localStorage.getItem(Le))||{};
+    if(u.homeFont!==homeFontId){u.homeFont=homeFontId;localStorage.setItem(Le,JSON.stringify(u))}
+  }catch{}
 }
+window.addEventListener("storage",e=>{
+  if(e.key!==Le)return;
+  try{
+    const u=JSON.parse(e.newValue||"{}");
+    if(u.theme==="wood"||u.theme==="dojo"||u.theme==="official")document.documentElement.dataset.theme=u.theme;
+    if(u.homeFont)applyHomeFont(u.homeFont);
+  }catch{}
+});
+window.addEventListener("message",e=>{
+  if(e.origin!==location.origin||!e.data||e.data.cdx!=="preview")return;
+  try{
+    const u=JSON.parse(localStorage.getItem(Le))||{};
+    if(u.theme==="wood"||u.theme==="dojo"||u.theme==="official")document.documentElement.dataset.theme=u.theme;
+    if(u.homeFont)applyHomeFont(u.homeFont);
+  }catch{}
+});
 try{if(window.CDX_ADMIN){try{atelierLive=localStorage.getItem(ATELIER_K)===ATELIER_S}catch{}atelierMark();if(!atelierLive)bindAtelierLogin()}else{atelierLive=!1;atelierMark()}const hb=a("homeBrand");if(hb)hb.onclick=()=>j("home");const hg=a("homeGrid");if(hg)hg.addEventListener("click",e=>{const v=e.target.closest("[data-kc-view]"),t=e.target.closest("[data-tab]");if(t&&t.dataset.tab==="knowledge")o.kcView=v?v.dataset.kcView:"hub";t&&j(t.dataset.tab)});applyHomeFont(d.siteFont||"stencil")}catch{}
 function homeFaces(){
   const faces=[["bbcf","Ragna the Bloodedge"],["mvc2","Shuma-Gorath"],["tokon","Captain America"],["sf6","Ryu"],["ggst","Sol"],["2xko","Ahri"],["al","Aang"],["umvc3","Dante"],["dbfz","Krillin"],["gbvsr","Avatar Belial"]];
