@@ -154,7 +154,7 @@ body.on-home .head .lang-switch{grid-column:2;grid-row:1;justify-self:end}
 body.on-home #headerStats{display:none}
 body.on-home .brand,body.on-home .brand-btn{justify-content:center}
 body.on-home .head h1.brand{font-size:var(--cdx-brand-size,clamp(46px,8vw,88px))!important;letter-spacing:var(--cdx-brand-track,.05em);line-height:.95;margin:4px 0 0}
-body.on-home .brand-btn{font-family:var(--cdx-brand-font,"Black Ops One",sans-serif);font-weight:var(--cdx-brand-weight,400);gap:14px}
+body.on-home .brand-btn{font-family:var(--cdx-brand-font,Silkscreen,sans-serif);font-weight:var(--cdx-brand-weight,400);gap:14px}
 body.on-home .brand-mark{font-size:.52em}
 .home-hero{margin:10px 0 18px;text-align:center}
 .home-font-row{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-start}
