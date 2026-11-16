@@ -21,6 +21,8 @@
 !objets/*/*.webp
 !.gitignore
 !.nojekyll
+!tools/
+!tools/check_site.py
 !pad/
 !pad/**
 !portraits/
