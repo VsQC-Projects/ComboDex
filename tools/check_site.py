@@ -222,6 +222,13 @@ def main():
             fail("CDX_REF_API.preview missing — atelier iframe must receive gap")
     if kc_p.exists():
         extra_js += kc_p.read_text(encoding="utf-8")
+        if "function searchHits" not in extra_js or "CDX_KC.search" not in extra_js and "search:searchHits" not in extra_js:
+            fail("KC searchHits / CDX_KC.search missing")
+    if "function B()" not in app and "function B(){" not in app.replace(" ", ""):
+        if "function B(){" not in app:
+            fail("search B() missing")
+    if "CDX_KC.search" not in app:
+        fail("B() must call CDX_KC.search")
     for m in re.finditer(r'localStorage\.setItem\((["\'])([^"\']+)\1', app + i18n + extra_js):
         key = m.group(2)
         if key in allowed or key.startswith("cdx-ft:") or key.startswith("cdx-kc-v1"):

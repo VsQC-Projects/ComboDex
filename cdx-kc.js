@@ -403,21 +403,34 @@ function panelBody(v){try{return v==="teams"?pTeams():v==="matchups"?pMatchups()
 
 /* ——— Recherche commune ——— */
 function encBlob(x){if(!x._blob){var parts=[x.term,x.alias.join(" "),x.ex,x.cat];["fr","en","es"].forEach(function(lg){parts.push((x.txt[lg]||[]).join(" "))});Object.keys(x.per).forEach(function(gm){parts.push(gName(gm));parts.push(tr(x.per[gm]))});x.games.forEach(function(gm){parts.push(gName(gm))});x._blob=norm(parts.join(" "))}return x._blob}
-function globalResults(q){
+function searchHits(q,opts){
+  opts=opts||{};
   var groups=[];
   var enc=D.ENTRIES.filter(function(x){return hit(encBlob(x),q)}).concat((INF||[]).filter(function(x){return hit(infBlob(x),q)})).slice(0,12);
-  groups.push(["encyclopedia",enc.map(function(x){return'<button type="button" class="kc-res" data-kc="open-enc" data-id="'+E_(x.id)+'"><b>'+E_(x.term)+'</b> <span class="muted small">'+E_(T_("kc.cat."+x.cat))+"</span></button>"})]);
+  groups.push({kind:"encyclopedia",title:VIEW_NAME.encyclopedia,items:enc.map(function(x){return{id:x.id,title:x.term,sub:T_("kc.cat."+x.cat)}})});
   var teams=S.teams.filter(function(t){return hit(norm([t.name,gName(t.game),t.notes,t.members.map(function(m){return m.char+" "+cName(m.char)}).join(" ")].join(" ")),q)}).slice(0,12);
-  groups.push(["teams",teams.map(function(t){return'<button type="button" class="kc-res" data-kc="open-team" data-id="'+E_(t.id)+'"><b>'+E_(t.name)+'</b> <span class="muted small">'+E_(gName(t.game))+" · "+E_(t.members.filter(function(m){return m.char}).map(function(m){return cName(m.char)}).join(", "))+"</span></button>"})]);
+  groups.push({kind:"teams",title:VIEW_NAME.teams,items:teams.map(function(t){return{id:t.id,title:t.name,sub:gName(t.game)+" · "+t.members.filter(function(m){return m.char}).map(function(m){return cName(m.char)}).join(", ")}})});
   var sits=S.sits.filter(function(s){return hit(norm([s.title,s.desc,s.opts,s.cond,s.notes,s.a,s.b,cName(s.a),cName(s.b),gName(s.game),T_("kc.sit."+s.cat)].join(" ")),q)}).slice(0,12);
-  groups.push(["matchups",sits.map(function(s){return'<button type="button" class="kc-res" data-kc="open-sit" data-id="'+E_(s.id)+'"><b>'+E_(s.title)+'</b> <span class="muted small">'+E_(cName(s.a))+" vs "+E_(cName(s.b))+" · "+E_(T_("kc.sit."+s.cat))+"</span></button>"})]);
-  var combos=combosAll().filter(function(c){return hit(norm([c.name,c.character,cName(c.character),gName(c.game),comboBlob(c)].join(" ")),q)}).slice(0,12);
-  groups.push(["challenge",combos.map(function(c){return'<button type="button" class="kc-res" data-kc="start" data-id="'+E_(c.id)+'"><b>'+E_(c.name)+'</b> <span class="muted small">'+E_(gName(c.game))+" · "+E_(cName(c.character))+"</span></button>"})]);
-  var pts=[];D.PATCHES.forEach(function(p){var ok=hit(norm([p.title,p.ver,p.summary||"",gName(p.game)].join(" ")),q);var ch=p.changes.filter(function(c){return hit(norm([tr(c.txt),c.chars.join(" "),c.chars.map(cName).join(" "),T_("kc.pt.cat."+c.cat)].join(" ")),q)});if(ok||ch.length)pts.push([p,ch.length])});
-  groups.push(["patches",pts.slice(0,12).map(function(x){var p=x[0];return'<button type="button" class="kc-res" data-kc="open-patch" data-id="'+E_(p.id)+'"><b>'+E_(gName(p.game))+" — "+E_(p.ver||p.title)+'</b> <span class="muted small">'+E_(fmtDay(p.date))+"</span></button>"})]);
-  var any=groups.some(function(gr){return gr[1].length});
-  if(!any)return'<div class="empty">'+E_(T_("kc.search.none"))+"</div>";
-  return groups.filter(function(gr){return gr[1].length}).map(function(gr){return'<div class="kc-gres-group"><h3 class="kc-h">'+VIEW_ICON[gr[0]]+" "+E_(VIEW_NAME[gr[0]])+' <span class="count">'+gr[1].length+'</span></h3><div class="kc-res-list">'+gr[1].join("")+"</div></div>"}).join("");
+  groups.push({kind:"matchups",title:VIEW_NAME.matchups,items:sits.map(function(s){return{id:s.id,title:s.title,sub:cName(s.a)+" vs "+cName(s.b)+" · "+T_("kc.sit."+s.cat)}})});
+  if(opts.combos){
+    var combos=combosAll().filter(function(c){return hit(norm([c.name,c.character,cName(c.character),gName(c.game),comboBlob(c)].join(" ")),q)}).slice(0,12);
+    groups.push({kind:"challenge",title:VIEW_NAME.challenge,items:combos.map(function(c){return{id:c.id,title:c.name,sub:gName(c.game)+" · "+cName(c.character)}})});
+  }
+  var pts=[];D.PATCHES.forEach(function(p){var ok=hit(norm([p.title,p.ver,p.summary||"",gName(p.game)].join(" ")),q);var ch=p.changes.filter(function(c){return hit(norm([tr(c.txt),c.chars.join(" "),c.chars.map(cName).join(" "),T_("kc.pt.cat."+c.cat)].join(" ")),q)});if(ok||ch.length)pts.push(p)});
+  groups.push({kind:"patches",title:VIEW_NAME.patches,items:pts.slice(0,12).map(function(p){return{id:p.id,title:gName(p.game)+" — "+(p.ver||p.title),sub:fmtDay(p.date)}})});
+  return groups.filter(function(gr){return gr.items.length});
+}
+function globalResults(q){
+  var groups=searchHits(q,{combos:true});
+  if(!groups.length)return'<div class="empty">'+E_(T_("kc.search.none"))+"</div>";
+  return groups.map(function(gr){return'<div class="kc-gres-group"><h3 class="kc-h">'+VIEW_ICON[gr.kind]+" "+E_(gr.title)+' <span class="count">'+gr.items.length+'</span></h3><div class="kc-res-list">'+gr.items.map(function(it){var act=gr.kind==="encyclopedia"?"open-enc":gr.kind==="teams"?"open-team":gr.kind==="matchups"?"open-sit":gr.kind==="patches"?"open-patch":"start";return'<button type="button" class="kc-res" data-kc="'+act+'" data-id="'+E_(it.id)+'"><b>'+E_(it.title)+'</b> <span class="muted small">'+E_(it.sub||"")+"</span></button>"}).join("")+"</div></div>"}).join("");
+}
+function openHit(kind,id){
+  if(kind==="encyclopedia"){setU("encOpen",id);go("encyclopedia");return}
+  if(kind==="teams"){go("teams",{teamSel:id});return}
+  if(kind==="matchups"){openSit(id);return}
+  if(kind==="patches"){var p=patchById(id);go("patches",{pGame:p?p.game:"tokon",pOpen:id,pQ:"",pChar:"",pCat:""});return}
+  if(kind==="challenge"){openCombo(id);return}
 }
 
 /* ——— Encyclopedia ——— */
@@ -944,5 +957,5 @@ function bind(r){
   });
 }
 
-window.CDX_KC={render:render,mastery:mastery,views:VIEWS,names:VIEW_NAME,patchFlags:patchFlags,go:go};
+window.CDX_KC={render:render,mastery:mastery,views:VIEWS,names:VIEW_NAME,patchFlags:patchFlags,go:go,search:searchHits,open:openHit,globalResults:globalResults};
 })();

@@ -153,6 +153,16 @@ fr:{
 ,"admin.stats.regions.off":"Pas de télémétrie joueurs."
 ,"admin.stats.pop":"Popularité in-game"
 ,"admin.stats.pop.off":"Pas de données de matchmaking."
+,"search.chars":"Personnages"
+,"import.preview.hint":"Les lignes déjà présentes ou en double dans le collage sont décochées."
+,"import.dup":"doublon du collage"
+,"import.blocked":"Ce wiki refuse la lecture automatique. Aucun combo ajouté. Colle les combos ou importe un fichier HTML."
+,"import.auto":"Extraction automatique : contrôle les commandes et conditions avant validation."
+,"import.manual":"Importation manuelle : vérifie les séquences et leur personnage avant validation."
+,"import.none.html":"Aucune séquence détectée. Essaie une section de combos plus précise ou le copier-coller."
+,"import.none.text":"Aucune ligne de commande reconnue. Copie une ou plusieurs séquences de coups depuis la page."
+,"import.paste.empty":"Colle d’abord les lignes de combos copiées sur le wiki."
+,"import.cors":"Lecture automatique bloquée (CORS ou page protégée). Aucun combo n’a été ajouté. Colle le HTML ou les lignes du wiki ci-dessous. Détails : {0}"
 ,"admin.infra.note":"GitHub Pages sert l’interface. Rôles, journal d’audit et statistiques de matchs partagées exigent un backend. ComboDex partage déjà les combos via le wiki."
 ,"admin.closed":"Console fermée."
 ,"admin.overview":"Tableau de bord"
@@ -570,6 +580,16 @@ en:{
 "admin.stats.regions.off":"No player telemetry.",
 "admin.stats.pop":"In-game popularity",
 "admin.stats.pop.off":"No matchmaking data.",
+"search.chars":"Characters",
+"import.preview.hint":"Rows already in the library or duplicated in the paste are unchecked.",
+"import.dup":"duplicate in paste",
+"import.blocked":"This wiki blocks automatic reading. No combo added. Paste the combos or import an HTML file.",
+"import.auto":"Automatic extraction: check commands and conditions before confirming.",
+"import.manual":"Manual import: check sequences and their character before confirming.",
+"import.none.html":"No sequence detected. Try a more specific combo section or paste.",
+"import.none.text":"No command line recognized. Copy one or more move sequences from the page.",
+"import.paste.empty":"Paste combo lines copied from the wiki first.",
+"import.cors":"Automatic fetch blocked (CORS or protected page). No combo was added. Paste the HTML or wiki lines below. Details: {0}",
 "admin.infra.note":"GitHub Pages serves the UI. Roles, audit logs and shared match stats need a backend. Combos are already shared through the wiki.",
 "admin.closed":"Console closed.",
 "admin.overview":"Dashboard",
@@ -1090,6 +1110,16 @@ es:{
 "admin.stats.regions.off":"Sin telemetría de jugadores.",
 "admin.stats.pop":"Popularidad in-game",
 "admin.stats.pop.off":"Sin datos de matchmaking.",
+"search.chars":"Personajes",
+"import.preview.hint":"Las líneas ya presentes o duplicadas en el pegado quedan desmarcadas.",
+"import.dup":"duplicado del pegado",
+"import.blocked":"Esta wiki bloquea la lectura automática. No se añadió ningún combo. Pega los combos o importa un HTML.",
+"import.auto":"Extracción automática: revisa comandos y condiciones antes de validar.",
+"import.manual":"Importación manual: revisa las secuencias y su personaje antes de validar.",
+"import.none.html":"No se detectó ninguna secuencia. Prueba una sección más precisa o pega el texto.",
+"import.none.text":"No se reconoció ninguna línea de comandos. Copia una o más secuencias de la página.",
+"import.paste.empty":"Pega primero las líneas de combos copiadas de la wiki.",
+"import.cors":"Lectura automática bloqueada (CORS o página protegida). No se añadió ningún combo. Pega el HTML o las líneas abajo. Detalles: {0}",
 "admin.infra.note":"GitHub Pages sirve la interfaz. Roles, auditoría y estadísticas de partidas compartidas requieren un backend. Los combos ya se comparten por el wiki.",
 "admin.closed":"Consola cerrada.",
 "admin.overview":"Panel",
