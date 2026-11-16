@@ -27,7 +27,7 @@ main{flex:1 1 auto;padding-bottom:0}
 .ra-pad .pal-group{display:grid;gap:5px}
 .ra-pad .buttons{display:flex;flex-wrap:wrap;gap:5px}
 .ra-pad button{padding:6px 8px;font-size:12px;font-weight:750;min-width:0}
-.ra-theater-panel{padding:0;overflow:hidden;background:#07070c}
+.ra-theater-panel{padding:0;overflow:visible;background:#07070c}
 .ra-stage{position:relative;background:#000;overflow:hidden;aspect-ratio:16/9;min-height:360px;max-height:min(78vh,860px)}
 .ra-player-host,.ra-player-host iframe,.ra-player-host video,.ra-player-host .video-frame,.ra-stage>#raPlayer,.ra-stage iframe,.ra-stage video,.ra-stage .video-frame{position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:0;aspect-ratio:auto;max-height:none;pointer-events:none;object-fit:contain;background:#000}
 .ra-stage[data-tool=play] .ra-ink{pointer-events:none}
@@ -122,8 +122,8 @@ main{flex:1 1 auto;padding-bottom:0}
 .ra-seek-wrap input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:14px;height:14px;margin-top:-4px;border-radius:99px;background:#f6e7a3;border:2px solid #fff;box-shadow:0 0 0 1px #0008;cursor:pointer}
 .ra-seek-wrap input[type=range]::-moz-range-track{height:7px;background:transparent;border:0}
 .ra-seek-wrap input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:99px;background:#f6e7a3;border:2px solid #fff;box-shadow:0 0 0 1px #0008;cursor:pointer}
-.ra-hud-seq{position:static;margin:0;max-height:40px;overflow:hidden}
-.ra-hud-seq .token{font-size:11px;padding:3px 6px}
+.ra-hud-seq{position:static;margin:6px 0 0;max-height:none;overflow:visible;flex-wrap:wrap}
+.ra-hud-seq .token{font-size:12px;padding:4px 8px}
 .ra-labbar{position:static;display:flex;flex-direction:column;gap:6px;padding:0;background:transparent;border:0}
 .ra-lab-row{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
 .ra-lab-mark{display:grid;grid-template-columns:auto auto minmax(0,1fr);gap:8px;align-items:center;width:100%}
@@ -730,7 +730,7 @@ body:has(#bulkActions:not(.hidden)) #personCombos{padding-bottom:190px}
   .ra-live{top:auto;bottom:12px}
   .ra-live .token{font-size:13px;padding:4px 7px}
   .ra-live .token.on{font-size:17px}
-  .ra-hud-seq{max-height:28px}
+  .ra-hud-seq{max-height:none;overflow:visible}
   .ra-tools button{padding:6px 8px}
   .ra-toggles{margin-left:0}
   .ra-lab-mark{grid-template-columns:1fr 1fr}
