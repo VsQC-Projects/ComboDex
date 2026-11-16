@@ -1,0 +1,19 @@
+name: check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: ComboDex integrity
+        run: python tools/check_site.py
+# This workflow only gates the tree. GitHub Pages stays a manual ship via tools/ship.py.
+# Do not add a Pages deploy step here: a failing check must never publish.

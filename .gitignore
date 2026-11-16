@@ -23,6 +23,9 @@
 !.nojekyll
 !tools/
 !tools/check_site.py
+!.github/
+!.github/workflows/
+!.github/workflows/check.yml
 !pad/
 !pad/**
 !portraits/

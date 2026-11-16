@@ -412,6 +412,7 @@ function queueWiki(list){const rows=(Array.isArray(list)?list:[list]).map(wikiSt
 async function saveWikiLive(){
   const list=(d.pending||[]).map(wikiStrip).filter(c=>c&&c.id&&c.game&&c.character&&((c.tokens&&c.tokens.length)||c.video));
   if(!list.length){d.pending=[];persistPending();return!0}
+  if(typeof navigator!=="undefined"&&navigator.onLine===false){persistPending();return!1}
   try{
     const r=await fetch(wikiApi()+"?on_conflict=id",{method:"POST",headers:wikiHeaders({"Content-Type":"application/json","Prefer":"resolution=merge-duplicates,return=minimal"}),body:JSON.stringify(list.map(wikiRow)),cache:"no-store"});
     if(r.ok||r.status===201){d.pending=[];persistPending();return!0}
@@ -419,11 +420,12 @@ async function saveWikiLive(){
   persistPending();
   return!1;
 }
+function wikiSaveFailMsg(){return typeof navigator!=="undefined"&&navigator.onLine===false?cdxT("wiki.offline"):cdxT("Le combo est sur cet appareil, pas encore sur ComboDex pour les autres.")}
 function publishWiki(combos){
   const list=queueWiki(combos);
   if(!list.length)return;
   list.forEach(upsertCombo);
-  saveWikiLive().then(ok=>g(ok?cdxT("Combo gravé sur ComboDex pour tout le monde."):cdxT("Le combo est sur cet appareil, pas encore sur ComboDex pour les autres."),!ok));
+  saveWikiLive().then(ok=>g(ok?cdxT("Combo gravé sur ComboDex pour tout le monde."):wikiSaveFailMsg(),!ok));
 }
 async function loadWiki(){
   const byId=new Map(),reqs=[];
@@ -458,6 +460,7 @@ function labFromForm(checked,prev){const p=labState(prev);if(isAtelier())return 
 function xHandleNorm(s){s=String(s||"").trim().replace(/^@+/,"");return/^[A-Za-z0-9_]{1,15}$/.test(s)?s:""}
 function xSignHtml(c){const h=xHandleNorm(c&&c.authorX);if(!h)return"";return `<span class="x-sign-sep" aria-hidden="true">|</span><a class="x-sign" href="https://x.com/${h}" target="_blank" rel="noopener noreferrer nofollow" title="${l(cdxT("x.sign.tip"))}">𝕏 @${h}</a>`}
 function labButton(c,id){const s=labState(c),at=isAtelier(),tip=at?(s==="ok"?"lab.tip.unset":"lab.tip.approve"):(s===""?"lab.tip.ask":s==="pending"?"lab.tip.cancel":"lab.locked"),ico=s==="ok"?"✔":s==="pending"?"⚠":"";return `<span class="lab-line"><button class="tiny lab-btn lab-${s||"off"}" data-action="lab" data-id="${id}" aria-pressed="${s==="ok"?"true":s==="pending"?"mixed":"false"}" title="${l(cdxT(tip))}"><span class="lab-box" aria-hidden="true">${ico}</span>${l(cdxT(s==="pending"?"lab.pending":s==="ok"?"lab.ok":"lab.off"))}</button>${xSignHtml(c)}</span>`}
+function comboStatusHtml(c){const lab=labState(c);let key="status.documented",cls="documented";if(c&&c.review==="pending"){key="status.submitted";cls="submitted"}else if(lab==="pending"){key="status.labwait";cls="labwait"}else if(lab==="ok"){key="status.labok";cls="labok"}return `<b class="status-pill status-${cls}">${l(cdxT(key))}</b>`}
 function labToggle(id){const c=L(id);if(!c)return;const s=labState(c);if(!isAtelier()&&s==="ok")return g(cdxT("lab.locked"));const next=isAtelier()?(s==="ok"?"":"ok"):(s===""?"pending":"");ae(id,labPatch(next));C()}
 function ze(e,t){d.keys[e]=[...d.keys[e]||[],t],M()}function Ue(){try{return JSON.parse(localStorage.getItem(Le))||{}}catch{return{}}}function Ve(e){try{localStorage.setItem(Le,JSON.stringify(e))}catch{}}const L=e=>d.combos.find(t=>t.id===e),q=(e,t)=>d.combos.filter(n=>n.game===e&&n.character===t);function T(e){const t=ke[e]||[],n=[...new Set(d.combos.filter(s=>s.game===e&&!t.includes(s.character)).map(s=>s.character))];return[...t.map(s=>({name:s,orphan:!1})),...n.sort().map(s=>({name:s,orphan:!0}))]}const We=(e,t)=>T(e).some(n=>n.name===t);function hiddenKeys(g){return((H.hideKeys||{})[g]||[]).map(x=>String(x).toLowerCase())}function orderKeys(g,keys){const ord=(H.palOrder&&H.palOrder[g])||[];if(!ord.length)return keys;const rank=new Map(ord.map((k,i)=>[String(k).toLowerCase(),i]));return[...keys].sort((a,b)=>(rank.has(String(a).toLowerCase())?rank.get(String(a).toLowerCase()):1e6)-(rank.has(String(b).toLowerCase())?rank.get(String(b).toLowerCase()):1e6))}
 function savePalOrder(g,keys){H.palOrder=H.palOrder||{};H.palOrder[g]=keys;oe()}
@@ -502,7 +505,7 @@ function Y(){const sc=cmpScope(),gm=a("compareGame").value,c1=a("compareChar"),c
   s.innerHTML=t&&n?hero+`<p class="compare-diff small muted">${t.tokens.length} vs ${n.tokens.length} ${cdxT("commandes")}${!r||!i?"":r===i?" · "+cdxT("dégâts identiques"):` · combo <b class="good">${r>i?"A":"B"}</b> ${cdxT("plus fort de")} ${Math.abs(r-i).toLocaleString(window.cdxLang==="en"?"en":window.cdxLang==="es"?"es":"fr")} ${cdxT("dégâts")}`} · ${cdxT("les commandes surlignées n’apparaissent que dans l’un des deux combos.")}</p>`:"";
   a("compareOut").innerHTML=[t,n].map((c,m)=>{var f;if(!c)return`<div class="subpanel"><div class="empty">Combo ${m?"B":"A"} non sélectionné</div></div>`;const p=((f=[t,n][1-m])==null?void 0:f.tokens)||c.tokens,u=Qe(c.tokens,p).map(({t:h,diff:$})=>`<span class="token${tokCls(h)} ${$?"diff":""}">${l(h)}</span>`).join("");return`<div class="subpanel compare-card"><div class="row between"><h3>${l(c.name)}</h3><span class="cmp-badge">${m?"B":"A"}</span></div><div class="seq">${u}</div>
         <p>${cdxT("Difficulté")} : ${l(cdxT(c.difficulty||""))}<br>${cdxT("Position")} : ${l(cdxT(c.position||""))}<br>${cdxT("Ressource")} : ${l(cdxT(c.meter||""))}<br>
-        ${cdxT("Assists")} : ${l(cdxT(c.assist||""))}<br>${cdxT("Dégâts :")} ${l(c.damage?String(c.damage):cdxT("non renseignés"))}<br>Lab : ${c.verified?cdxT("✓ Vérifié"):cdxT("Non vérifié")}</p></div>`}).join("");
+        ${cdxT("Assists")} : ${l(cdxT(c.assist||""))}<br>${cdxT("Dégâts :")} ${l(c.damage?String(c.damage):cdxT("non renseignés"))}<br>${comboStatusHtml(c)}</p></div>`}).join("");
 }
 function tt(){V("compare",et),a("compareGame").onchange=e=>{we(e.target.value),a("compareChar").dataset.mode="char",Y()},a("compareChar").onchange=()=>{a("compareA").value="";if(cmpScope()==="char")a("compareB").value="";Y()},a("compareChar2").onchange=()=>{a("compareB").value="";Y()};const sc=a("compareScope");if(sc)sc.onchange=()=>{a("compareA").value="";a("compareB").value="";Y()};a("compareA").onchange=()=>_(),a("compareB").onchange=()=>_();const bot=a("compareBot");if(bot)bot.onclick=openCompareBot}
 function botFill(key){let s=cdxT(key);for(let i=1;i<arguments.length;i++)s=s.replace("{"+(i-1)+"}",arguments[i]);return s}
@@ -2111,7 +2114,7 @@ function Lt(){V("import",yt),a("importGame").onchange=e=>{importManual(),me(e.ta
     ${e.video&&(o.watchId===t||!(view.tokens||[]).length)?'<div class="combo-video">'+leDock(e.video)+'</div>':''}
     ${view.desc?`<button type="button" class="combo-desc" data-action="desc" data-id="${t}" data-tip="${l(view.desc)}"><span class="combo-desc-k">${cdxT("Description du combo")}</span><span class="combo-desc-v">${l(view.desc)}</span></button>`:""}
     <div class="row between">
-      <span class="muted small">${cdxT("Dégâts :")} ${s?l(Number(e.damage).toLocaleString(window.cdxLang==="es"?"es":window.cdxLang==="en"?"en":"fr-FR")):cdxT("non renseignés")}${e.imported?" · "+cdxT("Importé"):""}${e.review==="pending"?` · <b class="review-pill">⏳ ${l(cdxT("review.pending"))}</b>`:""}</span>
+      <span class="muted small">${cdxT("Dégâts :")} ${s?l(Number(e.damage).toLocaleString(window.cdxLang==="es"?"es":window.cdxLang==="en"?"en":"fr-FR")):cdxT("non renseignés")}${e.imported?" · "+cdxT("Importé"):""} · ${comboStatusHtml(e)}</span>
       <div class="fav-col"><button class="tiny" data-action="favorite" data-id="${t}" aria-pressed="${d.fav.has(e.id)}">${d.fav.has(e.id)?cdxT("★ Favori"):cdxT("☆ Favori")}</button>${labButton(e,t)}</div>
     </div>
     ${view.lab?`<p class="small muted">${l(view.lab)}</p>`:""}

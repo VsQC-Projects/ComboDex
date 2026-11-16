@@ -6,7 +6,7 @@ import re
 import sys
 from pathlib import Path
 
-ROOT = Path(r"c:\Users\amand\Downloads\Combo_Dex")
+ROOT = Path(__file__).resolve().parent.parent
 errs: list[str] = []
 
 
@@ -243,6 +243,32 @@ def main():
 
     if "CRÉÉ PAR VSQC" not in html:
         fail("footer signature missing")
+
+    offs = re.findall(r'"lab\.off"\s*:\s*"([^"]+)"', i18n)
+    oks = re.findall(r'"lab\.ok"\s*:\s*"([^"]+)"', i18n)
+    if len(offs) < 3 or len(oks) < 3:
+        fail("lab.off / lab.ok missing in FR/EN/ES")
+    for a, b in zip(offs, oks):
+        if a == b:
+            fail(f"lab.off must not duplicate lab.ok: {a}")
+    if re.search(r'"admin\.import\.fail"\s*:\s*"Enregistré', i18n):
+        fail("admin.import.fail must not say Enregistré when fetch fails")
+    if "wiki.offline" not in i18n:
+        fail("wiki.offline missing")
+    if "comboStatusHtml" not in app:
+        fail("comboStatusHtml missing")
+    css = css_p.read_text(encoding="utf-8")
+    if "#charList.charlist" not in css or "max-height:min(42vh,360px)" not in css:
+        fail("mobile charlist must be scrollable")
+    wf = ROOT / ".github" / "workflows" / "check.yml"
+    if not wf.exists():
+        fail("GitHub Actions check.yml missing")
+    else:
+        wtxt = wf.read_text(encoding="utf-8")
+        if "check_site.py" not in wtxt:
+            fail("Actions must run check_site.py")
+        if "pages" in wtxt.lower() and "peaceiris" in wtxt.lower():
+            fail("Actions must not auto-deploy Pages")
 
     if errs:
         print("FAIL")

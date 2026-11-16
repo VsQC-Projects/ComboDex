@@ -216,7 +216,7 @@ fr:{
 ,"admin.import.meta.hint":"Indice : {0}"
 ,"admin.import.save":"Enregistrer sur ComboDex"
 ,"admin.import.ok":"Référence gravée : ComboDex peut l’afficher."
-,"admin.import.fail":"Enregistré ici, pas encore pour les autres."
+,"admin.import.fail":"L’envoi vers ComboDex a échoué. Copie locale seulement — rien n’est publié pour les autres."
 ,"admin.import.need":"Choisis le jeu, un fichier, et un nom en français."
 ,"admin.import.del":"Retirer"
 ,"admin.import.del.confirm":"Retirer cette référence importée de ComboDex ?"
@@ -261,10 +261,16 @@ fr:{
 ,"x.pending":"Vidéo X enregistrée. Elle s’affiche après acceptation dans l’atelier."
 ,"x.need":"Colle un lien YouTube ou X."
 ,"x.novid":"Pas de fichier vidéo sur ce post X. ComboDex n’affiche que la vidéo, pas le tweet."
-,"lab.off":"Testé et approuvé en lab"
-,"lab.ok":"Testé et approuvé en lab"
-,"lab.pending":"En attente d’approbation"
-,"lab.tip.ask":"Demander un test en lab. La demande reste en attente jusqu’à l’approbation de l’atelier."
+,"lab.off":"Demander un test lab"
+,"lab.ok":"Testé en lab"
+,"lab.pending":"Test lab demandé"
+,"status.submitted":"Soumis — en attente de validation"
+,"status.documented":"Documenté"
+,"status.labwait":"Test lab demandé"
+,"status.labok":"Testé en lab"
+,"wiki.offline":"Hors ligne. Le combo reste sur cet appareil — rien n’a été envoyé à ComboDex."
+,"Vérifié et testé en lab":"Testé en lab (pas une preuve de faisabilité)"
+,"lab.tip.ask":"Demander un test en lab. Ce n’est pas une preuve de faisabilité : l’atelier confirme ensuite le test."
 ,"lab.tip.cancel":"Retirer la demande de test."
 ,"lab.tip.approve":"Atelier : approuver ce combo."
 ,"lab.tip.unset":"Atelier : retirer l’approbation."
@@ -654,7 +660,7 @@ en:{
 "admin.import.meta.hint":"Hint: {0}",
 "admin.import.save":"Save on ComboDex",
 "admin.import.ok":"Reference saved: ComboDex can show it.",
-"admin.import.fail":"Saved here, not yet for everyone.",
+"admin.import.fail":"Sending to ComboDex failed. Local copy only — nothing was published for others.",
 "admin.import.need":"Pick the game, a file, and a French name.",
 "admin.import.del":"Remove",
 "admin.import.del.confirm":"Remove this imported reference from ComboDex?",
@@ -785,10 +791,15 @@ en:{
 "Vidéo YouTube ou X (facultatif)":"YouTube or X video (optional)",
 "x.need":"Paste a YouTube or X link.",
 "x.novid":"No video file on this X post. ComboDex only plays the video, not the tweet.",
-"lab.off":"Tested and approved in lab",
-"lab.ok":"Tested and approved in lab",
-"lab.pending":"Awaiting approval",
-"lab.tip.ask":"Request a lab test. The request stays pending until the workshop approves it.",
+"lab.off":"Request a lab test",
+"lab.ok":"Lab-tested",
+"lab.pending":"Lab test requested",
+"status.submitted":"Submitted — awaiting review",
+"status.documented":"Documented",
+"status.labwait":"Lab test requested",
+"status.labok":"Lab-tested",
+"wiki.offline":"Offline. The combo stays on this device — nothing was sent to ComboDex.",
+"lab.tip.ask":"Request a lab test. This is not a feasibility proof: the workshop confirms the test afterwards.",
 "lab.tip.cancel":"Withdraw the test request.",
 "lab.tip.approve":"Workshop: approve this combo.",
 "lab.tip.unset":"Workshop: remove the approval.",
@@ -807,7 +818,7 @@ en:{
 "ra.fps.hint":"Manual: the video does not expose its framerate.",
 "ra.analyze":"Combo analysis",
 "ra.ana.ink":"drawing(s)",
-"Vérifié et testé en lab":"Verified and lab-tested",
+"Vérifié et testé en lab":"Lab-tested (not a feasibility proof)",
 "Ajouter aux favoris":"Add to favorites",
 "Notes de lab (facultatif)":"Lab notes (optional)",
 "Date du test":"Test date",
@@ -1195,7 +1206,7 @@ es:{
 "admin.import.meta.hint":"Pista: {0}",
 "admin.import.save":"Guardar en ComboDex",
 "admin.import.ok":"Referencia grabada: ComboDex puede mostrarla.",
-"admin.import.fail":"Guardado aquí, aún no para los demás.",
+"admin.import.fail":"El envío a ComboDex ha fallado. Copia local solamente — no se publicó para los demás.",
 "admin.import.need":"Elige el juego, un archivo y un nombre en francés.",
 "admin.import.del":"Quitar",
 "admin.import.del.confirm":"¿Quitar esta referencia importada de ComboDex?",
@@ -1326,10 +1337,15 @@ es:{
 "Vidéo YouTube ou X (facultatif)":"Vídeo de YouTube o X (opcional)",
 "x.need":"Pega un enlace de YouTube o X.",
 "x.novid":"No hay archivo de vídeo en este post de X. ComboDex solo pone el vídeo, no el tuit.",
-"lab.off":"Probado y aprobado en lab",
-"lab.ok":"Probado y aprobado en lab",
-"lab.pending":"Pendiente de aprobación",
-"lab.tip.ask":"Pedir una prueba en lab. La petición queda pendiente hasta que el taller la apruebe.",
+"lab.off":"Pedir una prueba lab",
+"lab.ok":"Probado en lab",
+"lab.pending":"Prueba lab pedida",
+"status.submitted":"Enviado — pendiente de validación",
+"status.documented":"Documentado",
+"status.labwait":"Prueba lab pedida",
+"status.labok":"Probado en lab",
+"wiki.offline":"Sin conexión. El combo se queda en este aparato — no se envió nada a ComboDex.",
+"lab.tip.ask":"Pedir una prueba en lab. No es una prueba de viabilidad: el taller confirma el test después.",
 "lab.tip.cancel":"Retirar la petición de prueba.",
 "lab.tip.approve":"Taller: aprobar este combo.",
 "lab.tip.unset":"Taller: retirar la aprobación.",
@@ -1348,7 +1364,7 @@ es:{
 "ra.fps.hint":"Manual: el vídeo no expone el framerate.",
 "ra.analyze":"Análisis de combo",
 "ra.ana.ink":"dibujo(s)",
-"Vérifié et testé en lab":"Verificado y probado en lab",
+"Vérifié et testé en lab":"Probado en lab (no es una prueba de viabilidad)",
 "Ajouter aux favoris":"Añadir a favoritos",
 "Notes de lab (facultatif)":"Notas de lab (opcional)",
 "Date du test":"Fecha de la prueba",
